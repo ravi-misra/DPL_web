@@ -7,7 +7,12 @@ Top Navigation Bar
 nav {
     background: #222;
     padding: 0 15px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
 }
+
 a {
     color: white;
     text-decoration: none;

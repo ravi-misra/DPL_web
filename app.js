@@ -8,7 +8,10 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-const {PORT} = require('./config');
+const {PORT, LOCAL_HOST, PLCI_HOST} = require('./config');
+
+// const host = PLCI_HOST;
+const host = LOCAL_HOST;
 
 const app = express();
 
@@ -29,6 +32,6 @@ app.get('/', (req, res) => {
     res.render('users/shift-schedule-form.ejs');
 })
 
-app.listen(PORT, '10.130.64.23', () => {
-    console.log(`Listening at port ${PORT}`);
+app.listen(PORT, host, () => {
+    console.log(`Listening at ${host}:${PORT}`);
 });

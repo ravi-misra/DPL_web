@@ -1,64 +1,64 @@
 .shift-sch-frm {
-    flex: 1;
-    padding-top: 50px;
+  flex: 1 0 auto;
+  padding-top: 50px;
 }
 
 .shift-sch-frm table {
-    margin: 20px auto;
-    border: 1px solid black;
-    border-collapse: collapse;
+  margin: 20px auto;
+  border: 1px solid black;
+  border-collapse: collapse;
 }
 
 .shift-sch-frm th,
 .shift-sch-frm td {
-    border: 1px solid black;
-    padding: 20px 30px;
+  border: 1px solid black;
+  padding: 20px 30px;
 }
 
 .shift-sch-frm td:not(.row-1, .row-1) {
-    font-weight: 600;
-    font-style: italic;
+  font-weight: 600;
+  font-style: italic;
 }
 
 .shift-sch-frm [class^="label-shift"] {
-    margin-left: 5px;
-    margin-right: 100px;
+  margin-left: 5px;
+  margin-right: 100px;
 }
 
 .shift-sch-frm .cell-2 > label:nth-last-child(1) {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 .shift-sch-frm .row-1 {
-    font-size: 1.5rem;
-    text-decoration: underline;
-    background-color: #eca1a6;
+  font-size: 1.5rem;
+  text-decoration: underline;
+  background-color: #eca1a6;
 }
 
 .shift-sch-frm .row-2 {
-    font-size: 1.2rem;
-    font-style: italic;
-    background-color: #bdcebe;
+  font-size: 1.2rem;
+  font-style: italic;
+  background-color: #bdcebe;
 }
 
 .shift-sch-frm tbody > tr:nth-child(even) {
-    background-color: #fff2df;
+  background-color: #fff2df;
 }
 
 .shift-sch-frm .login-button-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 .shift-sch-frm .login-btn {
-    border-radius: 5px;
-    font-size: 1.1rem;
-    padding: 8px 60px;
-    text-decoration: none;
-    background: #c0392b;
-    color: white;
-    margin: 0 30px 10px 30px;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  padding: 8px 60px;
+  text-decoration: none;
+  background: #c0392b;
+  color: white;
+  margin: 0 30px 10px 30px;
 }
 .shift-sch-frm .login-btn:hover {
-    background: #9b2b1e;
+  background: #9b2b1e;
 }

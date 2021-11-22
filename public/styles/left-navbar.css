@@ -1,11 +1,11 @@
-.content {
+.sidebar-content {
     position: relative;
     width: 200px;
     flex: 0 0 auto;
 }
 
 .sidebar {
-    display: flex;
+    display: flex; /* this flex will be used for handling multiple sections in sidebar */
     flex-direction: column;
     justify-content: space-between;
     flex-wrap: wrap;

@@ -9,15 +9,17 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
     <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
     <link rel="manifest" href="/assets/favicon/site.webmanifest">
-    <link rel="stylesheet" href="/public/styles/fa/css/all.min.css">
-    <link rel="stylesheet" href="/public/styles/common.css">
-    <link rel="stylesheet" href="/public/styles/top-navbar.css">
-    <link rel="stylesheet" href="/public/styles/left-navbar.css">
-    <link rel="stylesheet" href="/public/styles/shift-schedule-form.css">
+    <link rel="stylesheet" href="/styles/common.css">
+    <link rel="stylesheet" href="/styles/top-navbar.css">
+    <link rel="stylesheet" href="/styles/fa/css/all.min.css">
+    <link rel="stylesheet" href="/styles/left-navbar.css">
+    <link rel="stylesheet" href="/styles/shift-schedule-form.css">
     <script src="/scripts/top-navbar.js" defer></script>
     <title>DPL Portal</title>
 </head>
 <body>
-    
+    <%- include("../partials/top-navbar.ejs")  %> 
+    <%- include("../partials/left-navbar.ejs")  %>
+    <%- body %>
 </body>
 </html>

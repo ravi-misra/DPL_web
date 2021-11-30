@@ -28,7 +28,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 const store = MongoStore.create({ 
-    clientPromise: mongoose.connection.asPromise().then(() => mongoose.connection.getClient()),
+    clientPromise: mongoose.connection.asPromise().then(c => c.getClient()),
     touchAfter: 24*3600 // time period in seconds
 });
 

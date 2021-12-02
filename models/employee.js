@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const employeeSchema = new Schema({
+const employeeSchema = new mongoose.Schema({
     pn: {
         type: String,
         required: true,
@@ -11,8 +10,9 @@ const employeeSchema = new Schema({
         type: String,
         required: true
     },
-    dept_code: {
-        type: String,
+    dept: {
+        type: Schema.Types.ObjectId,
+        ref: 'Department',
         required: true
     },
     designation: {
@@ -24,6 +24,11 @@ const employeeSchema = new Schema({
         required: true,
         enum: ['M', 'F']
     },
+    auth_level: {
+        type: Schema.Types.ObjectId,
+        ref: 'Authority',
+        required: true
+    },
     dob: Date,
     doj: Date,
     mobile: Number,
@@ -31,8 +36,9 @@ const employeeSchema = new Schema({
     intercom: Number,
     qtr_no: String,
     blood_grp: String,
-    password: String
+    password: String,
+    active: Boolean
 })
 
-const Employee = mongoose.model('Employee', employeeSchema);
+module.exports = mongoose.model('Employee', employeeSchema);
 

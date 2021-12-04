@@ -29,6 +29,11 @@ const employeeSchema = new mongoose.Schema({
         ref: 'Authority',
         required: true
     },
+    active: {
+        type: Boolean,
+        default: true,
+        required: true
+    },
     dob: Date,
     doj: Date,
     mobile: Number,
@@ -36,8 +41,7 @@ const employeeSchema = new mongoose.Schema({
     intercom: Number,
     qtr_no: String,
     blood_grp: String,
-    password: String,
-    active: Boolean
+    password: String
 })
 
 module.exports = mongoose.model('Employee', employeeSchema);

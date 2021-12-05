@@ -10,11 +10,11 @@ const employeeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    dept: {
+    dept: [{
         type: Schema.Types.ObjectId,
         ref: 'Department',
         required: true
-    },
+    }],
     designation: {
         type: String,
         required: true
@@ -34,6 +34,10 @@ const employeeSchema = new mongoose.Schema({
         default: true,
         required: true
     },
+    reports_to: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Employee'
+    }],
     dob: Date,
     doj: Date,
     mobile: Number,

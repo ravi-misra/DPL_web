@@ -29,14 +29,14 @@ const employeeSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Contractor'
     },
-    job: {
+    job: [{
         type: Schema.Types.ObjectId,
         ref: 'Contract_job'
-    },
-    reporting: {
+    }],
+    reports_to: [{
         type: Schema.Types.ObjectId,
         ref: 'Employee'
-    },
+    }],
     mobile: Number,
     esi: String
 })

@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const employeeSchema = new mongoose.Schema({
-    pass_no: {
+const ContractWorkerSchema = new Schema({
+    passno: {
         type: String,
         required: true,
         unique: true
@@ -10,7 +11,7 @@ const employeeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    area: {
+    dutyarea: {
         type: String,
         required: true
     },
@@ -20,19 +21,16 @@ const employeeSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        required: true,
         enum: ['M', 'F'],
         default: 'M'
     },
     validity: Date,
     contractor: {
         type: Schema.Types.ObjectId,
-        ref: 'Contractor'
+        ref: 'Contractor',
+        required: true
     },
-    job: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Contract_job'
-    }],
+    job: String,
     reports_to: [{
         type: Schema.Types.ObjectId,
         ref: 'Employee'
@@ -40,3 +38,5 @@ const employeeSchema = new mongoose.Schema({
     mobile: Number,
     esi: String
 })
+
+module.exports = mongoose.model('ContractWorker', ContractWorkerSchema);

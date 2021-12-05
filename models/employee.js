@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const employeeSchema = new mongoose.Schema({
+
+const EmployeeSchema = new Schema({
     pn: {
         type: String,
         required: true,
@@ -31,8 +33,7 @@ const employeeSchema = new mongoose.Schema({
     },
     active: {
         type: Boolean,
-        default: true,
-        required: true
+        default: true
     },
     reports_to: [{
         type: Schema.Types.ObjectId,
@@ -48,5 +49,5 @@ const employeeSchema = new mongoose.Schema({
     password: String
 })
 
-module.exports = mongoose.model('Employee', employeeSchema);
+module.exports = mongoose.model('Employee', EmployeeSchema);
 

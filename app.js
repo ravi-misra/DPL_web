@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-// const cookieParser = require('cookie-parser');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
@@ -44,21 +43,15 @@ const sessionConfig = {
 }
 
 app.use(session(sessionConfig));
-// app.use(cookieParser());
+app.use(flash());
 app.use(express.urlencoded({extended: true}));
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 app.use(flash());
 
 
 app.get('/', (req, res) => {
-    // if(req.session.count) {
-    //     req.session.count += 1;
-    // } else {
-    //     req.session.count = 1;
-    // }
-    // res.send(`You have viewed ${req.session.count} times.`);
-    res.render('users/shift-schedule-form.ejs'); 
+    res.send('home');
 })
 
 app.listen(PORT, host, () => {

@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const ContractorSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     address: String,
     contactperson: String,

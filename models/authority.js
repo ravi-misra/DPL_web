@@ -16,4 +16,6 @@ const AuthoritySchema = new Schema({
 
 });
 
+AuthoritySchema.index({ level: 1, category: 1}, { unique: true });
+
 module.exports = mongoose.model('Authority', AuthoritySchema);

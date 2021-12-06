@@ -8,7 +8,8 @@ const DepartmentSchema = new Schema({
     },
     costcode: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     area: {
         type: String,

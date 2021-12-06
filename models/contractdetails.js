@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const ContractDetailSchema = new Schema({
     wo: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     from: Date,
     to: Date,

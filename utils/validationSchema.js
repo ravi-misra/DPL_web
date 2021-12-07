@@ -12,7 +12,8 @@ module.exports.joiEmployeeSchema = Joi.object({
         doj: Joi.date(),
         mobile: Joi.number().integer().positive().max(9999999999),
         alternate_contacts: Joi.array().items(Joi.number().max(9999999999)),
-        intercom: Joi.number().integer().positive().max(99999)
+        intercom: Joi.number().integer().positive().max(99999),
+        password: Joi.string().min(4).max(20).required()
     }).required()
 });
 

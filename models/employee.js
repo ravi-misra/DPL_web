@@ -46,8 +46,10 @@ const EmployeeSchema = new Schema({
     intercom: Number,
     qtr_no: String,
     blood_grp: String,
-    password: String
+    password: {
+        type: String,
+        required: true
+    }
 })
 
 module.exports = mongoose.model('Employee', EmployeeSchema);
-

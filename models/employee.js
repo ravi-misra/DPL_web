@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const passportLocalMongoose = require('passport-local-mongoose');
 
 
 const EmployeeSchema = new Schema({
@@ -51,5 +52,7 @@ const EmployeeSchema = new Schema({
         required: true
     }
 })
+
+EmployeeSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('Employee', EmployeeSchema);

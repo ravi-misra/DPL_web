@@ -13,19 +13,27 @@ const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL} = require('./config');
 // const host = PLCI_HOST;
 const host = LOCAL_HOST;
 
+//express middlewares
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
 
+//MongoDB connections
 dbConnect().catch(err => console.log(err));
 async function dbConnect() {
     await mongoose.connect(DB_URL);
     console.log('Database connected.');
 }
 
+//View and templating engine setup
 app.engine('ejs', ejsMate);
-
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+
+//session configuration
 const store = MongoStore.create({ 
     clientPromise: mongoose.connection.asPromise().then(c => c.getClient()),
     touchAfter: 24*3600 // time period in seconds
@@ -44,12 +52,9 @@ const sessionConfig = {
 
 app.use(session(sessionConfig));
 app.use(flash());
-app.use(express.urlencoded({extended: true}));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(methodOverride('_method'));
-app.use(flash());
 
 
+//passport setup
 app.use(passport.initialize());
 app.use(passport.session());
 

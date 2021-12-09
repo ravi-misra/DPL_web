@@ -11,10 +11,10 @@ const ShiftScheduleSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    shift: {
+    shift: [{
         type: String,
         required: true
-    },
+    }],
     editby: {
         type: Schema.Types.ObjectId,
         ref: 'Employee',

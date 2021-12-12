@@ -4,7 +4,7 @@ const passportLocalMongoose = require('passport-local-mongoose');
 
 
 const EmployeeSchema = new Schema({
-    pn: {
+    username: {
         type: String,
         required: true,
         unique: true
@@ -46,11 +46,7 @@ const EmployeeSchema = new Schema({
     alternate_contacts: [Number],
     intercom: Number,
     qtr_no: String,
-    blood_grp: String,
-    password: {
-        type: String,
-        required: true
-    }
+    blood_grp: String
 })
 
 EmployeeSchema.plugin(passportLocalMongoose);

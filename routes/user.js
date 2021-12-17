@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 //===========USERS==========================
-// /mydpl  -> (individual homepage as per profile)
-// /mydpl/schedule  -> (update public shift schedule)
-// /mydpl/profile  -> (update personal profile)
-// /mydpl/attendance  -> (update casual attendance)
+// /me  -> (individual homepage as per profile)
+// /me/schedule  -> (update public shift schedule)
+// /me/profile  -> (update personal profile)
+// /me/attendance  -> (update casual attendance)
 
 //===========Plant Dashboards======================
-// /mydpl/plant  -> (view plant dashboards)
+// /me/plant  -> (view plant dashboards)
 
 
 //============Contract=========================
-// /mydpl/contract -> (view date wise attendance)
+// /me/contract -> (view date wise attendance)

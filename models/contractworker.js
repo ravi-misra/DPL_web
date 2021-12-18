@@ -11,10 +11,7 @@ const ContractWorkerSchema = new Schema({
         type: String,
         required: true
     },
-    dutyarea: {
-        type: String,
-        required: true
-    },
+    dutyarea: [String],
     designation: {
         type: String,
         required: true
@@ -36,7 +33,11 @@ const ContractWorkerSchema = new Schema({
         ref: 'Employee'
     }],
     mobile: Number,
-    esi: String
+    esi: String,
+    dept: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Department'
+    }]
 })
 
 module.exports = mongoose.model('ContractWorker', ContractWorkerSchema);

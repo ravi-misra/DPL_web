@@ -6,7 +6,6 @@ module.exports.joiEmployeeSchema = Joi.object({
         name: Joi.string().max(50).min(2).required(),
         dept: Joi.string().required(),
         designation: Joi.string().max(50).required(),
-        gender: Joi.string().pattern(/^[MF]{1}$/).required(),
         active: Joi.boolean(),
         dob: Joi.date(),
         doj: Joi.date(),
@@ -23,7 +22,6 @@ module.exports.joiContractWorkerSchema = Joi.object({
         name: Joi.string().max(50).min(2).required(),
         dutyarea: Joi.string().required(),
         designation: Joi.string().max(50).required(),
-        gender: Joi.string().pattern(/^[MF]{1}$/).required(),
         validity: Joi.date(),
         mobile: Joi.number().integer().positive().max(9999999999)
     }).required()
@@ -55,16 +53,17 @@ module.exports.joiContractDetailSchema = Joi.object({
     }).required()
 })
 
-module.exports.joiAuthoritySchema = Joi.object({
-    authority: Joi.object({
-        level: Joi.number().required(),
-        category: Joi.string().required()
-    }).required()
-})
-
 module.exports.joiShiftScheduleSchema = Joi.object({
     shiftschedule: Joi.object({
         employee: Joi.string().required(),
+        date: Joi.date().required(),
+        shift: Joi.string().max(1).min(1).required()
+    }).required()
+})
+
+module.exports.joiCasualAttendanceSchema = Joi.object({
+    casualattendance: Joi.object({
+        casual: Joi.string().required(),
         date: Joi.date().required(),
         shift: Joi.string().max(1).min(1).required()
     }).required()

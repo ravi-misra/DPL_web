@@ -24,7 +24,6 @@ const EmployeeSchema = new Schema({
     },
     gender: {
         type: String,
-        required: true,
         enum: ['M', 'F']
     },
     role: String,

@@ -19,11 +19,12 @@ const ShiftScheduleSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Employee',
     },
-    editon: Date,
     locked: {
         type: Boolean,
         default: false
     }
 })
+
+ShiftScheduleSchema.set('timestamps', true);
 
 module.exports = mongoose.model('ShiftSchedule', ShiftScheduleSchema);

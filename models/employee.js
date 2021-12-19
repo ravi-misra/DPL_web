@@ -27,11 +27,7 @@ const EmployeeSchema = new Schema({
         required: true,
         enum: ['M', 'F']
     },
-    auth_level: {
-        type: Schema.Types.ObjectId,
-        ref: 'Authority',
-        required: true
-    },
+    role: String,
     active: {
         type: Boolean,
         default: true

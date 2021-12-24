@@ -1,0 +1,32 @@
+<% if(success && success.length) {%>
+    <div class="flash">
+        <div class="flash__icon">
+            <i class="icon fa fa-check-circle-o"></i>
+        </div>
+        <p class="flash__body">
+            <%= success %>
+        </p>
+    </div>
+    <script>
+        document.querySelector(".flash").classList.add("animate--drop-in-fade-out");
+        setTimeout(function () {
+            document.querySelector(".flash").classList.remove("animate--drop-in-fade-out");
+        }, 3500);
+    </script>
+<% } %>
+<% if(error && error.length) {%>
+    <div class="flash">
+        <div class="flash__icon">
+            <i class="icon fa fa-exclamation-triangle"></i>
+        </div>
+        <p class="flash__body">
+            <%= error %>
+        </p>
+    </div>
+    <script>
+        document.querySelector(".flash").classList.add("animate--drop-in-fade-out");
+        setTimeout(function () {
+            document.querySelector(".flash").classList.remove("animate--drop-in-fade-out");
+        }, 3500);
+    </script>
+<% } %>

@@ -8,6 +8,7 @@ const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const ExpressError = require('./utils/ExpressErrors');
 const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL} = require('./config');
 
 // const host = PLCI_HOST;
@@ -71,6 +72,16 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
     res.send('home');
+})
+
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page Not Found', 404));
+})
+
+app.use((err, req, res, next) => {
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = 'Oh No, Something Went Wrong!'
+    res.status(statusCode).render('error', { err })
 })
 
 app.listen(PORT, host, () => {

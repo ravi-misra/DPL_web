@@ -1,3 +1,4 @@
+// Role type --> Main tabs --> Sub menu
 const role = {
     department: {
         Home: "/home",

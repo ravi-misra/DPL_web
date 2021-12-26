@@ -9,6 +9,7 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const ExpressError = require('./utils/ExpressErrors');
+const roles = require('./utils/role');
 const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL} = require('./config');
 
 // const host = PLCI_HOST;
@@ -44,10 +45,10 @@ const sessionConfig = {
     store,
     secret: 'thisisnotagoodsecret',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         httpOnly: true,
-        maxAge: 1000*60*60*24*7, // time period in miliseconds
+        // maxAge: 1000*60*60*24*7, // time period in miliseconds
     }
 }
 
@@ -65,8 +66,12 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;
+    if (req.user) {
+        res.locals.role = roles[req.user.role];
+    }
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
+    res.set("Cache-Control", "no-cache, no-store, must-revalidate");
     next();
 })
 

@@ -2,7 +2,23 @@
     <ul class="menu">
         <li class="logo"><a style="cursor: default">Digital Potline</a></li>
         <li class="item"><a href="#">Home</a></li>
-        <li class="item"><a href="#">About</a></li>
+        <% if(role) {%>
+            <% for (let tab of Object.keys(role)) {%>
+                <% if (typeof role[tab] === 'string') {%>
+                    <li class="item"><a href="<%= role[tab] %>"><%= tab %></a></li>
+                <% } else {%>
+                    <li class="item has-submenu">
+                        <a tabindex="0"><%= tab %></a>
+                        <ul class="submenu">
+                            <% for( let subtab of Object.keys(role[tab]) ) { %>
+                                <li class="subitem"><a href="<%= role[tab][subtab] %>"><%= subtab %></a></li>
+                            <% } %>
+                        </ul>
+                    </li>
+                <% } %>
+            <% } %>
+        <% } %>
+        <!-- <li class="item"><a href="#">About</a></li>
         <li class="item has-submenu">
             <a tabindex="0">Services</a>
             <ul class="submenu">
@@ -22,8 +38,9 @@
         </li>
         <li class="item"><a href="#">Blog</a></li>
         <li class="item"><a href="#">Contact</a></li>
+        <li class="item button"><a href="#">Log In</a></li> -->
         <li class="item button"><a href="#">Log In</a></li>
-        <li class="item button secondary"><a href="#">Sign Up</a></li>
+        <!-- <li class="item button secondary"><a href="#">Sign Up</a></li> -->
         <li class="toggle"><a href="#"><i class="fas fa-bars"></i></a></li>
     </ul>
 </nav>

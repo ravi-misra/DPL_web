@@ -1,5 +1,5 @@
 // Role type --> Main tabs --> Sub menu
-const role = {
+const roles = {
     department: {
         Home: "/home",
         View: {
@@ -115,3 +115,5 @@ const role = {
         }
     }
 }
+
+module.exports = roles;

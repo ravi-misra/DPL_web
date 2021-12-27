@@ -65,10 +65,26 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
+    let allowedURLs = [];
     res.locals.currentUser = req.user;
-    if (req.user) {
+    if (req.user && req.user.role) {
         res.locals.role = roles[req.user.role];
+        if (res.locals.role) {
+            for (let i of Object.keys(res.locals.role)) {
+                if (typeof res.locals.role[i] === 'string') {
+                    allowedURLs.push(res.locals.role[i]);
+                } else {
+                    for (let j of Object.keys(res.locals.role[i])) {
+                        allowedURLs.push(res.locals.role[i][j]);
+                    }
+                }
+            }
+        }
     }
+    if (!allowedURLs.includes('/home')) {
+        allowedURLs.push('/home');
+    }
+    res.locals.allowedURLs = allowedURLs;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     res.set("Cache-Control", "no-cache, no-store, must-revalidate");

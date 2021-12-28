@@ -14,6 +14,7 @@ const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL} = require('./config');
 
 // const host = PLCI_HOST;
 const host = LOCAL_HOST;
+const validShifts = ['A', 'B', 'C', 'G', 'WO', 'M', 'N'];
 
 //express middlewares
 const app = express();
@@ -85,6 +86,7 @@ app.use((req, res, next) => {
         allowedURLs.push('/home');
     }
     res.locals.allowedURLs = allowedURLs;
+    res.locals.validShifts = validShifts;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     res.set("Cache-Control", "no-cache, no-store, must-revalidate");

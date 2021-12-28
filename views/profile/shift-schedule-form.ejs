@@ -11,6 +11,12 @@
             </tr>
         </thead>
         <tbody class="schd-body">
+            <% for( let index = 3; index < 34; index++ ) { %>
+                <tr class="row-<%= index %>">
+                    <td class="cell-1"></td>
+                    <td class="cell-2"><input type="checkbox" name="<%= validShifts[0] %>" class="shiftA"><label for="" class="label-shiftA">A</label><input type="checkbox" name="" id="" class="shiftB"><label for="" class="label-shiftB">B</label><input type="checkbox" name="" id="" class="shiftC"><label for="" class="label-shiftC">C</label><input type="checkbox" name="" id="" class="shiftG"><label for="" class="label-shiftG">G</label><input type="checkbox" name="" id="" class="shiftWO"><label for="" class="label-shiftWO">WO/LV</label><input type="checkbox" name="" id="" class="shiftM"><label for="" class="label-shiftM">M</label><input type="checkbox" name="" id="" class="shiftN"><label for="" class="label-shiftN">N</label></td>
+                </tr>
+            <% } %>
             <tr class="row-3">
                 <td class="cell-1"></td>
                 <td class="cell-2"><input type="checkbox" name="" id="" class="shiftA"><label for="" class="label-shiftA">A</label><input type="checkbox" name="" id="" class="shiftB"><label for="" class="label-shiftB">B</label><input type="checkbox" name="" id="" class="shiftC"><label for="" class="label-shiftC">C</label><input type="checkbox" name="" id="" class="shiftG"><label for="" class="label-shiftG">G</label><input type="checkbox" name="" id="" class="shiftWO"><label for="" class="label-shiftWO">WO/LV</label><input type="checkbox" name="" id="" class="shiftM"><label for="" class="label-shiftM">M</label><input type="checkbox" name="" id="" class="shiftN"><label for="" class="label-shiftN">N</label></td>
@@ -138,8 +144,6 @@
         </tbody>
     </table>
     <div class="login-button-container">
-        <button type="button" name="button" class="btn login-btn">Login</button>
-        <button type="button" name="button" class="btn login-btn">Login</button>
-        <button type="button" name="button" class="btn login-btn">Login</button>
+        <button type="button" name="button" class="btn login-btn">Submit</button>
     </div>
 </form>

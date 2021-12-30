@@ -14,7 +14,7 @@ const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL} = require('./config');
 
 // const host = PLCI_HOST;
 const host = LOCAL_HOST;
-const validShifts = ['A', 'B', 'C', 'G', 'WO', 'M', 'N'];
+const validShifts = ['A', 'B', 'C', 'G', 'WO/LV', 'M', 'N'];
 
 //express middlewares
 const app = express();
@@ -81,6 +81,8 @@ app.use((req, res, next) => {
                 }
             }
         }
+    } else {
+        res.locals.role = undefined;
     }
     if (!allowedURLs.includes('/home')) {
         allowedURLs.push('/home');
@@ -94,7 +96,7 @@ app.use((req, res, next) => {
 })
 
 app.get('/', (req, res) => {
-    res.send('home');
+    res.redirect('/home');
 })
 
 app.all('*', (req, res, next) => {

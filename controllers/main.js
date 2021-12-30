@@ -1,12 +1,12 @@
 const Employee = require('../models/employee');
 
 module.exports.renderLogin = (req, res) => {
-    res.render('users/login');
+    res.render('login');
 }
 
 module.exports.login = (req, res) => {
-    req.flash('success', 'welcome back!');
-    const redirectUrl = req.session.returnTo || '/campgrounds';
+    req.flash('success', 'Welcome!');
+    const redirectUrl = req.session.returnTo || '/home';
     delete req.session.returnTo;
     res.redirect(redirectUrl);
 }
@@ -14,5 +14,9 @@ module.exports.login = (req, res) => {
 module.exports.logout = (req, res) => {
     req.logout();
     req.flash('success', "Goodbye!");
-    res.redirect('/campgrounds');
+    res.redirect('/home');
+}
+
+module.exports.goHome = (req, res) => {
+    res.render('home');
 }

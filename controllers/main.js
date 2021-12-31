@@ -20,3 +20,5 @@ module.exports.logout = (req, res) => {
 module.exports.goHome = (req, res) => {
     res.render('home');
 }
+
+// {dept1:{A:[[name, designation, mob],]}}

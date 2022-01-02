@@ -13,11 +13,11 @@ const EmployeeSchema = new Schema({
         type: String,
         required: true
     },
-    dept: [{
+    dept: {
         type: Schema.Types.ObjectId,
         ref: 'Department',
         required: true
-    }],
+    },
     designation: {
         type: String,
         required: true
@@ -37,9 +37,15 @@ const EmployeeSchema = new Schema({
     }],
     dob: Date,
     doj: Date,
-    mobile: Number,
-    alternate_contacts: [Number],
-    intercom: Number,
+    mobile: {
+        type: String,
+        default: ''
+    },
+    alternate_contacts: {
+        type: String,
+        default: ''
+    },
+    intercom: String,
     qtr_no: String,
     blood_grp: String
 })

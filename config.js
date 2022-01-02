@@ -5,7 +5,8 @@ module.exports = {
     PORT: process.env.PORT,
     LOCAL_HOST: process.env.LOCAL_HOST,
     PLCI_HOST: process.env.PLCI_HOST,
-    DB_URL: process.env.DB_URL
+    DB_URL: process.env.DB_URL,
+    validShifts : ['A', 'B', 'C', 'G', 'WO/LV', 'M', 'N']
 }
 
 // .env file contents

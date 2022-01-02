@@ -1,4 +1,53 @@
+<% layout('layouts/boilerplate.ejs') %>
 <h1>Shift Manpower Availability</h1>
-<table class="shift-availability">
-
-</table>
+<h2><%= date1 %></h2>
+<% for( let dept of Object.keys(scheduleObject1) ) { %>
+    <table class="mini-sch-table">
+        <tr class="dept-row">
+            <th colspan="3" class="dept-name"><%= dept %></th>
+        </tr>
+        <tr class="col-row">
+            <th class="name-col">Name</th>
+            <th class="contact-col">Contacts</th>
+            <th class="intercom-col">Intercom</th>
+        </tr>
+        <% for( let shift of Object.keys(scheduleObject1[dept]) ) { %>
+            <tr class="shift-row">
+                <th colspan="3" class="shift-name"><%= shift %></th>
+            </tr>
+            <% for( let data of Object.keys(scheduleObject1[dept][shift]) ) { %>
+                <tr class="data-row">
+                    <td class="name-data"><%= data[0] %></td>
+                    <td class="contact-data"><%= data[1] %></td>
+                    <td class="intercom-data"><%= data[2] %></td>
+                </tr>
+            <% } %>
+        <% } %>
+    </table>
+<% } %>
+<br><hr><br>
+<h2><%= date2 %></h2>
+<% for( let dept of Object.keys(scheduleObject2) ) { %>
+    <table class="mini-sch-table">
+        <tr class="dept-row">
+            <th colspan="3" class="dept-name"><%= dept %></th>
+        </tr>
+        <tr class="col-row">
+            <th class="name-col">Name</th>
+            <th class="contact-col">Contacts</th>
+            <th class="intercom-col">Intercom</th>
+        </tr>
+        <% for( let shift of Object.keys(scheduleObject2[dept]) ) { %>
+            <tr class="shift-row">
+                <th colspan="3" class="shift-name"><%= shift %></th>
+            </tr>
+            <% for( let data of Object.keys(scheduleObject2[dept][shift]) ) { %>
+                <tr class="data-row">
+                    <td class="name-data"><%= data[0] %></td>
+                    <td class="contact-data"><%= data[1] %></td>
+                    <td class="intercom-data"><%= data[2] %></td>
+                </tr>
+            <% } %>
+        <% } %>
+    </table>
+<% } %>

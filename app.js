@@ -10,11 +10,11 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const ExpressError = require('./utils/ExpressErrors');
 const roles = require('./utils/role');
-const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL} = require('./config');
+const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL, validShifts} = require('./config');
 
 // const host = PLCI_HOST;
 const host = LOCAL_HOST;
-const validShifts = ['A', 'B', 'C', 'G', 'WO/LV', 'M', 'N'];
+// const validShifts = ['A', 'B', 'C', 'G', 'WO/LV', 'M', 'N'];
 
 //express middlewares
 const app = express();

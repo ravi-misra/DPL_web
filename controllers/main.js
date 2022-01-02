@@ -1,4 +1,6 @@
 const Employee = require('../models/employee');
+const Shift_sch = require('../models/shift_sch');
+const {startOfDay, subDays, format} = require('date-fns');
 
 module.exports.renderLogin = (req, res) => {
     res.render('login');
@@ -17,8 +19,57 @@ module.exports.logout = (req, res) => {
     res.redirect('/home');
 }
 
-module.exports.goHome = (req, res) => {
-    res.render('home');
+module.exports.goHome = async (req, res) => {
+    let today = startOfDay(new Date());
+    let date1 = format(today, 'dd/MM/yyyy');
+    let date2 = format(subDays(today , 1), 'dd/MM/yyyy');
+    const todaySchedule = await Shift_sch.find({date: {$gte: subDays(today , 1), $lte: today}}).populate({
+        path: "employee",
+        populate: {
+            path: "dept",
+            select: 'name'
+        },
+        select: ['name', 'dept', 'mobile', 'alternate_contacts', 'intercom']
+    })
+    let scheduleObject1 = {};
+    let scheduleObject2 = {};
+    for (let item of todaySchedule) {
+        let dept = item.employee.dept;
+        let shift = item.shift;
+        let data = [item.employee.name, (item.employee.mobile + ", " + item.employee.alternate_contacts), item.employee.intercom]
+        if (item.date === today) {
+            if(scheduleObject1[dept]) {
+                if (scheduleObject1[dept][shift]) {
+                    scheduleObject1[dept][shift].push(data);
+                } else {
+                    scheduleObject1[dept][shift] = [];
+                    scheduleObject1[dept][shift].push(data);
+                }
+            } else {
+                scheduleObject1[dept] = {};
+                scheduleObject1[dept][shift] = [];
+                scheduleObject1[dept][shift].push(data);
+            }
+        } else if (item.date === subDays(today , 1)) {
+            if(scheduleObject2[dept]) {
+                if (scheduleObject2[dept][shift]) {
+                    scheduleObject2[dept][shift].push(data);
+                } else {
+                    scheduleObject2[dept][shift] = [];
+                    scheduleObject2[dept][shift].push(data);
+                }
+            } else {
+                scheduleObject2[dept] = {};
+                scheduleObject2[dept][shift] = [];
+                scheduleObject2[dept][shift].push(data);
+            }
+        }
+    }
+    res.render('home', {scheduleObject1, scheduleObject2, date1, date2});
 }
-
-// {dept1:{A:[[name, designation, mob],]}}
+// input(todaySchedule) --> [{employee:{name, dept, mobile, alt, intercom}, date, shift, editby, locked}]
+// output(scheduleObject1) --> (date1) --> {
+// dept1: {
+//     'A': [[name, contacts, intercom ], [name, contacts, intercom ]]
+// }}// date1, date2
+// 

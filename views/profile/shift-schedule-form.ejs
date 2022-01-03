@@ -1,6 +1,6 @@
 <% layout('layouts/boilerplate.ejs') %>
 <!-- Variables passed:-
-    {addMinutes,addHours,addDays,addMonths,addYears,format} = require('date-fns');// scheduledShifts= {date('dd/MM/yyyy'): [shifts]}// today 
+    {addDays,format} = require('date-fns');// scheduledShifts = {date('dd/MM/yyyy'): [shifts]}// today 
     Post:
     {date1:{date: 'yyyy-MM-dd', shift: {'A': 'on', 'B': 'on'}}, date2:}
 -->
@@ -16,14 +16,14 @@
             </tr>
         </thead>
         <tbody class="schd-body">
-            <% for( let index = 3, i = 1; index < 34; index++, i++ ) { %>
+            <% for( let index = 3, i = 1; index < 33; index++, i++ ) { %>
                 <tr class="row-<%= index %>">
                     <td class="cell-1"><%= format(addDays(today, (i-1)), 'dd/MM/yyyy') %></td>
                     <td class="cell-2">
                         <i style="display: none;"><input type="date" name="Date<%= i %>[date]" value="<%= format(addDays(today, (i-1)), 'yyyy-MM-dd') %>"></i>
                         <% for( let j of validShifts ) { %>
                             <% if (Object.keys(scheduledShifts).includes(format(addDays(today, (i-1)), 'dd/MM/yyyy'))) { %>
-                                <% if (scheduledShifts[format(addDays(today, (i-1)))].includes(j) { %>
+                                <% if (scheduledShifts[format(addDays(today, (i-1)), 'dd/MM/yyyy')].includes(j) { %>
                                     <input type="checkbox" name="Date<%= i %>[shift][<%= j %>]" id="shift<%= j %>" class="shift<%= j %>" checked><label for="shift<%= j %>" class="label-shift<%= j %>"><%= j %></label>
                                 <% } else { %>
                                     <input type="checkbox" name="Date<%= i %>[shift][<%= j %>]" id="shift<%= j %>" class="shift<%= j %>"><label for="shift<%= j %>" class="label-shift<%= j %>"><%= j %></label>

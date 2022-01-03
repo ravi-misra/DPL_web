@@ -20,9 +20,9 @@ module.exports.joiEmployeeSchema = Joi.object({
 module.exports.joiContractWorkerSchema = Joi.object({
     contractworker: Joi.object({
         passno: Joi.string().pattern(/^[0-9]+$/).max(10).required(),
-        name: Joi.string().max(50).min(2).required(),
+        name: Joi.string().required(),
         dutyarea: Joi.string(),
-        designation: Joi.string().max(50),
+        designation: Joi.string(),
         validity: Joi.date(),
         mobile: Joi.string()
     }).required()
@@ -58,7 +58,7 @@ module.exports.joiShiftScheduleSchema = Joi.object({
     shiftschedule: Joi.object({
         employee: Joi.string().required(),
         date: Joi.date().required(),
-        shift: Joi.string().max(1).min(1).valid(...validShifts).required()
+        shift: Joi.string().valid(...validShifts).required()
     }).required()
 })
 
@@ -66,6 +66,6 @@ module.exports.joiCasualAttendanceSchema = Joi.object({
     casualattendance: Joi.object({
         casual: Joi.string().required(),
         date: Joi.date().required(),
-        shift: Joi.string().max(1).min(1).required()
+        shift: Joi.string().required()
     }).required()
 })

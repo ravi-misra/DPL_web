@@ -12,3 +12,15 @@ module.exports.renderShiftScheduleForm = async (req, res) => {
     }
     res.render('profile/shift-schedule-form', scheduledShifts, today, addDays, format);
 }
+
+module.exports.updateShiftSchedule = async (req, res) => {
+    const body = req.body;
+    for (let i of Object.keys(body)) {
+        let filter = {_id: req.user._id, date: new Date(body[i]['date'])};
+        let update = {shift: Object.keys(body[i]['shift'])};
+        let doc = await Shift_sch.findOneAndUpdate(filter, update, {
+            new: true,
+            upsert: true
+        });
+    }
+}

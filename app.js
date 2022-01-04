@@ -11,6 +11,8 @@ const LocalStrategy = require('passport-local');
 const ExpressError = require('./utils/ExpressErrors');
 const roles = require('./utils/role');
 const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL, validShifts} = require('./config');
+const mainRoutes = require('./routes/main');
+const profileRoutes = require('./routes/profile');
 
 // const host = PLCI_HOST;
 const host = LOCAL_HOST;
@@ -95,9 +97,8 @@ app.use((req, res, next) => {
     next();
 })
 
-app.get('/', (req, res) => {
-    res.redirect('/home');
-})
+app.use('/', mainRoutes);
+app.use('/profile', profileRoutes);
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404));

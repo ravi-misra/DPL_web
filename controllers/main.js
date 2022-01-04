@@ -6,6 +6,9 @@ module.exports.renderLogin = (req, res) => {
 }
 
 module.exports.login = (req, res) => {
+    if (req.body["remember-checkbox"]) {
+        req.session.cookie.maxAge = 1000*60*60*24*30;
+    }
     req.flash('success', 'Welcome!');
     const redirectUrl = req.session.returnTo || '/home';
     delete req.session.returnTo;

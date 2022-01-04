@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const main = require('../controllers/main');
 
+router.get('/', main.goHome)
 
 router.route('/login')
     .get(main.renderLogin)

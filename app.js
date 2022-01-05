@@ -13,6 +13,7 @@ const roles = require('./utils/role');
 const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL, validShifts} = require('./config');
 const mainRoutes = require('./routes/main');
 const profileRoutes = require('./routes/profile');
+const Employee = require('./models/employee');
 
 // const host = PLCI_HOST;
 const host = LOCAL_HOST;
@@ -63,9 +64,9 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.use(new LocalStrategy(Employee.authenticate()));
+passport.serializeUser(Employee.serializeUser());
+passport.deserializeUser(Employee.deserializeUser());
 
 app.use((req, res, next) => {
     let allowedURLs = [];

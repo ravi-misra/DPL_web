@@ -2,7 +2,7 @@ const Shift_sch = require('../models/shift_sch');
 const {startOfDay, subDays, format} = require('date-fns');
 
 module.exports.renderLogin = (req, res) => {
-    res.render('login');
+    res.render('login.ejs');
 }
 
 module.exports.login = (req, res) => {
@@ -18,6 +18,7 @@ module.exports.login = (req, res) => {
 module.exports.logout = (req, res) => {
     req.logout();
     req.flash('success', "Goodbye!");
+    req.session.cookie.maxAge = 0;
     res.redirect('/home');
 }
 

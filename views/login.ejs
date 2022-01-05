@@ -1,3 +1,4 @@
+<% layout('layouts/boilerplate.ejs') %>
 <div class="login-screen">
     <div class="login-close"><a href="/home"><i class="far fa-times-circle"></i></a></div>
     <div class="login-container">
@@ -8,7 +9,7 @@
                 </div>
             </div>
             <div class="login-form-container">
-                <form action="" class="login-form">
+                <form action="/login" method="POST" class="login-form">
                     <div class="username-container">
                         <div class="user-icon">
                             <i class="fas fa-user"></i>

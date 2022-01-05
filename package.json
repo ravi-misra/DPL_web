@@ -4,6 +4,7 @@
   "description": "On-premises web portal of DPL",
   "main": "app.js",
   "scripts": {
+    "start": "nodemon -e * app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

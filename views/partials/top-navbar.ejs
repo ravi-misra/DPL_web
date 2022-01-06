@@ -1,7 +1,10 @@
 <nav>
     <ul class="menu">
+        <% if (currentUser) { %>
+        <li class="logo"><a style="cursor: default">Digital Potline/<%= currentUser.name %></a></li>            
+        <% } else {%>
         <li class="logo"><a style="cursor: default">Digital Potline</a></li>
-        <li class="item"><a href="/home">Home</a></li>
+        <% } %> 
         <% if(role) {%>
             <% for (let tab of Object.keys(role)) {%>
                 <% if (typeof role[tab] === 'string') {%>

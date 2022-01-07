@@ -10,7 +10,6 @@ module.exports.login = (req, res) => {
         req.session.cookie.maxAge = 1000*60*60*24*30;
     }
     req.flash('success', 'Welcome!');
-    console.log(error);
     const redirectUrl = req.session.returnTo || '/home';
     delete req.session.returnTo;
     res.redirect(redirectUrl);
@@ -19,7 +18,7 @@ module.exports.login = (req, res) => {
 module.exports.logout = (req, res) => {
     req.logout();
     req.flash('success', "Goodbye!");
-    req.session.cookie.maxAge = 0;
+    res.clearCookie('connect.sid');
     res.redirect('/home');
 }
 

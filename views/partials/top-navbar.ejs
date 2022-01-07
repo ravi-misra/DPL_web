@@ -1,7 +1,7 @@
 <nav>
     <ul class="menu">
         <% if (currentUser) { %>
-        <li class="logo"><a style="cursor: default">Digital Potline/<%= currentUser.name %></a></li>            
+        <li class="logo"><a style="cursor: default">Digital Potline/<i style="font-size: small;"><%= currentUser.name %></i></a></li>            
         <% } else {%>
         <li class="logo"><a style="cursor: default">Digital Potline</a></li>
         <% } %> 

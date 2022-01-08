@@ -95,6 +95,9 @@ app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     res.set("Cache-Control", "no-cache, no-store, must-revalidate");
+    if (!req.user && req.session.cookie.maxAge) {
+        req.session.cookie.maxAge = 0;
+    }
     next();
 })
 

@@ -10,7 +10,7 @@ module.exports.renderShiftScheduleForm = async (req, res) => {
     for (let i of data) {
         scheduledShifts[format(i.date, 'dd/MM/yyyy')] = i.shift;
     }
-    res.render('profile/shift-schedule-form', scheduledShifts, today, addDays, format);
+    res.render('profile/shift-schedule-form', {scheduledShifts, today, addDays: addDays, format: addDays});
 }
 
 module.exports.updateShiftSchedule = async (req, res) => {

@@ -10,20 +10,23 @@ module.exports.renderShiftScheduleForm = async (req, res) => {
     for (let i of data) {
         scheduledShifts[format(i.date, 'dd/MM/yyyy')] = i.shift;
     }
-    res.render('profile/shift-schedule-form', {scheduledShifts, today, addDays: addDays, format: addDays});
+    res.render('profile/shift-schedule-form', {scheduledShifts, today, addDays, format});
 }
 
 module.exports.updateShiftSchedule = async (req, res) => {
     const body = req.body;
+    delete body.button;
     for (let i of Object.keys(body)) {
-        if (Object.keys(body[i]['shift']).length > 0) {
-            let filter = {_id: req.user._id, date: new Date(body[i]['date'])};
-            let update = {shift: Object.keys(body[i]['shift'])};
-            let doc = await Shift_sch.findOneAndUpdate(filter, update, {
-                new: true,
-                upsert: true
-            });
-            await doc.save();
+        if (body[i]['shift']) { 
+            if (Object.keys(body[i]['shift']).length > 0) {
+                let filter = {employee: req.user._id, date: new Date(body[i]['date'])};
+                let update = {shift: Object.keys(body[i]['shift'])};
+                let doc = await Shift_sch.findOneAndUpdate(filter, update, {
+                    new: true,
+                    upsert: true
+                });
+                await doc.save();
+            }
         }
     }
 }

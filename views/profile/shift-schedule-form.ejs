@@ -23,7 +23,7 @@
                         <i style="display: none;"><input type="date" name="Date<%= i %>[date]" value="<%= format(addDays(today, (i-1)), 'yyyy-MM-dd') %>"></i>
                         <% for( let j of validShifts ) { %>
                             <% if (Object.keys(scheduledShifts).includes(format(addDays(today, (i-1)), 'dd/MM/yyyy'))) { %>
-                                <% if (scheduledShifts[format(addDays(today, (i-1)), 'dd/MM/yyyy')].includes(j) { %>
+                                <% if (scheduledShifts[format(addDays(today, (i-1)), 'dd/MM/yyyy')].includes(j)) { %>
                                     <input type="checkbox" name="Date<%= i %>[shift][<%= j %>]" id="shift<%= j %>" class="shift<%= j %>" checked><label for="shift<%= j %>" class="label-shift<%= j %>"><%= j %></label>
                                 <% } else { %>
                                     <input type="checkbox" name="Date<%= i %>[shift][<%= j %>]" id="shift<%= j %>" class="shift<%= j %>"><label for="shift<%= j %>" class="label-shift<%= j %>"><%= j %></label>
@@ -38,6 +38,6 @@
         </tbody>
     </table>
     <div class="login-button-container">
-        <button type="button" name="button" class="btn login-btn">Submit</button>
+        <button type="submit" name="button" class="btn login-btn">Submit</button>
     </div>
 </form>

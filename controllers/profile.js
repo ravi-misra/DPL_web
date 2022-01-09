@@ -6,7 +6,7 @@ const Shift_sch = require('../models/shift_sch');
 module.exports.renderShiftScheduleForm = async (req, res) => {
     const today = startOfDay(new Date());
     const scheduledShifts = {};
-    const data = await Shift_sch.find({employee: req.user._id, date: {$gte: today, $lte: addDays(today, 29)}});
+    const data = await Shift_sch.find({employee: req.user._id, date: {$gte: today, $lte: addDays(today, 30)}});
     for (let i of data) {
         scheduledShifts[format(i.date, 'dd/MM/yyyy')] = i.shift;
     }
@@ -18,15 +18,15 @@ module.exports.updateShiftSchedule = async (req, res) => {
     delete body.button;
     for (let i of Object.keys(body)) {
         if (body[i]['shift']) { 
-            if (Object.keys(body[i]['shift']).length > 0) {
-                let filter = {employee: req.user._id, date: new Date(body[i]['date'])};
-                let update = {shift: Object.keys(body[i]['shift'])};
-                let doc = await Shift_sch.findOneAndUpdate(filter, update, {
-                    new: true,
-                    upsert: true
-                });
-                await doc.save();
-            }
+            let filter = {employee: req.user._id, date: new Date(body[i]['date'])};
+            let update = {shift: Object.keys(body[i]['shift'])};
+            let doc = await Shift_sch.findOneAndUpdate(filter, update, {
+                new: true,
+                upsert: true
+            });
+            await doc.save();
         }
     }
+    req.flash('success', "Shift schedule updated.");
+    res.redirect('/profile/shift-schedule');
 }

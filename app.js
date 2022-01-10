@@ -14,6 +14,7 @@ const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL, validShifts} = require('./config');
 const mainRoutes = require('./routes/main');
 const profileRoutes = require('./routes/profile');
 const Employee = require('./models/employee');
+const Department = require('./models/department');
 
 // const host = PLCI_HOST;
 const host = LOCAL_HOST;

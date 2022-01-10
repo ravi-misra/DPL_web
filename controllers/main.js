@@ -1,5 +1,6 @@
 const Shift_sch = require('../models/shift_sch');
-const {startOfDay, subDays, format} = require('date-fns');
+const {startOfDay, subDays, format, addMinutes} = require('date-fns');
+const employee = require('../models/employee');
 
 module.exports.renderLogin = (req, res) => {
     res.render('login.ejs');
@@ -23,6 +24,7 @@ module.exports.logout = (req, res) => {
 
 module.exports.goHome = async (req, res) => {
     let today = startOfDay(new Date());
+    today = addMinutes(today, 330);
     let date1 = format(today, 'dd/MM/yyyy');
     let date2 = format(subDays(today , 1), 'dd/MM/yyyy');
     const todaySchedule = await Shift_sch.find({date: {$gte: subDays(today , 1), $lte: today}}).populate({
@@ -33,13 +35,21 @@ module.exports.goHome = async (req, res) => {
         },
         select: ['name', 'dept', 'mobile', 'alternate_contacts', 'intercom']
     })
+    console.log(todaySchedule);
     let scheduleObject1 = {};
     let scheduleObject2 = {};
     for (let item of todaySchedule) {
-        let dept = item.employee.dept;
+        let dept = item.employee.dept.name;
         let shift = item.shift;
-        let data = [item.employee.name, (item.employee.mobile + ", " + item.employee.alternate_contacts), item.employee.intercom]
-        if (item.date === today) {
+        let alternate_contacts = '', intercom = '';
+        if(item.employee.alternate_contacts) {
+            alternate_contacts = ", " + item.employee.alternate_contacts;
+        }
+        if(item.employee.intercom) {
+            intercom = item.employee.intercoms;
+        }
+        let data = [item.employee.name, (item.employee.mobile + alternate_contacts), intercom];
+        if (item.date.getDate() === today.getDate()) {
             if(scheduleObject1[dept]) {
                 if (scheduleObject1[dept][shift]) {
                     scheduleObject1[dept][shift].push(data);
@@ -52,7 +62,7 @@ module.exports.goHome = async (req, res) => {
                 scheduleObject1[dept][shift] = [];
                 scheduleObject1[dept][shift].push(data);
             }
-        } else if (item.date === subDays(today , 1)) {
+        } else if (item.date.getDate() === subDays(today , 1).getDate()) {
             if(scheduleObject2[dept]) {
                 if (scheduleObject2[dept][shift]) {
                     scheduleObject2[dept][shift].push(data);
@@ -67,6 +77,7 @@ module.exports.goHome = async (req, res) => {
             }
         }
     }
+    console.log(scheduleObject1, scheduleObject2)
     res.render('home', {scheduleObject1, scheduleObject2, date1, date2});
 }
 // input(todaySchedule) --> [{employee:{name, dept, mobile, alt, intercom}, date, shift, editby, locked}]

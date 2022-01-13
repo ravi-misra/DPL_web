@@ -39,6 +39,7 @@ module.exports.goHome = async (req, res) => {
     let scheduleObject1 = {};
     let scheduleObject2 = {};
     for (let item of todaySchedule) {
+        console.log('1', item);
         let dept = item.employee.dept.name;
         let shift = item.shift;
         let alternate_contacts = '', intercom = '';
@@ -77,7 +78,7 @@ module.exports.goHome = async (req, res) => {
             }
         }
     }
-    console.log(scheduleObject1, scheduleObject2)
+    console.log(scheduleObject1['POTLINE-I(OPRN.)']['WO/LV'], scheduleObject2)
     res.render('home', {scheduleObject1, scheduleObject2, date1, date2});
 }
 // input(todaySchedule) --> [{employee:{name, dept, mobile, alt, intercom}, date, shift, editby, locked}]

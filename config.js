@@ -6,7 +6,10 @@ module.exports = {
     LOCAL_HOST: process.env.LOCAL_HOST,
     PLCI_HOST: process.env.PLCI_HOST,
     DB_URL: process.env.DB_URL,
-    validShifts : ['A', 'B', 'C', 'G', 'WO/LV', 'M', 'N']
+    validShifts : ['A', 'B', 'C', 'G', 'WO/LV', 'M', 'N'],
+    AREACODE: {
+        POTLINE: ['530', '128', '131', '359', '139', '024', '026', '039', '020', '021', '027', '028']
+    }
 }
 
 // .env file contents

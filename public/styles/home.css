@@ -1,0 +1,31 @@
+h1 {
+    padding: 10px 0;
+    text-decoration: underline;
+    font-style: italic;
+}
+
+.mini-sch-table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+td,
+th {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+.dept-name,
+.shift-name,
+.col-row > th {
+    text-align: center;
+}
+
+.data-row > td {
+    text-align: left;
+}
+
+.mini-sch-table tr:nth-child(odd) {
+    background-color: #dddddd;
+}

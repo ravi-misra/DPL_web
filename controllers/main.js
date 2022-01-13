@@ -35,13 +35,11 @@ module.exports.goHome = async (req, res) => {
         },
         select: ['name', 'dept', 'mobile', 'alternate_contacts', 'intercom']
     })
-    console.log(todaySchedule);
     let scheduleObject1 = {};
     let scheduleObject2 = {};
     for (let item of todaySchedule) {
-        console.log('1', item);
         let dept = item.employee.dept.name;
-        let shift = item.shift;
+        let shift_m = item.shift;
         let alternate_contacts = '', intercom = '';
         if(item.employee.alternate_contacts) {
             alternate_contacts = ", " + item.employee.alternate_contacts;
@@ -50,35 +48,36 @@ module.exports.goHome = async (req, res) => {
             intercom = item.employee.intercoms;
         }
         let data = [item.employee.name, (item.employee.mobile + alternate_contacts), intercom];
-        if (item.date.getDate() === today.getDate()) {
-            if(scheduleObject1[dept]) {
-                if (scheduleObject1[dept][shift]) {
-                    scheduleObject1[dept][shift].push(data);
+        for (let shift of shift_m) {
+            if (item.date.getDate() === today.getDate()) {
+                if(scheduleObject1[dept]) {
+                    if (scheduleObject1[dept][shift]) {
+                        scheduleObject1[dept][shift].push(data);
+                    } else {
+                        scheduleObject1[dept][shift] = [];
+                        scheduleObject1[dept][shift].push(data);
+                    }
                 } else {
+                    scheduleObject1[dept] = {};
                     scheduleObject1[dept][shift] = [];
                     scheduleObject1[dept][shift].push(data);
                 }
-            } else {
-                scheduleObject1[dept] = {};
-                scheduleObject1[dept][shift] = [];
-                scheduleObject1[dept][shift].push(data);
-            }
-        } else if (item.date.getDate() === subDays(today , 1).getDate()) {
-            if(scheduleObject2[dept]) {
-                if (scheduleObject2[dept][shift]) {
-                    scheduleObject2[dept][shift].push(data);
+            } else if (item.date.getDate() === subDays(today , 1).getDate()) {
+                if(scheduleObject2[dept]) {
+                    if (scheduleObject2[dept][shift]) {
+                        scheduleObject2[dept][shift].push(data);
+                    } else {
+                        scheduleObject2[dept][shift] = [];
+                        scheduleObject2[dept][shift].push(data);
+                    }
                 } else {
+                    scheduleObject2[dept] = {};
                     scheduleObject2[dept][shift] = [];
                     scheduleObject2[dept][shift].push(data);
                 }
-            } else {
-                scheduleObject2[dept] = {};
-                scheduleObject2[dept][shift] = [];
-                scheduleObject2[dept][shift].push(data);
             }
         }
     }
-    console.log(scheduleObject1['POTLINE-I(OPRN.)']['WO/LV'], scheduleObject2)
     res.render('home', {scheduleObject1, scheduleObject2, date1, date2});
 }
 // input(todaySchedule) --> [{employee:{name, dept, mobile, alt, intercom}, date, shift, editby, locked}]

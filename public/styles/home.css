@@ -20,12 +20,18 @@ th {
 .shift-name,
 .col-row > th {
     text-align: center;
+    background-color: #bdcebe;
+    font-style: italic;
 }
 
 .data-row > td {
     text-align: left;
+    font-size: 14px;
 }
 
-.mini-sch-table tr:nth-child(odd) {
-    background-color: #dddddd;
+.dept-name {
+    background-color: #eca1a6;
 }
+/* .mini-sch-table tr:nth-child(odd) {
+    background-color: #dddddd;
+} */

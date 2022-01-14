@@ -13,6 +13,11 @@ module.exports.renderShiftScheduleForm = async (req, res) => {
     res.render('profile/shift-schedule-form', {scheduledShifts, today, addDays, format});
 }
 
+// Variables passed:-
+//     {addDays,format} = require('date-fns');// scheduledShifts = {date('dd/MM/yyyy'): [shifts]}// today 
+//     Post:
+//     {date1:{date: 'yyyy-MM-dd', shift: {'A': 'on', 'B': 'on'}}, date2:}
+
 module.exports.updateShiftSchedule = async (req, res) => {
     const body = req.body;
     delete body.button;

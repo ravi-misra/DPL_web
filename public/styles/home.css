@@ -32,6 +32,39 @@ th {
 .dept-name {
     background-color: #eca1a6;
 }
-/* .mini-sch-table tr:nth-child(odd) {
-    background-color: #dddddd;
+
+.dept-selector {
+    display: flex;
+    position: fixed;
+    top: 150px;
+    right: 0;
+    width: 90px;
+    flex-direction: column;
+}
+
+.dept-selector > .mech {
+    background: #005792;
+}
+.dept-selector > .elec {
+    background: #00bbf0;
+}
+.dept-selector > .ci {
+    background: #fdb44b;
+}
+
+.dept-selector > div > a {
+    color: white;
+    font-size: 14px;
+}
+.dept-selector > div > a:active {
+    color: black;
+    font-size: 14px;
+}
+/* .dept-selector > div > a:visited {
+    color: black;
+    font-size: 14px;
 } */
+.dept-selector > div {
+    padding: 5px 5px;
+    border-radius: 50% 0 0 50%;
+}

@@ -13,4 +13,10 @@ router.get('/logout', main.logout)
 
 router.get('/home', main.goHome)
 
+router.get('/home/ci', main.goHomeCI)
+
+router.get('/home/mechanical', main.goHomeMechanical)
+
+router.get('/home/electrical', main.goHomeElectrical)
+
 module.exports = router;

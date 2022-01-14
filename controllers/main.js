@@ -1,6 +1,6 @@
 const Shift_sch = require('../models/shift_sch');
 const {startOfDay, subDays, format, addMinutes} = require('date-fns');
-const employee = require('../models/employee');
+const {deptGroups} = require('../config');
 
 module.exports.renderLogin = (req, res) => {
     res.render('login.ejs');
@@ -22,7 +22,7 @@ module.exports.logout = (req, res) => {
     res.redirect('/home');
 }
 
-module.exports.goHome = async (req, res) => {
+async function homeConroller(req, res, depList = [], deptName = undefined) {
     let today = startOfDay(new Date());
     today = addMinutes(today, 330);
     let date1 = format(today, 'dd/MM/yyyy');
@@ -30,8 +30,7 @@ module.exports.goHome = async (req, res) => {
     const todaySchedule = await Shift_sch.find({date: {$gte: subDays(today , 1), $lte: today}}).populate({
         path: "employee",
         populate: {
-            path: "dept",
-            select: 'name'
+            path: "dept"
         },
         select: ['name', 'dept', 'mobile', 'alternate_contacts', 'intercom']
     })
@@ -39,6 +38,10 @@ module.exports.goHome = async (req, res) => {
     let scheduleObject2 = {};
     for (let item of todaySchedule) {
         let dept = item.employee.dept.name;
+        let deptCode = item.employee.dept.costcode;
+        if (depList.length > 0 && !depList.includes(deptCode)) {
+            continue;
+        }
         let shift_m = item.shift;
         let alternate_contacts = '', intercom = '';
         if(item.employee.alternate_contacts) {
@@ -78,7 +81,23 @@ module.exports.goHome = async (req, res) => {
             }
         }
     }
-    res.render('home', {scheduleObject1, scheduleObject2, date1, date2});
+    res.render('home', {scheduleObject1, scheduleObject2, date1, date2, deptName});
+}
+
+module.exports.goHome = (req, res) => {
+    homeConroller(req, res);
+}
+
+module.exports.goHomeCI = (req, res) => {
+    homeConroller(req, res, deptGroups.CI, "C&I");
+}
+
+module.exports.goHomeMechanical = (req, res) => {
+    homeConroller(req, res, deptGroups.MECHANICAL, "Mechanical");
+}
+
+module.exports.goHomeElectrical = (req, res) => {
+    homeConroller(req, res, deptGroups.ELECTRICAL, "Electrical");
 }
 // input(todaySchedule) --> [{employee:{name, dept, mobile, alt, intercom}, date, shift, editby, locked}]
 // output(scheduleObject1) --> (date1) --> {

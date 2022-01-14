@@ -21,7 +21,6 @@ module.exports.renderShiftScheduleForm = async (req, res) => {
 module.exports.updateShiftSchedule = async (req, res) => {
     const body = req.body;
     delete body.button;
-    console.log(body);
     for (let i of Object.keys(body)) {
         if (body[i]['shift']) { 
             let filter = {employee: req.user._id, date: new Date(body[i]['date'])};

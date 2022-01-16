@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const main = require('../controllers/main');
+const {isLoggedIn, isAuthorized} = require('../middleware');
 
 router.get('/', main.goHome)
 
@@ -9,7 +10,7 @@ router.route('/login')
     .get(main.renderLogin)
     .post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), main.login)
 
-router.get('/logout', main.logout)
+router.get('/logout', isLoggedIn, main.logout)
 
 router.get('/home', main.goHome)
 

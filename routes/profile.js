@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const profile = require("../controllers/profile");
-const catchAsync = require('../utils/catchAsync')
+const catchAsync = require('../utils/catchAsync');
+const {isLoggedIn, isAuthorized} = require('../middleware');
 
 router.route("/shift-schedule")
-    .get(catchAsync(profile.renderShiftScheduleForm))
-    .post(catchAsync(profile.updateShiftSchedule))
+    .get(isLoggedIn, isAuthorized, catchAsync(profile.renderShiftScheduleForm))
+    .post(isLoggedIn, isAuthorized, catchAsync(profile.updateShiftSchedule))
 
 module.exports = router;

@@ -56,15 +56,15 @@ th {
     color: white;
     font-size: 14px;
 }
-.dept-selector > div > a:active {
+.dept-selector > div > a:hover {
     color: black;
-    font-size: 14px;
+    font-size: 16px;
 }
 /* .dept-selector > div > a:visited {
     color: black;
     font-size: 14px;
 } */
 .dept-selector > div {
-    padding: 5px 5px;
+    padding: 5px 0px 5px 10px;
     border-radius: 50% 0 0 50%;
 }

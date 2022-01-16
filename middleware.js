@@ -10,7 +10,7 @@ module.exports.isLoggedIn = (req, res, next) => {
 }
 
 module.exports.isAuthorized = (req, res, next) => {
-    if (!allowedURLs.includes(req.originalUrl)) {
+    if (!res.locals.allowedURLs.includes(req.originalUrl)) {
         req.flash('error', 'Unauthorized request');
         return res.redirect('/home');
     }

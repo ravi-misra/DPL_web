@@ -23,6 +23,7 @@ module.exports.updateShiftSchedule = async (req, res) => {
     delete body.button;
     for (let i of Object.keys(body)) {
         if (body[i]['shift']) { 
+            // let checker = (arr, target) => target.every(v => arr.includes(v));
             let filter = {employee: req.user._id, date: new Date(body[i]['date'])};
             let update = {shift: Object.keys(body[i]['shift'])};
             let doc = await Shift_sch.findOneAndUpdate(filter, update, {
@@ -37,4 +38,8 @@ module.exports.updateShiftSchedule = async (req, res) => {
     }
     req.flash('success', "Shift schedule updated.");
     res.redirect('/profile/shift-schedule');
+}
+
+module.exports.renderDetailsForm = async (req, res) => {
+
 }

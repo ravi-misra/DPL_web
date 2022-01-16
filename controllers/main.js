@@ -22,7 +22,7 @@ module.exports.logout = (req, res) => {
     res.redirect('/home');
 }
 
-async function homeConroller(req, res, depList = [], deptName = undefined) {
+async function homeController(req, res, depList = [], deptName = undefined) {
     let today = startOfDay(new Date());
     today = addMinutes(today, 330);
     let date1 = format(today, 'dd/MM/yyyy');
@@ -85,19 +85,19 @@ async function homeConroller(req, res, depList = [], deptName = undefined) {
 }
 
 module.exports.goHome = (req, res) => {
-    homeConroller(req, res);
+    homeController(req, res);
 }
 
 module.exports.goHomeCI = (req, res) => {
-    homeConroller(req, res, deptGroups.CI, "C&I");
+    homeController(req, res, deptGroups.CI, "C&I");
 }
 
 module.exports.goHomeMechanical = (req, res) => {
-    homeConroller(req, res, deptGroups.MECHANICAL, "Mechanical");
+    homeController(req, res, deptGroups.MECHANICAL, "Mechanical");
 }
 
 module.exports.goHomeElectrical = (req, res) => {
-    homeConroller(req, res, deptGroups.ELECTRICAL, "Electrical");
+    homeController(req, res, deptGroups.ELECTRICAL, "Electrical");
 }
 // input(todaySchedule) --> [{employee:{name, dept, mobile, alt, intercom}, date, shift, editby, locked}]
 // output(scheduleObject1) --> (date1) --> {

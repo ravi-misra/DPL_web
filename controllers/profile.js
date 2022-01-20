@@ -23,14 +23,16 @@ module.exports.updateShiftSchedule = async (req, res) => {
     delete body.button;
     for (let i of Object.keys(body)) {
         if (body[i]['shift']) { 
-            // let checker = (arr, target) => target.every(v => arr.includes(v));
-            let filter = {employee: req.user._id, date: new Date(body[i]['date'])};
-            let update = {shift: Object.keys(body[i]['shift'])};
-            let doc = await Shift_sch.findOneAndUpdate(filter, update, {
-                new: true,
-                upsert: true
-            });
-            await doc.save();
+            let checker = (arr, target) => target.every(v => arr.includes(v));
+            if (checker(res.locals.validShifts, Object.keys(body[i]['shift']))) {
+                let filter = {employee: req.user._id, date: new Date(body[i]['date'])};
+                let update = {shift: Object.keys(body[i]['shift'])};
+                let doc = await Shift_sch.findOneAndUpdate(filter, update, {
+                    new: true,
+                    upsert: true
+                });
+                await doc.save();
+            }
         } else {
             let filter = {employee: req.user._id, date: new Date(body[i]['date'])};
             let doc = await Shift_sch.findOneAndDelete(filter);

@@ -84,20 +84,20 @@ async function homeController(req, res, depList = [], deptName = undefined) {
     res.render('home', {scheduleObject1, scheduleObject2, date1, date2, deptName});
 }
 
-module.exports.goHome = (req, res) => {
-    homeController(req, res);
+module.exports.goHome = (req, res, next) => {
+    homeController(req, res).catch(next);
 }
 
-module.exports.goHomeCI = (req, res) => {
-    homeController(req, res, deptGroups.CI, "C&I");
+module.exports.goHomeCI = (req, res, next) => {
+    homeController(req, res, deptGroups.CI, "C&I").catch(next);
 }
 
-module.exports.goHomeMechanical = (req, res) => {
-    homeController(req, res, deptGroups.MECHANICAL, "Mechanical");
+module.exports.goHomeMechanical = (req, res, next) => {
+    homeController(req, res, deptGroups.MECHANICAL, "Mechanical").catch(next);
 }
 
-module.exports.goHomeElectrical = (req, res) => {
-    homeController(req, res, deptGroups.ELECTRICAL, "Electrical");
+module.exports.goHomeElectrical = (req, res, next) => {
+    homeController(req, res, deptGroups.ELECTRICAL, "Electrical").catch(next);
 }
 // input(todaySchedule) --> [{employee:{name, dept, mobile, alt, intercom}, date, shift, editby, locked}]
 // output(scheduleObject1) --> (date1) --> {

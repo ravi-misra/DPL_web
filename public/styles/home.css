@@ -51,6 +51,9 @@ th {
 .dept-selector > .ci {
     background: #fdb44b;
 }
+.dept-selector > .all {
+    background: #d9ad7c;
+}
 
 .dept-selector > div > a {
     color: white;

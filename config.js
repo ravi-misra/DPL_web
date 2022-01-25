@@ -18,4 +18,4 @@ module.exports = {
 // PORT=3000
 // LOCAL_HOST="127.0.0.1"
 // PLCI_HOST="10.130.64.23"
-// DB_URL="mongodb://localhost:27017/yelp-camp"
+// DB_URL="mongodb://localhost:27017/dpl"

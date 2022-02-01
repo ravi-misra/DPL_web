@@ -1,0 +1,29 @@
+<% layout('layouts/boilerplate.ejs') %>
+<p>Personal No.: <%= currentUser.username %></p>
+<p>Name: <%= currentUser.name %></p>
+<p>Department: <%= currentUser.dept %></p>
+<p>Designation: <%= currentUser.designation %></p>
+<p>Main Mobile No.: <%= currentUser.mobile %></p>
+<form action="">
+    <div>
+        <label for="">Alternate Contacts: </label>
+        <textarea name="" id="" cols="30" rows="10"></textarea>
+    </div>
+    <div>
+        <label for="">Intercom: </label>
+        <input type="text" name="" id="">
+    </div>
+    <div>
+        <label for="">Intercom: </label>
+        <select name="" id="">
+            <option value="">A+</option>
+            <option value="">A-</option>
+            <option value="">B+</option>
+            <option value="">B-</option>
+            <option value="">O+</option>
+            <option value="">O-</option>
+            <option value="">AB+</option>
+            <option value="">AB-</option>
+        </select>
+    </div>
+</form>

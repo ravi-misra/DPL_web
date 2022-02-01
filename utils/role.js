@@ -17,6 +17,7 @@ const roles = {
         Dashboard: "/dashboard",
         Profile: {
             Details: "/profile/details",
+            "Change Password": "/profile/change-password",
             "Shift Schedule": "/profile/shift-schedule"
         },
         Attendance: {
@@ -32,6 +33,7 @@ const roles = {
         Dashboard: "/dashboard",
         Profile: {
             Details: "/profile/details",
+            "Change Password": "/profile/change-password",
             "Shift Schedule": "/profile/shift-schedule"
         },
         Attendance: {
@@ -47,6 +49,7 @@ const roles = {
         Dashboard: "/dashboard",
         Profile: {
             Details: "/profile/details",
+            "Change Password": "/profile/change-password",
             "Shift Schedule": "/profile/shift-schedule"
         },
         Attendance: {
@@ -65,6 +68,7 @@ const roles = {
         Dashboard: "/dashboard",
         Profile: {
             Details: "/profile/details",
+            "Change Password": "/profile/change-password",
             "Shift Schedule": "/profile/shift-schedule"
         },
         Attendance: {
@@ -94,6 +98,7 @@ const roles = {
         Dashboard: "/dashboard",
         Profile: {
             Details: "/profile/details",
+            "Change Password": "/profile/change-password",
             "Shift Schedule": "/profile/shift-schedule"
         },
         Attendance: {

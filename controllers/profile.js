@@ -43,5 +43,5 @@ module.exports.updateShiftSchedule = async (req, res) => {
 }
 
 module.exports.renderDetailsForm = async (req, res) => {
-
+    res.render('profile/details');
 }

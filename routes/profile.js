@@ -10,4 +10,8 @@ router.route("/shift-schedule")
 
 router.route("/details")
     .get(isLoggedIn, isAuthorized, profile.renderDetailsForm)
+
+router.route("/change-password")
+    .get(isLoggedIn, isAuthorized, profile.renderPasswordForm)
+
 module.exports = router;

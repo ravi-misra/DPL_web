@@ -45,3 +45,7 @@ module.exports.updateShiftSchedule = async (req, res) => {
 module.exports.renderDetailsForm = async (req, res) => {
     res.render('profile/details');
 }
+
+module.exports.renderPasswordForm = async (req, res) => {
+    res.render('profile/change-password');
+}

@@ -1,10 +1,12 @@
 <% layout('layouts/boilerplate.ejs') %>
-<p>Personal No.: <%= currentUser.username %></p>
-<p>Name: <%= currentUser.name %></p>
-<p>Department: <%= currentUser.dept %></p>
-<p>Designation: <%= currentUser.designation %></p>
-<p>Main Mobile No.: <%= currentUser.mobile %></p>
-<form action="">
+<div class="emp-prefilled">
+    <p>Personal No.: <%= currentUser.username %></p>
+    <p>Name: <%= currentUser.name %></p>
+    <p>Department: <%= currentUser.dept %></p>
+    <p>Designation: <%= currentUser.designation %></p>
+    <p>Main Mobile No.: <%= currentUser.mobile %></p>
+</div>
+<form action="" class="emp-details">
     <div>
         <label for="">Alternate Contacts: </label>
         <textarea name="" id="" cols="30" rows="10"></textarea>
@@ -25,5 +27,8 @@
             <option value="">AB+</option>
             <option value="">AB-</option>
         </select>
+    </div>
+    <div class="login-button-container">
+        <button type="submit" name="button" class="btn login-btn">Submit</button>
     </div>
 </form>

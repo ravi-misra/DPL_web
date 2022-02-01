@@ -1,0 +1,12 @@
+.change-pass,
+h2 {
+    margin: 20px auto;
+}
+
+.change-pass > div {
+    margin: 30px 0;
+}
+
+.change-pass > div > input:not([type="checkbox"]) {
+    display: block;
+}

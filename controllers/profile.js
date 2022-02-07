@@ -42,10 +42,20 @@ module.exports.updateShiftSchedule = async (req, res) => {
     res.redirect('/profile/shift-schedule');
 }
 
-module.exports.renderDetailsForm = async (req, res) => {
+module.exports.renderDetailsForm = (req, res) => {
     res.render('profile/details');
 }
 
-module.exports.renderPasswordForm = async (req, res) => {
+module.exports.renderPasswordForm = (req, res) => {
     res.render('profile/change-password');
+}
+
+module.exports.updatePassword = async (req, res) => {
+    if(req.body.new != req.body.new1) {
+        req.flash('error', "New passwords don't match");
+        return res.redirect('/profile/change-password');
+    }
+    await req.user.changePassword(req.body.old, req.body.new);
+    req.flash('success', "Password updated");
+    res.redirect('/home');
 }

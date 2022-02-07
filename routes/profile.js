@@ -13,5 +13,6 @@ router.route("/details")
 
 router.route("/change-password")
     .get(isLoggedIn, isAuthorized, profile.renderPasswordForm)
+    .post(isLoggedIn, isAuthorized, catchAsync(profile.updatePassword))
 
 module.exports = router;

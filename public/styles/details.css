@@ -1,0 +1,14 @@
+.emp-prefilled {
+    margin: 20px auto;
+}
+
+.emp-prefilled > h3,
+.emp-details > h3 {
+    text-decoration: underline;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.emp-details {
+    margin: 30px auto;
+}

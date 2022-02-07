@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {addDays,format, startOfDay} = require('date-fns');
 const Shift_sch = require('../models/shift_sch');
+const Dept = require('../models/department');
 
 module.exports.renderShiftScheduleForm = async (req, res) => {
     const today = startOfDay(new Date());
@@ -42,8 +43,9 @@ module.exports.updateShiftSchedule = async (req, res) => {
     res.redirect('/profile/shift-schedule');
 }
 
-module.exports.renderDetailsForm = (req, res) => {
-    res.render('profile/details');
+module.exports.renderDetailsForm = async (req, res) => {
+    let dept = await Dept.findById(req.user.dept);
+    res.render('profile/details', {dept});
 }
 
 module.exports.renderPasswordForm = (req, res) => {

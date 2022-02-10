@@ -1,5 +1,10 @@
-.change-pass {
+.change-pass,
+.change-pass-heading {
     margin: 20px auto;
+}
+
+.change-pass-heading {
+    text-decoration: underline;
 }
 
 .change-pass > div {

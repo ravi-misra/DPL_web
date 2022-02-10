@@ -13,8 +13,10 @@ const DepartmentSchema = new Schema({
     },
     area: {
         type: String
-    }
-
+    },
+    dashboards: [{
+        type: String
+    }]
 });
 
 module.exports = mongoose.model('Department', DepartmentSchema);

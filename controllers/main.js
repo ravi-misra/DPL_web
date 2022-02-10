@@ -48,7 +48,7 @@ async function homeController(req, res, depList = [], deptName = undefined) {
             alternate_contacts = ", " + item.employee.alternate_contacts;
         }
         if(item.employee.intercom) {
-            intercom = item.employee.intercoms;
+            intercom = item.employee.intercom;
         }
         let data = [item.employee.name, (item.employee.mobile + alternate_contacts), intercom];
         for (let shift of shift_m) {

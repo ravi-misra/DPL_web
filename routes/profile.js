@@ -9,7 +9,8 @@ router.route("/shift-schedule")
     .post(isLoggedIn, isAuthorized, catchAsync(profile.updateShiftSchedule))
 
 router.route("/details")
-    .get(isLoggedIn, isAuthorized, profile.renderDetailsForm)
+    .get(isLoggedIn, isAuthorized, catchAsync(profile.renderDetailsForm))
+    .post(isLoggedIn, isAuthorized, catchAsync(profile.updateDetails))
 
 router.route("/change-password")
     .get(isLoggedIn, isAuthorized, profile.renderPasswordForm)

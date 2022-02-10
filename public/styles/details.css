@@ -12,3 +12,21 @@
 .emp-details {
     margin: 30px auto;
 }
+
+.emp-details label,
+.emp-details input,
+.emp-details textarea {
+    display: block;
+}
+.emp-details textarea {
+    resize: none;
+}
+
+.emp-details label {
+    margin-top: 20px;
+}
+
+.emp-details input {
+    margin-bottom: 30px;
+    width: 100%;
+}

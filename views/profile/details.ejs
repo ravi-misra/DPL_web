@@ -8,28 +8,15 @@
     <p>Main Mobile No.: <%= currentUser.mobile %></p>
 </div>
 <hr>
-<form action="" class="emp-details">
+<form action="/profile/details" method="post" class="emp-details">
     <h3>Add Details</h3>
     <div>
-        <label for="">Alternate Contacts: </label>
-        <textarea name="" id="" cols="30" rows="10"></textarea>
+        <label for="">Alternate Contacts:</label>
+        <textarea name="alt_conts" id="" cols="30" rows="2" maxlength="50" placeholder="Max 50 characters"><%= currentUser.alternate_contacts %></textarea>
     </div>
     <div>
-        <label for="">Intercom: </label>
-        <input type="text" name="" id="">
-    </div>
-    <div>
-        <label for="">Blood group: </label>
-        <select name="" id="">
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-        </select>
+        <label for="">Intercom:</label>
+        <input type="text" name="intercom" maxlength="10" id="" placeholder="Max 10 characters" value="<%= currentUser.intercom %>">
     </div>
     <div class="login-button-container">
         <button type="submit" name="button" class="btn login-btn">Submit</button>

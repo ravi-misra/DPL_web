@@ -14,7 +14,7 @@ const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL, validShifts} = require('./config');
 const mainRoutes = require('./routes/main');
 const profileRoutes = require('./routes/profile');
 const Employee = require('./models/employee');
-const Department = require('./models/department');
+const http = require('http');
 
 // const host = PLCI_HOST;
 const host = LOCAL_HOST;
@@ -22,6 +22,7 @@ const host = LOCAL_HOST;
 
 //express middlewares
 const app = express();
+const server = http.createServer(app);
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -117,6 +118,6 @@ app.use((err, req, res, next) => {
     res.redirect('/home');
 })
 
-app.listen(PORT, host, () => {
+server.listen(PORT, host, () => {
     console.log(`Listening at ${host}:${PORT}`);
 });

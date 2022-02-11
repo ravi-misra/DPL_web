@@ -12,11 +12,11 @@
     <h3>Add Details</h3>
     <div>
         <label for="">Alternate Contacts:</label>
-        <textarea name="alt_conts" id="" cols="30" rows="2" maxlength="50" placeholder="Max 50 characters"><%= currentUser.alternate_contacts %></textarea>
+        <textarea name="alt_conts" id="" cols="30" rows="2" maxlength="50" placeholder="Number1, Number2..."><%= currentUser.alternate_contacts %></textarea>
     </div>
     <div>
         <label for="">Intercom:</label>
-        <input type="text" name="intercom" maxlength="10" id="" placeholder="Max 10 characters" value="<%= currentUser.intercom %>">
+        <input type="text" name="intercom" maxlength="10" id="" placeholder="Number1, Number2..." value="<%= currentUser.intercom %>">
     </div>
     <div class="login-button-container">
         <button type="submit" name="button" class="btn login-btn">Submit</button>

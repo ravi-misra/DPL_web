@@ -13,8 +13,11 @@ const roles = require('./utils/role');
 const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL, validShifts} = require('./config');
 const mainRoutes = require('./routes/main');
 const profileRoutes = require('./routes/profile');
+const dashboardRoutes = require('./routes/dashboard');
+const socketCarbonArea = require("./sockets/carbon-area");
 const Employee = require('./models/employee');
 const http = require('http');
+const { Server } = require("socket.io");
 
 // const host = PLCI_HOST;
 const host = LOCAL_HOST;
@@ -23,6 +26,17 @@ const host = LOCAL_HOST;
 //express middlewares
 const app = express();
 const server = http.createServer(app);
+
+const io = new Server(server);
+
+//Add handlers for department wise data producer namespaces//////////
+
+io.of("carbon-area").on("connection", (socket) => {
+    socketCarbonArea(io, socket);
+});
+
+
+///////////////////////////////////////////////////////
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -105,6 +119,7 @@ app.use((req, res, next) => {
 
 app.use('/', mainRoutes);
 app.use('/profile', profileRoutes);
+app.use('/dashboard', dashboardRoutes);
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404));

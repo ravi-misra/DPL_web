@@ -14,7 +14,10 @@ const roles = {
             Employess: "/employee-list",
             Casuals: "/casuals-list"
         },
-        Dashboard: "/dashboard",
+        Dashboard: {
+            Transport: "/dashboard/transport"
+        },
+        // Dashboard: "/dashboard",
         Profile: {
             Details: "/profile/details",
             "Change Password": "/profile/change-password",

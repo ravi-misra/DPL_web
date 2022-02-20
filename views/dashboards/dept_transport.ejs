@@ -1,24 +1,33 @@
 <% layout('layouts/boilerplate.ejs') %>
 <script src="/socket.io/socket.io.js"></script>
 <div class="cb container">
-    <h1>CB Silo</h1>
+    <h1>RS-1 CB Silo(600T)</h1>
     <div id="cb"></div>
 </div>
 <div class="alumina container">
-    <h1>Alumina Silo</h1>
+    <h1>RS-1 Alumina Silo(55T)</h1>
     <div id="alumina"></div>
 </div>
 <script>
     let c = document.querySelector("#cb");
     let a = document.querySelector("#alumina");
+    c.textContent = "xxxxxx";
+    a.textContent = "xxxxxx";
     // const socket = io("http://127.0.0.1:3000/");
     const socket = io();
     socket.on("connect", () => {
-        console.log("connected");
-        socket.on("update", (data) => {
-            console.log(data);
-            c.textContent = data.cb + " %";
-            a.textContent = data.alumina + " %";
-        })
+        // socket.on("update", (data) => {
+        //     console.log(data);
+        //     c.textContent = data.cb + " %";
+        //     a.textContent = data.alumina + " %";
+        // })
     });
+    socket.on("update", (data) => {
+        c.textContent = data.cb + " %";
+        a.textContent = data.alumina + " %";
+        })
+    socket.on("disconnect", (data) => {
+        c.textContent = "xxxxxx";
+        a.textContent = "xxxxxx";
+        })
 </script>

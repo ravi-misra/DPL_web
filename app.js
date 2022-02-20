@@ -14,7 +14,7 @@ const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL, validShifts} = require('./config');
 const mainRoutes = require('./routes/main');
 const profileRoutes = require('./routes/profile');
 const dashboardRoutes = require('./routes/dashboard');
-const socketCarbonArea = require("./sockets/carbon-area");
+const {socketCarbonArea, socketCarbonAreaDisconnect} = require("./sockets/carbon-area");
 const Employee = require('./models/employee');
 const http = require('http');
 const { Server } = require("socket.io");
@@ -32,7 +32,12 @@ const io = new Server(server);
 //Add handlers for department wise data producer namespaces//////////
 
 io.of("carbon-area").on("connection", (socket) => {
+    console.log("Carbon area client connected")
     socketCarbonArea(io, socket);
+    socket.on("disconnect", (reason) => {
+        console.log("Carbon area client disconnected")
+        socketCarbonAreaDisconnect(io);
+    });
 });
 
 

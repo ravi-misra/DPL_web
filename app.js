@@ -122,6 +122,24 @@ app.use((req, res, next) => {
     next();
 })
 
+let useP = true;
+// setInterval(useProfile, 10000);
+// function useProfile() {
+//     if(useP) {
+//         useP=false;
+//     } else {
+//         useP = true;
+//     }
+// }
+
+app.all('*', (req, res, next) => {
+    if (useP) {
+        next();
+    } else {
+        return res.send("Maintenance")
+    }
+})
+
 app.use('/', mainRoutes);
 app.use('/profile', profileRoutes);
 app.use('/dashboard', dashboardRoutes);

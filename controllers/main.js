@@ -37,6 +37,10 @@ async function homeController(req, res, depList = [], deptName = undefined) {
     let scheduleObject1 = {};
     let scheduleObject2 = {};
     for (let item of todaySchedule) {
+        //incase of missing employee reference, its value becomes null on populate
+        if (!item.employee) {
+            continue;
+        }
         let dept = item.employee.dept.name;
         let deptCode = item.employee.dept.costcode;
         if (depList.length > 0 && !depList.includes(deptCode)) {
@@ -85,8 +89,8 @@ async function homeController(req, res, depList = [], deptName = undefined) {
 }
 
 module.exports.goHome = (req, res, next) => {+
-    res.redirect('/dashboard/transport');
-    // homeController(req, res).catch(next);
+    // res.redirect('/dashboard/transport');
+    homeController(req, res).catch(next);
 }
 
 module.exports.goHomeCI = (req, res, next) => {

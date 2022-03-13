@@ -4,6 +4,6 @@ const dashboard = require("../controllers/dashboard");
 const {isLoggedIn, isAuthorized} = require('../middleware');
 
 router.route("/transport")
-    .get(isLoggedIn, isAuthorized, dashboard.renderTransportDept)
+    .get(dashboard.renderTransportDept)
 
 module.exports = router;

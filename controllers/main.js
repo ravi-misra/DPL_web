@@ -84,8 +84,9 @@ async function homeController(req, res, depList = [], deptName = undefined) {
     res.render('home', {scheduleObject1, scheduleObject2, date1, date2, deptName});
 }
 
-module.exports.goHome = (req, res, next) => {
-    homeController(req, res).catch(next);
+module.exports.goHome = (req, res, next) => {+
+    res.redirect('/dashboard/transport');
+    // homeController(req, res).catch(next);
 }
 
 module.exports.goHomeCI = (req, res, next) => {

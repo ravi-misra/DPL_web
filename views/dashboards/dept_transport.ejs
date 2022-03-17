@@ -1,33 +1,71 @@
 <% layout('layouts/boilerplate.ejs') %>
 <script src="/socket.io/socket.io.js"></script>
-<div class="cb container">
+<!-- <div class="cb container">
     <h1>RS-1 CB Silo(600T)</h1>
     <div id="cb"></div>
 </div>
 <div class="alumina container">
     <h1>RS-1 Alumina Silo(55T)</h1>
     <div id="alumina"></div>
+</div> -->
+
+<div class="transport-container">
+    <div class="ca-rs1">
+        <h1>Carbon Area RS-1</h1>
+        <div class="ca-rs1-indicator">
+            <div class="ca-rs1-al">
+                <h2>RS-1 Alumina Silo(55T)</h2>
+                <div id="rs1-alumina-silo"></div>
+            </div>
+            <div class="ca-rs1-cb">
+                <h2>RS-1 CB Silo(600T)</h2>
+                <div id="rs1-cb-silo"></div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="ca-rs2">
+        <h1>Carbon Area RS-2</h1>
+        <div class="ca-rs2-indicator">
+            <div class="ca-rs2-al">
+                <h2>RS-2 Alumina Silo(55T)</h2>
+                <div id="rs2-alumina-silo"></div>
+            </div>
+            <div class="ca-rs2-cb">
+                <h2>RS-2 CB Silo(600T)</h2>
+                <div id="rs2-cb-silo"></div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
-    let c = document.querySelector("#cb");
-    let a = document.querySelector("#alumina");
-    c.textContent = "xxxxxx";
-    a.textContent = "xxxxxx";
-    // const socket = io("http://127.0.0.1:3000/");
+    let c1 = document.querySelector("#rs1-cb-silo");
+    let a1 = document.querySelector("#rs1-alumina-silo");
+    let c2 = document.querySelector("#rs2-cb-silo");
+    let a2 = document.querySelector("#rs2-alumina-silo");
+    let initialValue = 'xxxxxx';
+    c1.textContent = initialValue;
+    a1.textContent = initialValue;
+    c2.textContent = initialValue;
+    a2.textContent = initialValue;
+
     const socket = io();
-    socket.on("connect", () => {
-        // socket.on("update", (data) => {
-        //     console.log(data);
-        //     c.textContent = data.cb + " %";
-        //     a.textContent = data.alumina + " %";
-        // })
-    });
-    socket.on("update", (data) => {
-        c.textContent = data.cb + " %";
-        a.textContent = data.alumina + " %";
-        })
+
+    socket.on("rs1-update", (data) => {
+        c1.textContent = data.cb + " %";
+        a1.textContent = data.alumina + " %";
+    })
+
+    socket.on("rs2-update", (data) => {
+        c2.textContent = data.cb + " %";
+        a2.textContent = data.alumina + " %";
+    })
+
+
     socket.on("disconnect", (data) => {
-        c.textContent = "xxxxxx";
-        a.textContent = "xxxxxx";
-        })
+        c1.textContent = initialValue;
+        a1.textContent = initialValue;
+        c2.textContent = initialValue;
+        a2.textContent = initialValue;
+    })
 </script>

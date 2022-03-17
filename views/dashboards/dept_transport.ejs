@@ -1,14 +1,5 @@
 <% layout('layouts/boilerplate.ejs') %>
 <script src="/socket.io/socket.io.js"></script>
-<!-- <div class="cb container">
-    <h1>RS-1 CB Silo(600T)</h1>
-    <div id="cb"></div>
-</div>
-<div class="alumina container">
-    <h1>RS-1 Alumina Silo(55T)</h1>
-    <div id="alumina"></div>
-</div> -->
-
 <div class="transport-container">
     <div class="ca-rs1">
         <h1>Carbon Area RS-1</h1>
@@ -48,20 +39,15 @@
     a1.textContent = initialValue;
     c2.textContent = initialValue;
     a2.textContent = initialValue;
-
     const socket = io();
-
-    socket.on("rs1-update", (data) => {
+    socket.on("ca-rs1-update", (data) => {
         c1.textContent = data.cb + " %";
         a1.textContent = data.alumina + " %";
     })
-
-    socket.on("rs2-update", (data) => {
+    socket.on("ca-rs2-update", (data) => {
         c2.textContent = data.cb + " %";
         a2.textContent = data.alumina + " %";
     })
-
-
     socket.on("disconnect", (data) => {
         c1.textContent = initialValue;
         a1.textContent = initialValue;

@@ -14,7 +14,7 @@ const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL, validShifts} = require('./config');
 const mainRoutes = require('./routes/main');
 const profileRoutes = require('./routes/profile');
 const dashboardRoutes = require('./routes/dashboard');
-const {socketCarbonArea, socketCarbonAreaDisconnect} = require("./sockets/carbon-area");
+const {socketCarbonAreaRS1, socketCarbonAreaRS1Disconnect} = require("./sockets/carbon-area");
 const Employee = require('./models/employee');
 const {scrape, dbUpdate, deleteolddata} = require('./web-scraping/getPotlineEmployees');
 const shutdownResponse = require('./utils/shutdownResponse');
@@ -33,13 +33,34 @@ const io = new Server(server);
 
 //Add handlers for department wise data producer namespaces//////////
 
-io.of("carbon-area").on("connection", (socket) => {
-    console.log("Carbon area client connected")
-    socketCarbonArea(io, socket);
-    socket.on("disconnect", (reason) => {
-        console.log("Carbon area client disconnected")
-        socketCarbonAreaDisconnect(io);
-    });
+//Carbon area rs-1
+let caRS1 = true;
+io.of("ca-rs1").on("connection", (socket) => {
+    if (caRS1) {
+        console.log(`CA RS1 connected (id:${socket.id})`)
+        socketCarbonAreaRS1(io, socket);
+        caRS1 = false;
+        socket.on("disconnect", (reason) => {
+            console.log(`CA RS1 disconnected (id:${socket.id})`)
+            caRS1 = true;
+            socketCarbonAreaRS1Disconnect(io);
+        });
+    }
+});
+
+//Carbon area rs-2
+let caRS2 = true;
+io.of("ca-rs2").on("connection", (socket) => {
+    if (caRS2) {
+        console.log(`CA RS2 connected (id:${socket.id})`)
+        socketCarbonAreaRS2(io, socket);
+        caRS2 = false;
+        socket.on("disconnect", (reason) => {
+            console.log(`CA RS2 disconnected (id:${socket.id})`)
+            caRS2 = true;
+            socketCarbonAreaRS2Disconnect(io);
+        });
+    }
 });
 
 

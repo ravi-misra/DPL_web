@@ -116,8 +116,4 @@ async function deleteolddata() {
     await Shift_sch.deleteMany({date: {$lt: addDays(today, -30)}});
 }
 
-module.exports = {
-    scrape,
-    dbUpdate,
-    deleteolddata
-}
+module.exports = {scrape, dbUpdate, deleteolddata}

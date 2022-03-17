@@ -16,6 +16,8 @@ const profileRoutes = require('./routes/profile');
 const dashboardRoutes = require('./routes/dashboard');
 const {socketCarbonArea, socketCarbonAreaDisconnect} = require("./sockets/carbon-area");
 const Employee = require('./models/employee');
+const {scrape, dbUpdate, deleteolddata} = require('./web-scraping/getPotlineEmployees');
+const shutdownResponse = require('./utils/shutdownResponse');
 const http = require('http');
 const { Server } = require("socket.io");
 
@@ -136,7 +138,7 @@ app.all('*', (req, res, next) => {
     if (useP) {
         next();
     } else {
-        return res.send("Maintenance")
+        return res.send(shutdownResponse)
     }
 })
 

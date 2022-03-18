@@ -14,7 +14,7 @@ const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL, validShifts} = require('./config');
 const mainRoutes = require('./routes/main');
 const profileRoutes = require('./routes/profile');
 const dashboardRoutes = require('./routes/dashboard');
-const {socketCarbonAreaRS1, socketCarbonAreaRS1Disconnect} = require("./sockets/carbon-area");
+const socHandle = require("./sockets/carbon-area");
 const Employee = require('./models/employee');
 const {scrape, dbUpdate, deleteolddata} = require('./web-scraping/getPotlineEmployees');
 const shutdownResponse = require('./utils/shutdownResponse');
@@ -31,6 +31,7 @@ const server = http.createServer(app);
 
 const io = new Server(server);
 
+/////////////////////////////////////////////////////////////////////
 //Add handlers for department wise data producer namespaces//////////
 
 //Carbon area rs-1
@@ -38,12 +39,12 @@ let caRS1 = true;
 io.of("ca-rs1").on("connection", (socket) => {
     if (caRS1) {
         console.log(`CA RS1 connected (id:${socket.id})`);
-        socketCarbonAreaRS1(io, socket);
+        socHandle.socketCarbonAreaRS1(io, socket);
         caRS1 = false;
         socket.on("disconnect", (reason) => {
             console.log(`CA RS1 disconnected (id:${socket.id})`);
             caRS1 = true;
-            socketCarbonAreaRS1Disconnect(io);
+            socHandle.socketCarbonAreaRS1Disconnect(io);
         });
     } else {
         socket.emit('reject');
@@ -57,18 +58,23 @@ let caRS2 = true;
 io.of("ca-rs2").on("connection", (socket) => {
     if (caRS2) {
         console.log(`CA RS2 connected (id:${socket.id})`)
-        socketCarbonAreaRS2(io, socket);
+        socHandle.socketCarbonAreaRS2(io, socket);
         caRS2 = false;
         socket.on("disconnect", (reason) => {
             console.log(`CA RS2 disconnected (id:${socket.id})`)
             caRS2 = true;
-            socketCarbonAreaRS2Disconnect(io);
+            socHandle.socketCarbonAreaRS2Disconnect(io);
         });
+    } else {
+        socket.emit('reject');
+        socket.disconnect(true);
+        console.log(`CA RS2 client rejected (id:${socket.id})`);
     }
 });
 
 
-///////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));

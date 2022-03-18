@@ -37,14 +37,18 @@ const io = new Server(server);
 let caRS1 = true;
 io.of("ca-rs1").on("connection", (socket) => {
     if (caRS1) {
-        console.log(`CA RS1 connected (id:${socket.id})`)
+        console.log(`CA RS1 connected (id:${socket.id})`);
         socketCarbonAreaRS1(io, socket);
         caRS1 = false;
         socket.on("disconnect", (reason) => {
-            console.log(`CA RS1 disconnected (id:${socket.id})`)
+            console.log(`CA RS1 disconnected (id:${socket.id})`);
             caRS1 = true;
             socketCarbonAreaRS1Disconnect(io);
         });
+    } else {
+        socket.emit('reject');
+        socket.disconnect(true);
+        console.log(`CA RS1 client rejected (id:${socket.id})`);
     }
 });
 

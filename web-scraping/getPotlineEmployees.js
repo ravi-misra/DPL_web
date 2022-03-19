@@ -3,10 +3,11 @@ const Dept = require('../models/department');
 const Employee = require('../models/employee');
 const Shift_sch = require('../models/shift_sch');
 const {startOfDay, addDays} = require('date-fns');
+const {defaultHash, defaultSalt} = require('../utils/defaultPassword');
 
 
-const pl_dept = ["530-E & I - POTLINE", "128-MECH.ALUMINA HNDLG. SHOP", "131-POT CAP.REP.SHOP", "359-POT LINE (ELECT.)", "139-POT LINE (MECH.)", "024-POTLINE(O) FTP & PC", "023-POTLINE(O) LPC SHOP", "026-POTLINE(O) OSG-I & OSG-II", "039-POTLINE(O) TRANSPORT", "020-POTLINE-I(OPRN.)", "021-POTLINE-II(OPRN.)", "027-POTLINE-III(OPRN.)", "028-POTLINE-IV(OPRN.)"];
-// let pl_dept = ["530-E & I - POTLINE"];
+// const pl_dept = ["530-E & I - POTLINE", "128-MECH.ALUMINA HNDLG. SHOP", "131-POT CAP.REP.SHOP", "359-POT LINE (ELECT.)", "139-POT LINE (MECH.)", "024-POTLINE(O) FTP & PC", "023-POTLINE(O) LPC SHOP", "026-POTLINE(O) OSG-I & OSG-II", "039-POTLINE(O) TRANSPORT", "020-POTLINE-I(OPRN.)", "021-POTLINE-II(OPRN.)", "027-POTLINE-III(OPRN.)", "028-POTLINE-IV(OPRN.)"];
+let pl_dept = ["530-E & I - POTLINE"];
 
 async function scrape() {
     let data = [];
@@ -80,20 +81,25 @@ async function scrape() {
 
 async function dbUpdate(data, allPN) {
     let availablePN = [];
+    let newPN = [];
+    let newEmployees = [];
     let deptIDMap = {};
     for (let p of pl_dept) {
+        console.log(p.slice(0, 3));
         let dep = await Dept.findOne({costcode: p.slice(0, 3)});
+        console.log(dep);
         deptIDMap[p.slice(0, 3)] = dep._id;
     }
     if (data) {
-        //Remove employees no longer in PL
         let docs = await Employee.find({});
+        newPN = allPN.filter((x) => !availablePN.includes(x));
+        //Remove employees no longer in PL
         if (docs) {
             for (let doc of docs) {
                 availablePN.push(doc.username);
             }
             let invalidPN = availablePN.filter((x) => !allPN.includes(x));
-            if (invalidPN) {
+            if (invalidPN.length) {
                 for (let pn of invalidPN) {
                     await Employee.findOneAndDelete({username: pn});
                 }
@@ -102,9 +108,15 @@ async function dbUpdate(data, allPN) {
         //Update employee details from intranet
         for (let o of data) {
             if (deptIDMap[o.dept_code]) {
-                let doc = await Employee.findOneAndUpdate({username: o.pn}, {username: o.pn, name: o.name, dept: deptIDMap[o.dept_code], designation: o.designation, mobile: o.mobile}, {new: true, upsert: true});
+                if (newPN.includes(o.pn)) {
+                    newEmployees.push({username: o.pn, name: o.name, dept: deptIDMap[o.dept_code], designation: o.designation, mobile: o.mobile})
+                }
+                let doc = await Employee.findOneAndUpdate({username: o.pn}, {name: o.name, dept: deptIDMap[o.dept_code], designation: o.designation, mobile: o.mobile}, {new: true});
                 await doc.save();
             }
+        }
+        if (newEmployees.length) {
+            await Employee.create(newEmployees);
         }
     }
 }
@@ -116,4 +128,13 @@ async function deleteolddata() {
     await Shift_sch.deleteMany({date: {$lt: addDays(today, -30)}});
 }
 
-module.exports = {scrape, dbUpdate, deleteolddata}
+async function dbMaintenance() {
+    const {data, allPN} = await scrape();
+    console.log('scraping done');
+    await dbUpdate(data, allPN);
+    console.log('update done');
+    await deleteolddata();
+    console.log('cleaning done');
+}
+
+module.exports = dbMaintenance;

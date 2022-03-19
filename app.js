@@ -14,7 +14,7 @@ const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL, validShifts} = require('./config');
 const mainRoutes = require('./routes/main');
 const profileRoutes = require('./routes/profile');
 const dashboardRoutes = require('./routes/dashboard');
-const socHandle = require("./sockets/carbon-area");
+const socHandle = require("./sockets/handlers");
 const Employee = require('./models/employee');
 const {scrape, dbUpdate, deleteolddata} = require('./web-scraping/getPotlineEmployees');
 const shutdownResponse = require('./utils/shutdownResponse');
@@ -32,7 +32,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 /////////////////////////////////////////////////////////////////////
-//Add handlers for department wise data producer namespaces//////////
+//Add listeners for department wise data producer namespaces/////////
 
 //Carbon area rs-1
 let caRS1 = true;

@@ -16,7 +16,7 @@ const profileRoutes = require('./routes/profile');
 const dashboardRoutes = require('./routes/dashboard');
 const socListeners = require('./sockets/listeners');
 const Employee = require('./models/employee');
-const dbMaintenance = require('./web-scraping/getPotlineEmployees');
+const {scrape, dbUpdate, deleteolddata} = require('./web-scraping/getPotlineEmployees');
 const shutdownResponse = require('./utils/shutdownResponse');
 const http = require('http');
 const { Server } = require("socket.io");
@@ -120,19 +120,41 @@ app.use((req, res, next) => {
     next();
 })
 
-let useP = true;
-// setInterval(useProfile, 10000);
-// function useProfile() {
-//     if(useP) {
-//         useP=false;
-//     } else {
-//         useP = true;
-//     }
-// }
+let startDBUpdate = false;
+let dbUpdateHour = 2;
+let checkIntervalMinutes = 30;
+setInterval(triggerDBMaintenance, 1000*60*checkIntervalMinutes);
 
-// dbMaintenance();
+function triggerDBMaintenance() {
+    let myDate = new Date();
+    if (myDate.getHours === dbUpdateHour) {
+        if (myDate.getMinutes <= (checkIntervalMinutes-1)) {
+            dbMaintenance();
+        }
+    }
+}
+
+async function dbMaintenance() {
+    try{
+        console.log(`Scraping started at ${new Date()}`);
+        const {data, allPN} = await scrape();
+        console.log('scraping done');
+        startDBUpdate = true;
+        await dbUpdate(data, allPN);
+        console.log('update done');
+        await deleteolddata();
+        console.log('cleaning done');
+        startDBUpdate = false;
+    }
+    catch(err) {
+        startDBUpdate = false;
+        console.log(err);
+    }
+    
+}
+
 app.all('*', (req, res, next) => {
-    if (useP) {
+    if (!startDBUpdate) {
         next();
     } else {
         return res.send(shutdownResponse)

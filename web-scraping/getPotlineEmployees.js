@@ -79,7 +79,7 @@ async function scrape() {
     return {data, allPN};
 }
 
-async function dbUpdate(data, allPN) {
+async function dbUpdate(data = [], allPN = []) {
     let availablePN = [];
     let newPN = [];
     let newEmployees = [];
@@ -110,9 +110,10 @@ async function dbUpdate(data, allPN) {
             if (deptIDMap[o.dept_code]) {
                 if (newPN.includes(o.pn)) {
                     newEmployees.push({username: o.pn, name: o.name, dept: deptIDMap[o.dept_code], designation: o.designation, mobile: o.mobile})
+                } else {
+                    let doc = await Employee.findOneAndUpdate({username: o.pn}, {name: o.name, dept: deptIDMap[o.dept_code], designation: o.designation, mobile: o.mobile}, {new: true});
+                    await doc.save();
                 }
-                let doc = await Employee.findOneAndUpdate({username: o.pn}, {name: o.name, dept: deptIDMap[o.dept_code], designation: o.designation, mobile: o.mobile}, {new: true});
-                await doc.save();
             }
         }
         if (newEmployees.length) {
@@ -128,13 +129,4 @@ async function deleteolddata() {
     await Shift_sch.deleteMany({date: {$lt: addDays(today, -30)}});
 }
 
-async function dbMaintenance() {
-    const {data, allPN} = await scrape();
-    console.log('scraping done');
-    await dbUpdate(data, allPN);
-    console.log('update done');
-    await deleteolddata();
-    console.log('cleaning done');
-}
-
-module.exports = dbMaintenance;
+module.exports = {scrape, dbUpdate, deleteolddata};

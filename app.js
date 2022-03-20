@@ -14,7 +14,7 @@ const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL, validShifts} = require('./config');
 const mainRoutes = require('./routes/main');
 const profileRoutes = require('./routes/profile');
 const dashboardRoutes = require('./routes/dashboard');
-const socHandle = require("./sockets/handlers");
+const socListeners = require('./sockets/listeners');
 const Employee = require('./models/employee');
 const dbMaintenance = require('./web-scraping/getPotlineEmployees');
 const shutdownResponse = require('./utils/shutdownResponse');
@@ -23,69 +23,34 @@ const { Server } = require("socket.io");
 
 // const host = PLCI_HOST;
 const host = LOCAL_HOST;
-// const validShifts = ['A', 'B', 'C', 'G', 'WO/LV', 'M', 'N'];
 
-//express middlewares
 const app = express();
 const server = http.createServer(app);
-
 const io = new Server(server);
 
 /////////////////////////////////////////////////////////////////////
 //Add listeners for department wise data producer namespaces/////////
-
+/////////////////////////////////////////////////////////////////////
 //Carbon area rs-1
-let caRS1 = true;
-io.of("ca-rs1").on("connection", (socket) => {
-    if (caRS1) {
-        console.log(`CA RS1 connected (id:${socket.id})`);
-        socHandle.socketCarbonAreaRS1(io, socket);
-        caRS1 = false;
-        socket.on("disconnect", (reason) => {
-            console.log(`CA RS1 disconnected (id:${socket.id})`);
-            caRS1 = true;
-            socHandle.socketCarbonAreaRS1Disconnect(io);
-        });
-    } else {
-        socket.emit('reject');
-        socket.disconnect(true);
-        console.log(`CA RS1 client rejected (id:${socket.id})`);
-    }
-});
+socListeners.CARS1.cars1listener(io);
 
 //Carbon area rs-2
-let caRS2 = true;
-io.of("ca-rs2").on("connection", (socket) => {
-    if (caRS2) {
-        console.log(`CA RS2 connected (id:${socket.id})`)
-        socHandle.socketCarbonAreaRS2(io, socket);
-        caRS2 = false;
-        socket.on("disconnect", (reason) => {
-            console.log(`CA RS2 disconnected (id:${socket.id})`)
-            caRS2 = true;
-            socHandle.socketCarbonAreaRS2Disconnect(io);
-        });
-    } else {
-        socket.emit('reject');
-        socket.disconnect(true);
-        console.log(`CA RS2 client rejected (id:${socket.id})`);
-    }
-});
-
-
+socListeners.CARS2.cars2listener(io);
 /////////////////////////////////////////////////////////////////////
 
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(methodOverride('_method'));
-
-//MongoDB connections
+//MongoDB connection
 dbConnect().catch(err => console.log(err));
 async function dbConnect() {
     await mongoose.connect(DB_URL);
     console.log('Database connected.');
 }
+
+//express middlewares
+
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
 
 //View and templating engine setup
 app.engine('ejs', ejsMate);
@@ -165,7 +130,7 @@ let useP = true;
 //     }
 // }
 
-dbMaintenance();
+// dbMaintenance();
 app.all('*', (req, res, next) => {
     if (useP) {
         next();
@@ -184,7 +149,7 @@ app.all('*', (req, res, next) => {
 
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
-    if (!err.message) err.message = 'Oh No, Something Went Wrong!'
+    if (!err.message) err.message = 'Something Went Wrong!'
     // res.status(statusCode).render('error', { err })
     req.flash('error', err.message);
     res.redirect('/home');

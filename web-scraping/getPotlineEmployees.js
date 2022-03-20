@@ -85,9 +85,7 @@ async function dbUpdate(data = [], allPN = []) {
     let newEmployees = [];
     let deptIDMap = {};
     for (let p of pl_dept) {
-        console.log(p.slice(0, 3));
         let dep = await Dept.findOne({costcode: p.slice(0, 3)});
-        console.log(dep);
         deptIDMap[p.slice(0, 3)] = dep._id;
     }
     if (data) {

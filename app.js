@@ -126,9 +126,9 @@ let checkIntervalMinutes = 30;
 setInterval(triggerDBMaintenance, 1000*60*checkIntervalMinutes);
 
 function triggerDBMaintenance() {
-    let myDate = new Date();
-    if (myDate.getHours === dbUpdateHour) {
-        if (myDate.getMinutes <= (checkIntervalMinutes-1)) {
+    let myDate = new Date(); 
+    if (myDate.getHours() == dbUpdateHour) {
+        if (myDate.getMinutes() <= (checkIntervalMinutes-1)) {
             dbMaintenance();
         }
     }

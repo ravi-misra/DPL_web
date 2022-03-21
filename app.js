@@ -133,7 +133,7 @@ function triggerDBMaintenance() {
         }
     }
 }
-
+dbMaintenance();
 async function dbMaintenance() {
     try{
         console.log(`Scraping started at ${new Date()}`);

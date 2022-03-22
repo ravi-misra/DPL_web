@@ -21,8 +21,8 @@ const shutdownResponse = require('./utils/shutdownResponse');
 const http = require('http');
 const { Server } = require("socket.io");
 
-// const host = PLCI_HOST;
-const host = LOCAL_HOST;
+const host = PLCI_HOST;
+// const host = LOCAL_HOST;
 
 const app = express();
 const server = http.createServer(app);
@@ -120,6 +120,7 @@ app.use((req, res, next) => {
     next();
 })
 
+//Scheduled employees DB update
 let startDBUpdate = false;
 let dbUpdateHour = 2;
 let checkIntervalMinutes = 30;
@@ -133,7 +134,7 @@ function triggerDBMaintenance() {
         }
     }
 }
-dbMaintenance();
+
 async function dbMaintenance() {
     try{
         console.log(`Scraping started at ${new Date()}`);

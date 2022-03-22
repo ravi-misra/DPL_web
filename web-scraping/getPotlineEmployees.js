@@ -8,7 +8,6 @@ const {defaultHash, defaultSalt} = require('../utils/defaultPassword');
 
 const pl_dept = ["530-E & I - POTLINE", "128-MECH.ALUMINA HNDLG. SHOP", "131-POT CAP.REP.SHOP", "359-POT LINE (ELECT.)", "139-POT LINE (MECH.)", "024-POTLINE(O) FTP & PC", "023-POTLINE(O) LPC SHOP", "026-POTLINE(O) OSG-I & OSG-II", "039-POTLINE(O) TRANSPORT", "020-POTLINE-I(OPRN.)", "021-POTLINE-II(OPRN.)", "027-POTLINE-III(OPRN.)", "028-POTLINE-IV(OPRN.)"];
 // let pl_dept = ["530-E & I - POTLINE"];
-// let pl_dept = ["128-MECH.ALUMINA HNDLG. SHOP"];
 
 async function scrape() {
     let data = [];
@@ -19,7 +18,6 @@ async function scrape() {
     await page.goto('http://10.60.235.33/ComplaintSys/TelephoneDirectory.aspx?unitcd=1400');
     await new Promise(resolve => setTimeout(resolve, 3000));
     for(let i of pl_dept) {
-        console.log(i)
         await page.click("#ddlDept > span > button"); //open department list dropdown
         await new Promise(resolve => setTimeout(resolve, 3000));
         let clickedData = await page.$$("#ddlDept_DropDown > div > ul > li");//get all lis
@@ -43,10 +41,9 @@ async function scrape() {
             await bodyHandle.dispose();
         }
         pageCount = Number(pageCount);
-        console.log("Pages:", pageCount);
 
         for(let j=1;j<=pageCount;j++){
-            await new Promise(resolve => setTimeout(resolve, 10000));
+            await new Promise(resolve => setTimeout(resolve, 3000));
             const dataRows = await page.$$("#TelGrid_ctl00 > tbody > tr");
             for(let row of dataRows) {
                 const clickedData = await row.$$eval("td", (tds) => {
@@ -74,13 +71,19 @@ async function scrape() {
                 let buttonNext = await page.evaluateHandle(() =>
                 document.querySelector('#TelGrid_ctl00 > tfoot > tr > td > div > div.rgWrap.rgArrPart2 > button.t-button.rgActionButton.rgPageNext')
                 );
-                console.log('next');
                 await buttonNext.click();
                 await new Promise(resolve => setTimeout(resolve, 3000))
                 await buttonNext.dispose();
             }
         }
-        console.log(allPN.length);
+        if (pageCount > 1) {
+            let buttonFirst = await page.evaluateHandle(() =>
+            document.querySelector('#TelGrid_ctl00 > tfoot > tr > td > div > div.rgWrap.rgArrPart1 > button.t-button.rgActionButton.rgPageFirst')
+            );
+            await buttonFirst.click();
+            await new Promise(resolve => setTimeout(resolve, 3000))
+            await buttonFirst.dispose();
+        }
     }
     browser.close();
     return {data, allPN};
@@ -95,8 +98,6 @@ async function dbUpdate(data = [], allPN = []) {
         let dep = await Dept.findOne({costcode: p.slice(0, 3)});
         deptIDMap[p.slice(0, 3)] = dep._id;
     }
-    console.log(allPN.length);
-    console.log(deptIDMap);
     if (data) {
         let docs = await Employee.find({});
         //Remove employees no longer in PL

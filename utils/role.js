@@ -1,12 +1,10 @@
 // Role type --> Main tabs --> Sub menu
 const roles = {
-    department: {
+    departmentCA: {
         Home: "/home",
-        View: {
-            Employess: "/employee-list",
-            Casuals: "/casuals-list"
-        },
-        Dashboard: "/dashboard"
+        Dashboard: {
+            Transport: "/dashboard/transport"
+        }
     },
     ShiftIC: {
         Home: "/home",

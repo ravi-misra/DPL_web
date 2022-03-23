@@ -1,6 +1,7 @@
 const Shift_sch = require('../models/shift_sch');
 const {startOfDay, subDays, format, addMinutes} = require('date-fns');
 const {deptGroups} = require('../config');
+const roles = require('../utils/role');
 
 module.exports.renderLogin = (req, res) => {
     res.render('login.ejs');
@@ -11,8 +12,12 @@ module.exports.login = (req, res) => {
         req.session.cookie.maxAge = 1000*60*60*24*30;
     }
     // req.flash('success', 'Welcome!');
-    const redirectUrl = req.session.returnTo || '/home';
+    let redirectUrl = req.session.returnTo || '/home';
     delete req.session.returnTo;
+    if(req.user.role && req.user.role.includes('department')) {
+        let dashboards = Object.keys(roles[req.user.role].Dashboard);
+        redirectUrl = roles[req.user.role].Dashboard[dashboards[0]];
+    }
     res.redirect(redirectUrl);
 }
 

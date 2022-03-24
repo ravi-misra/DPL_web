@@ -4,6 +4,7 @@ const Employee = require('../models/employee');
 const Shift_sch = require('../models/shift_sch');
 const {startOfDay, addDays} = require('date-fns');
 const {defaultHash, defaultSalt} = require('../utils/defaultPassword');
+const exceptionUsers = require('../utils/exceptionUsers');
 
 
 const pl_dept = ["530-E & I - POTLINE", "128-MECH.ALUMINA HNDLG. SHOP", "131-POT CAP.REP.SHOP", "359-POT LINE (ELECT.)", "139-POT LINE (MECH.)", "024-POTLINE(O) FTP & PC", "023-POTLINE(O) LPC SHOP", "026-POTLINE(O) OSG-I & OSG-II", "039-POTLINE(O) TRANSPORT", "020-POTLINE-I(OPRN.)", "021-POTLINE-II(OPRN.)", "027-POTLINE-III(OPRN.)", "028-POTLINE-IV(OPRN.)"];
@@ -108,7 +109,10 @@ async function dbUpdate(data = [], allPN = []) {
             let invalidPN = availablePN.filter((x) => !allPN.includes(x));
             if (invalidPN.length) {
                 for (let pn of invalidPN) {
-                    await Employee.findOneAndDelete({username: pn});
+                    //dont delete usernames defined in exceptioUsers
+                    if (!Object.keys(exceptionUsers).includes(pn)) {
+                        await Employee.findOneAndDelete({username: pn});
+                    }
                 }
             }
         }

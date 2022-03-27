@@ -1,22 +1,26 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const DepartmentSchema = new Schema({
     costcode: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     name: {
         type: String,
-        required: true
+        required: true,
     },
     area: {
-        type: String
+        type: String,
     },
-    dashboards: [{
-        type: String
-    }]
+    dashboards: Schema.Types.Mixed, //{key(name of submenu item): vale(link for that item), }
+    hod: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Employee",
+        },
+    ],
 });
 
-module.exports = mongoose.model('Department', DepartmentSchema);
+module.exports = mongoose.model("Department", DepartmentSchema);

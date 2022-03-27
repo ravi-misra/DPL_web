@@ -1,30 +1,32 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ShiftScheduleSchema = new mongoose.Schema({
     employee: {
         type: Schema.Types.ObjectId,
-        ref: 'Employee',
-        required: true
+        ref: "Employee",
+        required: true,
     },
     date: {
         type: Date,
-        required: true
+        required: true,
     },
-    shift: [{
-        type: String,
-        required: true
-    }],
+    shift: [
+        {
+            type: String,
+            required: true,
+        },
+    ],
     editby: {
         type: Schema.Types.ObjectId,
-        ref: 'Employee',
+        ref: "Employee",
     },
     locked: {
         type: Boolean,
-        default: false
-    }
-})
+        default: false,
+    },
+});
 
-ShiftScheduleSchema.set('timestamps', true);
+ShiftScheduleSchema.set("timestamps", true);
 
-module.exports = mongoose.model('ShiftSchedule', ShiftScheduleSchema);
+module.exports = mongoose.model("ShiftSchedule", ShiftScheduleSchema);

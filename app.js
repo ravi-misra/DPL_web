@@ -91,6 +91,7 @@ app.use((req, res, next) => {
     let allowedURLs = [];
     res.locals.currentUser = req.user;
     if (req.user && req.user.role) {
+        //enter dashboard logic here
         res.locals.role = roles[req.user.role];
         if (res.locals.role) {
             for (let i of Object.keys(res.locals.role)) {

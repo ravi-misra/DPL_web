@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .shift-plan-strategy {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+        .choice-button {
+            width: 300px;
+            height: 75px;
+            background-color: rgb(177, 212, 247);
+            /* background-color: rgb(87, 165, 243); */
+            margin: 20px;
+            flex: 0 0 auto;
+        }
+        .choice-button:hover, .choice-button.selected-choice {
+            background-color: rgb(87, 165, 243);            
+        }
+
+        .choice-button.selected-choice p {
+            font-size: 18px;
+        }
+
+        .choice-button p {
+            text-align: center;
+            padding: 2px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="shift-plan-strategy">
+        <button class="choice-button file-upload">
+            <p>Upload System Generated Excel File</p>
+        </button>
+        <button class="choice-button manual-entry">
+            <p>Enter Shift Schedule Manually</p>
+        </button>
+    </div>
+    <hr>
+    <div class="shift-plan-action excel" style="display: none;">
+        <input type="file" name="" id="">
+    </div>
+    <div class="shift-plan-action manual" style="display: none;">
+        <h1>coming...</h1>
+    </div>
+    <script>
+        let buttonContainer  = document.querySelector(".shift-plan-strategy");
+        let choiceButtons = buttonContainer.querySelectorAll(".choice-button");
+        function highlightClickedButton() {
+            let currentActive = buttonContainer.querySelector('.selected-choice');
+            if(currentActive) {
+                currentActive.classList.remove("selected-choice");
+            }
+            this.classList.add('selected-choice');
+            if (this.classList.contains("file-upload")) {
+                document.querySelector(".excel").style.display = "block";
+                document.querySelector(".manual").style.display = "none";
+            }
+            if (this.classList.contains("manual-entry")) {
+                document.querySelector(".excel").style.display = "none";
+                document.querySelector(".manual").style.display = "block";
+            }
+        } 
+        for(let i of choiceButtons) {
+            i.addEventListener('click', highlightClickedButton);
+        }
+    </script>
+</body>
+</html>

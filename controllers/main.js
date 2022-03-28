@@ -1,47 +1,48 @@
-const Shift_sch = require('../models/shift_sch');
-const {startOfDay, subDays, format, addMinutes} = require('date-fns');
-const {deptGroups} = require('../config');
-const roles = require('../utils/role');
-const exceptionUsers = require('../utils/exceptionUsers');
+const Shift_sch = require("../models/shift_sch");
+const { startOfDay, subDays, format, addMinutes } = require("date-fns");
+const { deptGroups } = require("../config");
+const exceptionUsers = require("../utils/exceptionUsers");
 
 module.exports.renderLogin = (req, res) => {
-    res.render('login.ejs');
-}
+    res.render("login.ejs");
+};
 
 module.exports.login = (req, res) => {
     if (req.body["remember-checkbox"]) {
-        req.session.cookie.maxAge = 1000*60*60*24*30;
+        req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30;
     }
     // req.flash('success', 'Welcome!');
-    let redirectUrl = req.session.returnTo || '/home';
+    let redirectUrl = req.session.returnTo || "/home";
     delete req.session.returnTo;
     //Handle exception users
-    if(req.user.role && exceptionUsers[req.user.username]) {
+    if (req.user.role && exceptionUsers[req.user.username]) {
         if (exceptionUsers[req.user.username].defaultRoute) {
             redirectUrl = exceptionUsers[req.user.username].defaultRoute;
         }
     }
     res.redirect(redirectUrl);
-}
+};
 
 module.exports.logout = (req, res) => {
     req.logout();
     // req.flash('success', "Goodbye!");
-    res.redirect('/home');
-}
+    res.redirect("/home");
+};
 
 async function homeController(req, res, depList = [], deptName = undefined) {
     let today = startOfDay(new Date());
     today = addMinutes(today, 330);
-    let date1 = format(today, 'dd/MM/yyyy');
-    let date2 = format(subDays(today , 1), 'dd/MM/yyyy');
-    const todaySchedule = await Shift_sch.find({date: {$gte: subDays(today , 1), $lte: today}}).populate({
+    let date1 = format(today, "dd/MM/yyyy");
+    let date2 = format(subDays(today, 1), "dd/MM/yyyy");
+    const todaySchedule = await Shift_sch.find({
+        date: { $gte: subDays(today, 1), $lte: today },
+    }).populate({
         path: "employee",
         populate: {
-            path: "dept"
+            path: "dept",
         },
-        select: ['name', 'dept', 'mobile', 'alternate_contacts', 'intercom']
-    })
+        select: ["name", "dept", "mobile", "alternate_contacts", "intercom"],
+    });
     let scheduleObject1 = {};
     let scheduleObject2 = {};
     for (let item of todaySchedule) {
@@ -55,17 +56,22 @@ async function homeController(req, res, depList = [], deptName = undefined) {
             continue;
         }
         let shift_m = item.shift;
-        let alternate_contacts = '', intercom = '';
-        if(item.employee.alternate_contacts) {
+        let alternate_contacts = "",
+            intercom = "";
+        if (item.employee.alternate_contacts) {
             alternate_contacts = ", " + item.employee.alternate_contacts;
         }
-        if(item.employee.intercom) {
+        if (item.employee.intercom) {
             intercom = item.employee.intercom;
         }
-        let data = [item.employee.name, (item.employee.mobile + alternate_contacts), intercom];
+        let data = [
+            item.employee.name,
+            item.employee.mobile + alternate_contacts,
+            intercom,
+        ];
         for (let shift of shift_m) {
             if (item.date.getDate() === today.getDate()) {
-                if(scheduleObject1[dept]) {
+                if (scheduleObject1[dept]) {
                     if (scheduleObject1[dept][shift]) {
                         scheduleObject1[dept][shift].push(data);
                     } else {
@@ -77,8 +83,8 @@ async function homeController(req, res, depList = [], deptName = undefined) {
                     scheduleObject1[dept][shift] = [];
                     scheduleObject1[dept][shift].push(data);
                 }
-            } else if (item.date.getDate() === subDays(today , 1).getDate()) {
-                if(scheduleObject2[dept]) {
+            } else if (item.date.getDate() === subDays(today, 1).getDate()) {
+                if (scheduleObject2[dept]) {
                     if (scheduleObject2[dept][shift]) {
                         scheduleObject2[dept][shift].push(data);
                     } else {
@@ -93,28 +99,34 @@ async function homeController(req, res, depList = [], deptName = undefined) {
             }
         }
     }
-    res.render('home', {scheduleObject1, scheduleObject2, date1, date2, deptName});
+    res.render("home", {
+        scheduleObject1,
+        scheduleObject2,
+        date1,
+        date2,
+        deptName,
+    });
 }
 
-module.exports.goHome = (req, res, next) => {+
+module.exports.goHome = (req, res, next) => {
     // res.redirect('/dashboard/transport');
     homeController(req, res).catch(next);
-}
+};
 
 module.exports.goHomeCI = (req, res, next) => {
     homeController(req, res, deptGroups.CI, "C&I").catch(next);
-}
+};
 
 module.exports.goHomeMechanical = (req, res, next) => {
     homeController(req, res, deptGroups.MECHANICAL, "Mechanical").catch(next);
-}
+};
 
 module.exports.goHomeElectrical = (req, res, next) => {
     homeController(req, res, deptGroups.ELECTRICAL, "Electrical").catch(next);
-}
+};
 // input(todaySchedule) --> [{employee:{name, dept, mobile, alt, intercom}, date, shift, editby, locked}]
 // output(scheduleObject1) --> (date1) --> {
 // dept1: {
 //     'A': [[name, contacts, intercom ], [name, contacts, intercom ]]
 // }}// date1, date2
-// 
+//

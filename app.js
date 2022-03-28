@@ -1,24 +1,34 @@
-const express = require('express');
-const path = require('path');
-const mongoose = require('mongoose');
-const methodOverride = require('method-override');
-const ejsMate = require('ejs-mate');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
-const flash = require('connect-flash');
-const passport = require('passport');
-const LocalStrategy = require('passport-local');
-const ExpressError = require('./utils/ExpressErrors');
-const roles = require('./utils/role');
-const {PORT, LOCAL_HOST, PLCI_HOST, DB_URL, validShifts} = require('./config');
-const mainRoutes = require('./routes/main');
-const profileRoutes = require('./routes/profile');
-const dashboardRoutes = require('./routes/dashboard');
-const socListeners = require('./sockets/listeners');
-const Employee = require('./models/employee');
-const {scrape, dbUpdate, deleteolddata} = require('./web-scraping/getPotlineEmployees');
-const shutdownResponse = require('./utils/shutdownResponse');
-const http = require('http');
+const express = require("express");
+const path = require("path");
+const mongoose = require("mongoose");
+const methodOverride = require("method-override");
+const ejsMate = require("ejs-mate");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const ExpressError = require("./utils/ExpressErrors");
+const roles = require("./utils/role");
+const {
+    PORT,
+    LOCAL_HOST,
+    PLCI_HOST,
+    DB_URL,
+    validShifts,
+} = require("./config");
+const mainRoutes = require("./routes/main");
+const profileRoutes = require("./routes/profile");
+const dashboardRoutes = require("./routes/dashboard");
+const socListeners = require("./sockets/listeners");
+const Employee = require("./models/employee");
+const {
+    scrape,
+    dbUpdate,
+    deleteolddata,
+} = require("./web-scraping/getPotlineEmployees");
+const shutdownResponse = require("./utils/shutdownResponse");
+const http = require("http");
 const { Server } = require("socket.io");
 
 const host = PLCI_HOST;
@@ -39,45 +49,43 @@ socListeners.CARS2.cars2listener(io);
 /////////////////////////////////////////////////////////////////////
 
 //MongoDB connection
-dbConnect().catch(err => console.log(err));
+dbConnect().catch((err) => console.log(err));
 async function dbConnect() {
     await mongoose.connect(DB_URL);
-    console.log('Database connected.');
+    console.log("Database connected.");
 }
 
 //express middlewares
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(methodOverride('_method'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
+app.use(methodOverride("_method"));
 
 //View and templating engine setup
-app.engine('ejs', ejsMate);
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
+app.engine("ejs", ejsMate);
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 //session configuration
-const store = MongoStore.create({ 
-    clientPromise: mongoose.connection.asPromise().then(c => c.getClient()),
-    touchAfter: 24*3600 // time period in seconds
+const store = MongoStore.create({
+    clientPromise: mongoose.connection.asPromise().then((c) => c.getClient()),
+    touchAfter: 24 * 3600, // time period in seconds
 });
 
 const sessionConfig = {
     store,
-    secret: 'thisisnotagoodsecret',
+    secret: "thisisnotagoodsecret",
     resave: false,
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
         // maxAge: 1000*60*60*24*7, // time period in miliseconds
-    }
-}
+    },
+};
 
 app.use(session(sessionConfig));
 app.use(flash());
-
 
 //passport setup
 app.use(passport.initialize());
@@ -95,7 +103,7 @@ app.use((req, res, next) => {
         res.locals.role = roles[req.user.role];
         if (res.locals.role) {
             for (let i of Object.keys(res.locals.role)) {
-                if (typeof res.locals.role[i] === 'string') {
+                if (typeof res.locals.role[i] === "string") {
                     allowedURLs.push(res.locals.role[i]);
                 } else {
                     for (let j of Object.keys(res.locals.role[i])) {
@@ -107,77 +115,75 @@ app.use((req, res, next) => {
     } else {
         res.locals.role = undefined;
     }
-    if (!allowedURLs.includes('/home')) {
-        allowedURLs.push('/home');
+    if (!allowedURLs.includes("/home")) {
+        allowedURLs.push("/home");
     }
     res.locals.allowedURLs = allowedURLs;
     res.locals.validShifts = validShifts;
-    res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error');
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
     res.set("Cache-Control", "no-cache, no-store, must-revalidate");
     if (!req.user && req.session.cookie.maxAge) {
         req.session.cookie.maxAge = 0;
     }
     next();
-})
+});
 
 //Scheduled employees DB update
 let startDBUpdate = false;
 let dbUpdateHour = 2;
 let checkIntervalMinutes = 30;
-setInterval(triggerDBMaintenance, 1000*60*checkIntervalMinutes);
+setInterval(triggerDBMaintenance, 1000 * 60 * checkIntervalMinutes);
 
 function triggerDBMaintenance() {
-    let myDate = new Date(); 
+    let myDate = new Date();
     if (myDate.getHours() == dbUpdateHour) {
-        if (myDate.getMinutes() <= (checkIntervalMinutes-1)) {
+        if (myDate.getMinutes() <= checkIntervalMinutes - 1) {
             dbMaintenance();
         }
     }
 }
 
 async function dbMaintenance() {
-    try{
+    try {
         console.log(`Scraping started at ${new Date()}`);
-        const {data, allPN} = await scrape();
-        console.log('scraping done');
+        const { data, allPN } = await scrape();
+        console.log("scraping done");
         startDBUpdate = true;
         await dbUpdate(data, allPN);
-        console.log('update done');
+        console.log("update done");
         await deleteolddata();
-        console.log('cleaning done');
+        console.log("cleaning done");
         startDBUpdate = false;
-    }
-    catch(err) {
+    } catch (err) {
         startDBUpdate = false;
         console.log(err);
     }
-    
 }
 
-app.all('*', (req, res, next) => {
+app.all("*", (req, res, next) => {
     if (!startDBUpdate) {
         next();
     } else {
-        return res.send(shutdownResponse)
+        return res.send(shutdownResponse);
     }
-})
+});
 
-app.use('/', mainRoutes);
-app.use('/profile', profileRoutes);
-app.use('/dashboard', dashboardRoutes);
+app.use("/", mainRoutes);
+app.use("/profile", profileRoutes);
+app.use("/dashboard", dashboardRoutes);
 
-app.all('*', (req, res, next) => {
-    next(new ExpressError('Page Not Found', 404));
-})
+app.all("*", (req, res, next) => {
+    next(new ExpressError("Page Not Found", 404));
+});
 
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
-    if (!err.message) err.message = 'Something Went Wrong!'
+    if (!err.message) err.message = "Something Went Wrong!";
     // res.status(statusCode).render('error', { err })
-    req.flash('error', err.message);
-    res.redirect('/home');
-})
+    req.flash("error", err.message);
+    res.redirect("/home");
+});
 
 server.listen(PORT, host, () => {
     console.log(`Listening at ${host}:${PORT}`);

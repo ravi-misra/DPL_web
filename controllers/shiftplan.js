@@ -1,30 +1,31 @@
-const multer = require('multer');
-const path = require('path');
+const multer = require("multer");
+const path = require("path");
 const Dept = require("../models/department");
-const {startOfDay, addMinutes, addDays} = require('date-fns');
+const { startOfDay, addMinutes, addDays } = require("date-fns");
 const xlsx = require("xlsx");
-
 
 //multer setup
 const options = {
     destination: "../uploads/shiftplans",
-    filename: function(req, file, cb) {
+    filename: function (req, file, cb) {
         cb(null, req.body.costcode + path.extname(file.originalname));
-    }
-}
+    },
+};
 const storage = multer.diskStorage(options);
 
 // Check File Type
-function checkFileType(file, cb){
+function checkFileType(file, cb) {
     // Allowed ext
     const filetypes = /xls/;
     // Check ext
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const extname = filetypes.test(
+        path.extname(file.originalname).toLowerCase()
+    );
     // // Check mime
     // const mimetype = filetypes.test(file.mimetype);
-  
-    if(extname){
-        return cb(null,true);
+
+    if (extname) {
+        return cb(null, true);
     } else {
         cb("Only excel files are allowed");
     }
@@ -32,14 +33,14 @@ function checkFileType(file, cb){
 
 const upload = multer({
     storage: storage,
-    limits:{fileSize: 2*1000*1000}, //Size in bytes
-    fileFilter: function(req, file, cb){
+    limits: { fileSize: 2 * 1000 * 1000 }, //Size in bytes
+    fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
-    }
-}).single('attendance-sheet');
+    },
+}).single("attendance-sheet");
 
 async function handleShiftPlan(req, res, selection = "") {
-    let hodDeps = await Dept.find({hod: req.user._id});
+    let hodDeps = await Dept.find({ hod: req.user._id });
     let hodObject = {};
     for (let d of hodDeps) {
         hodObject[d.costcode] = d.name;
@@ -54,7 +55,12 @@ function processExcelFile(filename) {
     for (let d of data) {
         if (d["Dept Cd"] && d["Attend Dt"] && d["PersNo"]) {
             if (d["Sch. Sts."] !== "WO") {
-                
+                let x = addDays(
+                    new Date("1899-12-31"),
+                    parseInt(data[0]["Attend Dt"])
+                );
+                let y = x.toISOString();
+                y = y.slice(0, 10);
             }
         }
     }
@@ -72,6 +78,4 @@ function processExcelFile(filename) {
     console.log(addMinutes(newDate, 330));
 }
 
-module.exports.renderShiftPlanForm = async (req, res) => {
-    
-}
+module.exports.renderShiftPlanForm = async (req, res) => {};

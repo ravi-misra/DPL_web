@@ -1,6 +1,8 @@
 const multer = require('multer');
 const path = require('path');
 const Dept = require("../models/department");
+const {startOfDay, addMinutes, addDays} = require('date-fns');
+const xlsx = require("xlsx");
 
 
 //multer setup
@@ -36,10 +38,40 @@ const upload = multer({
     }
 }).single('attendance-sheet');
 
-module.exports.renderShiftPlanForm = async (req, res) => {
+async function handleShiftPlan(req, res, selection = "") {
     let hodDeps = await Dept.find({hod: req.user._id});
     let hodObject = {};
     for (let d of hodDeps) {
         hodObject[d.costcode] = d.name;
     }
+}
+
+function processExcelFile(filename) {
+    let wb = xlsx.readFile(filename);
+
+    let ws = wb.Sheets[wb.SheetNames[0]];
+    let data = xlsx.utils.sheet_to_json(ws);
+    for (let d of data) {
+        if (d["Dept Cd"] && d["Attend Dt"] && d["PersNo"]) {
+            if (d["Sch. Sts."] !== "WO") {
+                
+            }
+        }
+    }
+
+    let x = addDays(new Date("1899-12-31"), parseInt(data[0]["Attend Dt"]));
+    y = x.toISOString();
+    y = y.slice(0, 10);
+    console.log(y);
+    z = new Date(y);
+    console.log(z);
+    console.log(z.getDate());
+    console.log(z.getMonth());
+    console.log(z.getFullYear());
+    let newDate = new Date(z.getFullYear(), z.getDate() - 1, z.getMonth() + 1);
+    console.log(addMinutes(newDate, 330));
+}
+
+module.exports.renderShiftPlanForm = async (req, res) => {
+    
 }

@@ -6,7 +6,7 @@ module.exports = {
     LOCAL_HOST: process.env.LOCAL_HOST,
     PLCI_HOST: process.env.PLCI_HOST,
     DB_URL: process.env.DB_URL,
-    validShifts : ['A', 'B', 'C', 'G', 'WO/LV', 'M', 'N'],
+    validShifts : ['A', 'B', 'C', 'G', 'M', 'N'],
     deptGroups: {
         CI: ['530'],
         ELECTRICAL: ['359'],

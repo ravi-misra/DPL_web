@@ -42,17 +42,42 @@
         <button class="choice-button file-upload">
             <p>Upload System Generated Excel File</p>
         </button>
-        <button class="choice-button manual-entry">
-            <p>Enter Shift Schedule Manually</p>
+        <button class="choice-button view-plan">
+            <p>View Department Shift Plan</p>
         </button>
     </div>
     <hr>
-    <div class="shift-plan-action excel" style="display: none;">
-        <input type="file" name="" id="">
-    </div>
-    <div class="shift-plan-action manual" style="display: none;">
-        <h1>coming...</h1>
-    </div>
+    <form action="" method="post" class="shift-plan-action excel" style="display: none;">
+        <div>
+            <select name="costcode" id="">
+                <option value="">--Please choose department--</option>
+                <option value="saab">Saab</option>
+                <option value="opel">Opel</option>
+                <option value="audi">Audi</option>
+            </select>
+        </div>
+        <div>
+            <input type="file" name="" id="">
+        </div>
+        <div class="login-button-container">
+            <button type="submit" name="button" class="btn login-btn">Submit</button>
+        </div>
+    </form>
+    <form action="" method="post" class="shift-plan-action view" style="display: none;">
+        <div>
+            <div>
+                <select name="costcode" id="">
+                    <option value="">--Please choose department--</option>
+                    <option value="saab">Saab</option>
+                    <option value="opel">Opel</option>
+                    <option value="audi">Audi</option>
+                </select>
+            </div>
+        </div>
+        <div class="login-button-container">
+            <button type="submit" name="button" class="btn login-btn">Submit</button>
+        </div>
+    </form>
     <script>
         let buttonContainer  = document.querySelector(".shift-plan-strategy");
         let choiceButtons = buttonContainer.querySelectorAll(".choice-button");
@@ -64,11 +89,11 @@
             this.classList.add('selected-choice');
             if (this.classList.contains("file-upload")) {
                 document.querySelector(".excel").style.display = "block";
-                document.querySelector(".manual").style.display = "none";
+                document.querySelector(".view").style.display = "none";
             }
-            if (this.classList.contains("manual-entry")) {
+            if (this.classList.contains("view-plan")) {
                 document.querySelector(".excel").style.display = "none";
-                document.querySelector(".manual").style.display = "block";
+                document.querySelector(".view").style.display = "block";
             }
         } 
         for(let i of choiceButtons) {

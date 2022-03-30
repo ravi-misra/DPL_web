@@ -1,7 +1,7 @@
 const multer = require("multer");
 const path = require("path");
 const Dept = require("../models/department");
-const { startOfDay, addMinutes, addDays } = require("date-fns");
+const { addMinutes, addDays} = require("date-fns");
 const xlsx = require("xlsx");
 
 //multer setup
@@ -47,34 +47,35 @@ async function handleShiftPlan(req, res, selection = "") {
     }
 }
 
+
 async function processExcelFile(req, res, filename) {
     let wb = xlsx.readFile(filename);
 
     let ws = wb.Sheets[wb.SheetNames[0]];
     let data = xlsx.utils.sheet_to_json(ws);
+    //Handle wrong date format supplied by system excel file
     let firstDateValue = parseInt(data[0]["Attend Dt"]);
     let x = addDays(new Date("1899-12-31"), firstDateValue);
     let y = x.toISOString();
     y = y.slice(0, 10);
     let z = new Date(y);
-    if (newDate.getMonth() === 0) {
+    if (z.getMonth() === 0) {
         let firstDate = new Date(z.getFullYear(), z.getDate() - 1, z.getMonth() + 1);
         firstDate = addMinutes(newDate, 330);
         let currentDateValue = firstDateValue, currentDate = firstDate;
         for (let d of data) {
-            if (d["Dept Cd"] && d["Attend Dt"] && d["PersNo"]) {
+            if (d["Dept Cd"] && d["Attend Dt"] && d["PersNo"] && d["Sch. Sts."]) {
                 if (d["Sch. Sts."] !== "WO" && d["Dept Cd"] === req.body.costcode) {
-                    let nextDateValue, nextDate;
+                    if (d["PersNo"].length === 4) {
+                        d["PersNo"] = "0" + d["PersNo"];
+                    }
                     let runningDateValue = parseInt(d["Attend Dt"]);
-                    let x = addDays(
-                        new Date("1899-12-31"),
-                        runningDateValue
-                    );
-                    let y = x.toISOString();
-                    y = y.slice(0, 10);
-                    let z = new Date(y);
-                    let newDate = new Date(z.getFullYear(), z.getDate() - 1, z.getMonth() + 1);
-                    newDate = addMinutes(newDate, 330);
+                    if (currentDateValue === runningDateValue) {
+
+                    } else {
+                        currentDate = addDays(currentDate, 1);
+                        currentDateValue = runningDateValue;
+                    }
                 }
             }
         }

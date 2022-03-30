@@ -1,8 +1,11 @@
 const multer = require("multer");
 const path = require("path");
 const Dept = require("../models/department");
-const { addMinutes, addDays} = require("date-fns");
+const Employee = require("../models/employee");
+const Shift_sch = require("../models/shift_sch");
+const { addMinutes, addDays } = require("date-fns");
 const xlsx = require("xlsx");
+const { validShifts } = require("../config");
 
 //multer setup
 const options = {
@@ -47,8 +50,8 @@ async function handleShiftPlan(req, res, selection = "") {
     }
 }
 
-
 async function processExcelFile(req, res, filename) {
+    let empRefMap = {};
     let wb = xlsx.readFile(filename);
 
     let ws = wb.Sheets[wb.SheetNames[0]];
@@ -60,21 +63,79 @@ async function processExcelFile(req, res, filename) {
     y = y.slice(0, 10);
     let z = new Date(y);
     if (z.getMonth() === 0) {
-        let firstDate = new Date(z.getFullYear(), z.getDate() - 1, z.getMonth() + 1);
+        let firstDate = new Date(
+            z.getFullYear(),
+            z.getDate() - 1,
+            z.getMonth() + 1
+        );
         firstDate = addMinutes(newDate, 330);
-        let currentDateValue = firstDateValue, currentDate = firstDate;
+        let currentDateValue = firstDateValue,
+            currentDate = firstDate;
         for (let d of data) {
-            if (d["Dept Cd"] && d["Attend Dt"] && d["PersNo"] && d["Sch. Sts."]) {
-                if (d["Sch. Sts."] !== "WO" && d["Dept Cd"] === req.body.costcode) {
+            if (
+                d["Dept Cd"] &&
+                d["Attend Dt"] &&
+                d["PersNo"] &&
+                d["Sch. Shift"] &&
+                d["Sch. Sts."]
+            ) {
+                if (
+                    d["Sch. Sts."] !== "WO" &&
+                    d["Dept Cd"] === req.body.costcode &&
+                    validShifts.includes(d["Sch. Shift"])
+                ) {
                     if (d["PersNo"].length === 4) {
                         d["PersNo"] = "0" + d["PersNo"];
                     }
                     let runningDateValue = parseInt(d["Attend Dt"]);
-                    if (currentDateValue === runningDateValue) {
-
-                    } else {
-                        currentDate = addDays(currentDate, 1);
-                        currentDateValue = runningDateValue;
+                    if (!Object.keys(empRefMap).includes(d["PersNo"])) {
+                        let doc = await Employee.findOne({
+                            username: d["PersNo"],
+                        });
+                        if (doc) {
+                            empRefMap[d["PersNo"]] = doc._id;
+                        }
+                    }
+                    if (empRefMap[d["PersNo"]]) {
+                        if (currentDateValue === runningDateValue) {
+                            //Same date record
+                            let filter = {
+                                employee: empRefMap[d["PersNo"]],
+                                date: currentDate,
+                            };
+                            let update = {
+                                $addToSet: { shift: d["Sch. Shift"] },
+                            };
+                            let doc = await Shift_sch.findOneAndUpdate(
+                                filter,
+                                update,
+                                {
+                                    new: true,
+                                    upsert: true,
+                                }
+                            );
+                            await doc.save();
+                        } else {
+                            //Next date record
+                            currentDate = addDays(currentDate, 1);
+                            currentDateValue = runningDateValue;
+                            let filter = {
+                                employee: empRefMap[d["PersNo"]],
+                                date: currentDate,
+                            };
+                            let update = {
+                                $addToSet: { shift: d["Sch. Shift"] },
+                            };
+                            let doc = await Shift_sch.findOneAndUpdate(
+                                filter,
+                                update,
+                                {
+                                    new: true,
+                                    upsert: true,
+                                }
+                            );
+                            await doc.save();
+                        }
                     }
                 }
             }

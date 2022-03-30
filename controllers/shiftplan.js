@@ -47,35 +47,50 @@ async function handleShiftPlan(req, res, selection = "") {
     }
 }
 
-function processExcelFile(filename) {
+async function processExcelFile(req, res, filename) {
     let wb = xlsx.readFile(filename);
 
     let ws = wb.Sheets[wb.SheetNames[0]];
     let data = xlsx.utils.sheet_to_json(ws);
-    for (let d of data) {
-        if (d["Dept Cd"] && d["Attend Dt"] && d["PersNo"]) {
-            if (d["Sch. Sts."] !== "WO") {
-                let x = addDays(
-                    new Date("1899-12-31"),
-                    parseInt(data[0]["Attend Dt"])
-                );
-                let y = x.toISOString();
-                y = y.slice(0, 10);
+    let firstDateValue = parseInt(data[0]["Attend Dt"]);
+    let x = addDays(new Date("1899-12-31"), firstDateValue);
+    let y = x.toISOString();
+    y = y.slice(0, 10);
+    let z = new Date(y);
+    if (newDate.getMonth() === 0) {
+        let firstDate = new Date(z.getFullYear(), z.getDate() - 1, z.getMonth() + 1);
+        firstDate = addMinutes(newDate, 330);
+        let currentDateValue = firstDateValue, currentDate = firstDate;
+        for (let d of data) {
+            if (d["Dept Cd"] && d["Attend Dt"] && d["PersNo"]) {
+                if (d["Sch. Sts."] !== "WO" && d["Dept Cd"] === req.body.costcode) {
+                    let nextDateValue, nextDate;
+                    let runningDateValue = parseInt(d["Attend Dt"]);
+                    let x = addDays(
+                        new Date("1899-12-31"),
+                        runningDateValue
+                    );
+                    let y = x.toISOString();
+                    y = y.slice(0, 10);
+                    let z = new Date(y);
+                    let newDate = new Date(z.getFullYear(), z.getDate() - 1, z.getMonth() + 1);
+                    newDate = addMinutes(newDate, 330);
+                }
             }
         }
     }
 
-    let x = addDays(new Date("1899-12-31"), parseInt(data[0]["Attend Dt"]));
-    y = x.toISOString();
-    y = y.slice(0, 10);
-    console.log(y);
-    z = new Date(y);
-    console.log(z);
-    console.log(z.getDate());
-    console.log(z.getMonth());
-    console.log(z.getFullYear());
-    let newDate = new Date(z.getFullYear(), z.getDate() - 1, z.getMonth() + 1);
-    console.log(addMinutes(newDate, 330));
+    // let x = addDays(new Date("1899-12-31"), parseInt(data[0]["Attend Dt"]));
+    // y = x.toISOString();
+    // y = y.slice(0, 10);
+    // console.log(y);
+    // z = new Date(y);
+    // console.log(z);
+    // console.log(z.getDate());
+    // console.log(z.getMonth());
+    // console.log(z.getFullYear());
+    // let newDate = new Date(z.getFullYear(), z.getDate() - 1, z.getMonth() + 1);
+    // console.log(addMinutes(newDate, 330));
 }
 
 module.exports.renderShiftPlanForm = async (req, res) => {};

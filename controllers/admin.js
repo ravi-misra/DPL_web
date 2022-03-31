@@ -7,9 +7,10 @@ const ExpressError = require("../utils/ExpressErrors");
 const { addMinutes, addDays } = require("date-fns");
 const xlsx = require("xlsx");
 const { validShifts } = require("../config");
+const puppeteer = require("puppeteer");
 
 const fileDestinationFolder = path.resolve(__dirname, "../uploads/shiftplans/");
-// const fileDestinationFolder = path.resolve("./uploads/shiftplans/");
+
 //multer setup
 const options = {
     destination: fileDestinationFolder,
@@ -52,6 +53,33 @@ async function handleShiftPlan(req, res, selection = "") {
         hodObject[d.costcode] = d.costcode + " - " + d.name;
     }
     return hodObject;
+}
+
+async function processExcelFile2(req, res, fileUri) {
+    const browser = await puppeteer.launch({});
+    const page = await browser.newPage();
+    page.setDefaultNavigationTimeout(0);
+    await page.goto(fileUri);
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    let allRows = await page.$$("#grdpunch > tbody > tr");
+    for (let row of allRows.slice(1)) {
+        let rowData = await row.$$eval("td", (tds) => {
+            if (tds) {
+                return tds.map((x) => x.innerText);
+            } else {
+                return undefined;
+            }
+        });
+
+        if (!Object.keys(empRefMap).includes(d["PersNo"])) {
+            let doc = await Employee.findOne({
+                username: d["PersNo"],
+            });
+            if (doc) {
+                empRefMap[d["PersNo"]] = doc._id;
+            }
+        }
+    }
 }
 
 async function processExcelFile(req, res, filename) {
@@ -172,7 +200,7 @@ module.exports.uploadShiftPlan = async (req, res, next) => {
                     )
                 );
                 req.flash("success", "Shift plan updated.");
-                res.redirect("/home");
+                res.redirect("/admin/shift-plan");
             }
         }
     });

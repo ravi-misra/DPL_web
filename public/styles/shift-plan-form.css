@@ -1,0 +1,51 @@
+.shift-plan-strategy {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.shift-plan-action > * {
+    text-align: center;
+}
+
+.shift-plan-action .file-selection > * {
+    display: block;
+    margin: 40px 10px;
+    font-size: 1rem;
+}
+
+.shift-plan-action .file-selection > #file {
+    margin-left: 30px;
+}
+
+.shift-plan-action .file-selection {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.choice-button {
+    width: 300px;
+    height: 75px;
+    background-color: rgb(177, 212, 247);
+    /* background-color: rgb(87, 165, 243); */
+    margin: 20px;
+    flex: 0 0 auto;
+    /* border: 1px solid black; */
+    border-radius: 7px;
+}
+.choice-button:hover,
+.choice-button.selected-choice {
+    background-color: rgb(87, 165, 243);
+}
+
+.choice-button.selected-choice p {
+    font-size: 18px;
+}
+
+.choice-button p {
+    text-align: center;
+    padding: 2px 0;
+    font-size: 16px;
+    font-weight: bold;
+}

@@ -3,13 +3,16 @@ const path = require("path");
 const Dept = require("../models/department");
 const Employee = require("../models/employee");
 const Shift_sch = require("../models/shift_sch");
+const ExpressError = require("../utils/ExpressErrors");
 const { addMinutes, addDays } = require("date-fns");
 const xlsx = require("xlsx");
 const { validShifts } = require("../config");
 
+const fileDestinationFolder = path.resolve(__dirname, "../uploads/shiftplans/");
+// const fileDestinationFolder = path.resolve("./uploads/shiftplans/");
 //multer setup
 const options = {
-    destination: "../uploads/shiftplans",
+    destination: fileDestinationFolder,
     filename: function (req, file, cb) {
         cb(null, req.body.costcode + path.extname(file.originalname));
     },
@@ -30,7 +33,7 @@ function checkFileType(file, cb) {
     if (extname) {
         return cb(null, true);
     } else {
-        cb("Only excel files are allowed");
+        cb(new ExpressError("Only excel files are allowed", 404));
     }
 }
 
@@ -46,8 +49,9 @@ async function handleShiftPlan(req, res, selection = "") {
     let hodDeps = await Dept.find({ hod: req.user._id });
     let hodObject = {};
     for (let d of hodDeps) {
-        hodObject[d.costcode] = d.name;
+        hodObject[d.costcode] = d.costcode + " - " + d.name;
     }
+    return hodObject;
 }
 
 async function processExcelFile(req, res, filename) {
@@ -68,7 +72,7 @@ async function processExcelFile(req, res, filename) {
             z.getDate() - 1,
             z.getMonth() + 1
         );
-        firstDate = addMinutes(newDate, 330);
+        firstDate = addMinutes(firstDate, 330);
         let currentDateValue = firstDateValue,
             currentDate = firstDate;
         for (let d of data) {
@@ -86,6 +90,9 @@ async function processExcelFile(req, res, filename) {
                 ) {
                     if (d["PersNo"].length === 4) {
                         d["PersNo"] = "0" + d["PersNo"];
+                    }
+                    if (d["Dept Cd"].length === 2) {
+                        d["Dept Cd"] = "0" + d["Dept Cd"];
                     }
                     let runningDateValue = parseInt(d["Attend Dt"]);
                     if (!Object.keys(empRefMap).includes(d["PersNo"])) {
@@ -141,18 +148,32 @@ async function processExcelFile(req, res, filename) {
             }
         }
     }
-
-    // let x = addDays(new Date("1899-12-31"), parseInt(data[0]["Attend Dt"]));
-    // y = x.toISOString();
-    // y = y.slice(0, 10);
-    // console.log(y);
-    // z = new Date(y);
-    // console.log(z);
-    // console.log(z.getDate());
-    // console.log(z.getMonth());
-    // console.log(z.getFullYear());
-    // let newDate = new Date(z.getFullYear(), z.getDate() - 1, z.getMonth() + 1);
-    // console.log(addMinutes(newDate, 330));
 }
 
-module.exports.renderShiftPlanForm = async (req, res) => {};
+module.exports.renderShiftPlanForm = async (req, res) => {
+    let hodObject = await handleShiftPlan(req, res);
+    res.render("admin/shiftplanning", { hodObject });
+};
+
+module.exports.uploadShiftPlan = async (req, res, next) => {
+    upload(req, res, async (err) => {
+        if (err) {
+            next(err);
+        } else {
+            if (req.file === undefined) {
+                next(new ExpressError("No file selected", 404));
+            } else {
+                await processExcelFile(
+                    req,
+                    res,
+                    path.resolve(
+                        fileDestinationFolder,
+                        req.body.costcode + ".xls"
+                    )
+                );
+                req.flash("success", "Shift plan updated.");
+                res.redirect("/home");
+            }
+        }
+    });
+};

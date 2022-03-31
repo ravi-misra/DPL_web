@@ -1,4 +1,77 @@
 <% layout('layouts/boilerplate.ejs') %>
-<div>
-    
+<div class="shift-plan-strategy">
+    <button class="choice-button file-upload">
+        <p>Upload System Generated Excel File</p>
+    </button>
+    <button class="choice-button view-plan">
+        <p>View Department Shift Plan</p>
+    </button>
 </div>
+<hr>
+<form action="/admin/shift-plan" method="post" enctype="multipart/form-data" class="shift-plan-action excel" style="display: none;">
+    <div class="file-selection">
+        <select name="costcode" id="">
+            <option value="">--Please choose department--</option>
+            <% for( let d of Object.keys(hodObject) ) { %>
+                <option value=<%= d %>><%= hodObject[d] %></option>
+            <% } %>
+        </select>
+        <input type="file" accept=".xls, .xlsx" name="attendance-sheet" id="file">
+    </div>
+    <div class="login-button-container">
+        <button type="submit" name="button" class="btn login-btn">Submit</button>
+    </div>
+</form>
+<form action="" method="post" class="shift-plan-action view" style="display: none;">
+    <div>
+        <br><br>
+        Page under development. Coming soon...
+    </div>
+    <!-- <div>
+        <div>
+            <select name="costcode" id="">
+                <option value="">--Please choose department--</option>
+                <option value="saab">Saab</option>
+                <option value="opel">Opel</option>
+                <option value="audi">Audi</option>
+            </select>
+        </div>
+    </div>
+    <div class="login-button-container">
+        <button type="submit" name="button" class="btn login-btn">Submit</button>
+    </div> -->
+</form>
+<div id="file-upload-modal" style="display: none;position: fixed;height: 100vh;width: 100vw;z-index: 9999;background-color: transparent;">
+    <img src="/assets/images/loading.gif" alt="Loading..." width="414" height="233" style="vertical-align:middle;margin: auto;">
+</div>
+
+<script>
+    let buttonContainer  = document.querySelector(".shift-plan-strategy");
+    let choiceButtons = buttonContainer.querySelectorAll(".choice-button");
+    let uploadButton = document.querySelector(".excel > .login-button-container");
+    let modalPage = document.querySelector("#file-upload-modal");
+    let excelUploadForm = document.querySelector(".shift-plan-action.excel");
+    uploadButton.addEventListener("click", (e) => {
+        e.preventDefault(),
+        modalPage.style.display = "block";
+        excelUploadForm.submit();
+    })
+    function highlightClickedButton() {
+        let currentActive = buttonContainer.querySelector('.selected-choice');
+        if(currentActive) {
+            currentActive.classList.remove("selected-choice");
+        }
+        this.classList.add('selected-choice');
+        if (this.classList.contains("file-upload")) {
+            document.querySelector(".excel").style.display = "block";
+            document.querySelector(".view").style.display = "none";
+        }
+        if (this.classList.contains("view-plan")) {
+            document.querySelector(".excel").style.display = "none";
+            document.querySelector(".view").style.display = "block";
+        }
+    } 
+    for(let i of choiceButtons) {
+        i.addEventListener('click', highlightClickedButton);
+    }
+</script>

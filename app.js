@@ -20,6 +20,7 @@ const {
 const mainRoutes = require("./routes/main");
 const profileRoutes = require("./routes/profile");
 const dashboardRoutes = require("./routes/dashboard");
+const adminRoutes = require("./routes/admin");
 const socListeners = require("./sockets/listeners");
 const Employee = require("./models/employee");
 const {
@@ -172,6 +173,7 @@ app.all("*", (req, res, next) => {
 app.use("/", mainRoutes);
 app.use("/profile", profileRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/admin", adminRoutes);
 
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404));
@@ -180,7 +182,7 @@ app.all("*", (req, res, next) => {
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = "Something Went Wrong!";
-    // res.status(statusCode).render('error', { err })
+    // res.status(statusCode).render("error", { err });
     req.flash("error", err.message);
     res.redirect("/home");
 });

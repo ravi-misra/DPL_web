@@ -60,7 +60,7 @@ let roles = {
         },
         Admin: {
             "Shift Plan": "/admin/shift-plan",
-            "Password-reset": "/admin/password-reset",
+            "User Management": "/admin/user-management",
         },
         Contracts: {
             "All Contracts": "/contract",
@@ -87,7 +87,7 @@ let roles = {
         },
         Admin: {
             "Shift Plan": "/admin/shift-plan",
-            "User Management": "/admin/password-reset",
+            "User Management": "/admin/user-management",
         },
         Contracts: {
             "All Contracts": "/contract",

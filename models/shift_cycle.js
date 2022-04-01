@@ -7,19 +7,14 @@ const ShiftCycle3WeekSchema = new Schema({
         ref: "Department",
         required: true,
     },
-    employee: {
-        type: Schema.Types.ObjectId,
-        ref: "Employee",
-        required: true,
-    },
-    date: {
+    shift_cycle_ref: {
         type: Date,
         required: true,
     },
-    shift: {
-        type: String,
+    next_start_ref: {
+        type: Date,
         required: true,
-    }
+    },
 });
 
 module.exports = mongoose.model("ShiftCycle3Week", ShiftCycle3WeekSchema);

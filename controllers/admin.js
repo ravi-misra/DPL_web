@@ -3,8 +3,14 @@ const path = require("path");
 const Dept = require("../models/department");
 const Employee = require("../models/employee");
 const Shift_sch = require("../models/shift_sch");
+const Shift_cycle = require("../models/shift_cycle");
 const ExpressError = require("../utils/ExpressErrors");
-const { addMinutes, addDays, parse } = require("date-fns");
+const {
+    addMinutes,
+    addDays,
+    parse,
+    differenceInCalendarDays,
+} = require("date-fns");
 const { validShifts } = require("../config");
 const puppeteer = require("puppeteer");
 
@@ -64,6 +70,9 @@ async function handleShiftPlan(req, res, selection = "") {
 
 async function processExcelFile(req, res, fileUri) {
     let empRefMap = {};
+    let shiftCycleRef,
+        runningDate,
+        firstIteration = true;
     fileUri = `file:///` + fileUri;
     puppeteerCount += 1;
     const browser = await puppeteer.launch({});
@@ -95,9 +104,6 @@ async function processExcelFile(req, res, fileUri) {
                 validShifts.includes(scheduledShift) &&
                 scheduledStatus !== "WO"
             ) {
-                if (validShifts.includes(modifiedShift)) {
-                    scheduledStatus = modifiedShift;
-                }
                 if (!Object.keys(empRefMap).includes(personalNumber)) {
                     let doc = await Employee.findOne({
                         username: personalNumber,
@@ -107,12 +113,20 @@ async function processExcelFile(req, res, fileUri) {
                     }
                 }
                 if (empRefMap[personalNumber]) {
+                    runningDate = addMinutes(
+                        parse(dateString, "dd/MM/yyyy", new Date()),
+                        330
+                    );
+                    if (firstIteration) {
+                        shiftCycleRef = runningDate;
+                        firstIteration = false;
+                    }
+                    if (validShifts.includes(modifiedShift)) {
+                        scheduledStatus = modifiedShift;
+                    }
                     let filter = {
                         employee: empRefMap[personalNumber],
-                        date: addMinutes(
-                            parse(dateString, "dd/MM/yyyy", new Date()),
-                            330
-                        ),
+                        date: runningDate,
                     };
                     let update = { shift: [scheduledShift] };
                     let doc = await Shift_sch.findOneAndUpdate(filter, update, {
@@ -121,6 +135,25 @@ async function processExcelFile(req, res, fileUri) {
                     });
                     await doc.save();
                 }
+            }
+        }
+        if (req.body.cycle3week) {
+            if (differenceInCalendarDays(runningDate, shiftCycleRef) > 21) {
+                const cycleDep = await Dept.findOne({
+                    costcode: req.body.costcode,
+                });
+                const newCycle = await Shift_cycle.findOneAndUpdate(
+                    { dept: cycleDep._id },
+                    {
+                        shift_cycle_ref: shiftCycleRef,
+                        next_start_ref: addDays(runningDate, 1),
+                    },
+                    {
+                        new: true,
+                        upsert: true,
+                    }
+                );
+                await newCycle.save();
             }
         }
     } catch (e) {

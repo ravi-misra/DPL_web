@@ -2,7 +2,8 @@ const puppeteer = require("puppeteer");
 const Dept = require("../models/department");
 const Employee = require("../models/employee");
 const Shift_sch = require("../models/shift_sch");
-const { startOfDay, addDays } = require("date-fns");
+const Shift_cycle = require("../models/shift_cycle");
+const { startOfDay, addDays, differenceInCalendarDays } = require("date-fns");
 const { defaultHash, defaultSalt } = require("../utils/defaultPassword");
 const exceptionUsers = require("../utils/exceptionUsers");
 const { pl_dept } = require("../config");
@@ -166,5 +167,7 @@ async function deleteolddata() {
     //delete data older than 30 days
     await Shift_sch.deleteMany({ date: { $lt: addDays(today, -30) } });
 }
+
+async function cycle_schedule() {}
 
 module.exports = { scrape, dbUpdate, deleteolddata };

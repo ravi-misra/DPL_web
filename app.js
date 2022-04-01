@@ -153,12 +153,12 @@ async function dbMaintenance() {
         startDBUpdate = true;
         await dbUpdate(data, allPN);
         console.log("update done");
+    } catch (err) {
+        console.log(err);
+    } finally {
         await deleteolddata();
         console.log("cleaning done");
         startDBUpdate = false;
-    } catch (err) {
-        startDBUpdate = false;
-        console.log(err);
     }
 }
 

@@ -4,18 +4,20 @@ const Dept = require("../models/department");
 const Employee = require("../models/employee");
 const Shift_sch = require("../models/shift_sch");
 const ExpressError = require("../utils/ExpressErrors");
-const { addMinutes, addDays } = require("date-fns");
-const xlsx = require("xlsx");
+const { addMinutes, addDays, parse } = require("date-fns");
 const { validShifts } = require("../config");
 const puppeteer = require("puppeteer");
 
 const fileDestinationFolder = path.resolve(__dirname, "../uploads/shiftplans/");
+const maxMB = 2;
+let puppeteerCount = 0;
+const maxPuppeteer = 2;
 
 //multer setup
 const options = {
     destination: fileDestinationFolder,
     filename: function (req, file, cb) {
-        cb(null, req.body.costcode + path.extname(file.originalname));
+        cb(null, req.body.costcode + ".htm");
     },
 };
 const storage = multer.diskStorage(options);
@@ -28,19 +30,24 @@ function checkFileType(file, cb) {
     const extname = filetypes.test(
         path.extname(file.originalname).toLowerCase()
     );
-    // // Check mime
-    // const mimetype = filetypes.test(file.mimetype);
+    // Check mime
+    const mimetype = /application\/vnd\.ms-excel$/.test(file.mimetype);
 
-    if (extname) {
+    if (extname && mimetype) {
         return cb(null, true);
     } else {
-        cb(new ExpressError("Only excel files are allowed", 404));
+        cb(
+            new ExpressError(
+                "Only system generated excel files are allowed",
+                404
+            )
+        );
     }
 }
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 2 * 1000 * 1000 }, //Size in bytes
+    limits: { fileSize: maxMB * 1000 * 1000 }, //Size in bytes
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
     },
@@ -55,126 +62,73 @@ async function handleShiftPlan(req, res, selection = "") {
     return hodObject;
 }
 
-async function processExcelFile2(req, res, fileUri) {
-    const browser = await puppeteer.launch({});
-    const page = await browser.newPage();
-    page.setDefaultNavigationTimeout(0);
-    await page.goto(fileUri);
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    let allRows = await page.$$("#grdpunch > tbody > tr");
-    for (let row of allRows.slice(1)) {
-        let rowData = await row.$$eval("td", (tds) => {
-            if (tds) {
-                return tds.map((x) => x.innerText);
-            } else {
-                return undefined;
-            }
-        });
-
-        if (!Object.keys(empRefMap).includes(d["PersNo"])) {
-            let doc = await Employee.findOne({
-                username: d["PersNo"],
-            });
-            if (doc) {
-                empRefMap[d["PersNo"]] = doc._id;
-            }
-        }
-    }
-}
-
-async function processExcelFile(req, res, filename) {
+async function processExcelFile(req, res, fileUri) {
     let empRefMap = {};
-    let wb = xlsx.readFile(filename);
+    fileUri = `file:///` + fileUri;
+    puppeteerCount += 1;
+    const browser = await puppeteer.launch({});
+    try {
+        const page = await browser.newPage();
+        page.setDefaultNavigationTimeout(0);
+        await page.goto(fileUri);
+        // await new Promise((resolve) => setTimeout(resolve, 3000));
+        let allRows = await page.$$("#grdpunch > tbody > tr");
+        for (let row of allRows.slice(1)) {
+            let rowData = await row.$$eval("td", (tds) => {
+                if (tds) {
+                    return tds.map((x) => x.innerText);
+                } else {
+                    return undefined;
+                }
+            });
 
-    let ws = wb.Sheets[wb.SheetNames[0]];
-    let data = xlsx.utils.sheet_to_json(ws);
-    //Handle wrong date format supplied by system excel file
-    let firstDateValue = parseInt(data[0]["Attend Dt"]);
-    let x = addDays(new Date("1899-12-31"), firstDateValue);
-    let y = x.toISOString();
-    y = y.slice(0, 10);
-    let z = new Date(y);
-    if (z.getMonth() === 0) {
-        let firstDate = new Date(
-            z.getFullYear(),
-            z.getDate() - 1,
-            z.getMonth() + 1
-        );
-        firstDate = addMinutes(firstDate, 330);
-        let currentDateValue = firstDateValue,
-            currentDate = firstDate;
-        for (let d of data) {
+            let depCode = rowData[1].trim();
+            let dateString = rowData[2].trim();
+            let personalNumber = rowData[3].trim();
+            let scheduledShift = rowData[6].trim();
+            let modifiedShift = rowData[7].trim();
+            let scheduledStatus = rowData[8].trim();
             if (
-                d["Dept Cd"] &&
-                d["Attend Dt"] &&
-                d["PersNo"] &&
-                d["Sch. Shift"] &&
-                d["Sch. Sts."]
+                depCode === req.body.costcode &&
+                dateString &&
+                personalNumber &&
+                validShifts.includes(scheduledShift) &&
+                scheduledStatus !== "WO"
             ) {
-                if (
-                    d["Sch. Sts."] !== "WO" &&
-                    d["Dept Cd"] === req.body.costcode &&
-                    validShifts.includes(d["Sch. Shift"])
-                ) {
-                    if (d["PersNo"].length === 4) {
-                        d["PersNo"] = "0" + d["PersNo"];
+                if (validShifts.includes(modifiedShift)) {
+                    scheduledStatus = modifiedShift;
+                }
+                if (!Object.keys(empRefMap).includes(personalNumber)) {
+                    let doc = await Employee.findOne({
+                        username: personalNumber,
+                    });
+                    if (doc) {
+                        empRefMap[personalNumber] = doc._id;
                     }
-                    if (d["Dept Cd"].length === 2) {
-                        d["Dept Cd"] = "0" + d["Dept Cd"];
-                    }
-                    let runningDateValue = parseInt(d["Attend Dt"]);
-                    if (!Object.keys(empRefMap).includes(d["PersNo"])) {
-                        let doc = await Employee.findOne({
-                            username: d["PersNo"],
-                        });
-                        if (doc) {
-                            empRefMap[d["PersNo"]] = doc._id;
-                        }
-                    }
-                    if (empRefMap[d["PersNo"]]) {
-                        if (currentDateValue === runningDateValue) {
-                            //Same date record
-                            let filter = {
-                                employee: empRefMap[d["PersNo"]],
-                                date: currentDate,
-                            };
-                            let update = {
-                                $addToSet: { shift: d["Sch. Shift"] },
-                            };
-                            let doc = await Shift_sch.findOneAndUpdate(
-                                filter,
-                                update,
-                                {
-                                    new: true,
-                                    upsert: true,
-                                }
-                            );
-                            await doc.save();
-                        } else {
-                            //Next date record
-                            currentDate = addDays(currentDate, 1);
-                            currentDateValue = runningDateValue;
-                            let filter = {
-                                employee: empRefMap[d["PersNo"]],
-                                date: currentDate,
-                            };
-                            let update = {
-                                $addToSet: { shift: d["Sch. Shift"] },
-                            };
-                            let doc = await Shift_sch.findOneAndUpdate(
-                                filter,
-                                update,
-                                {
-                                    new: true,
-                                    upsert: true,
-                                }
-                            );
-                            await doc.save();
-                        }
-                    }
+                }
+                if (empRefMap[personalNumber]) {
+                    let filter = {
+                        employee: empRefMap[personalNumber],
+                        date: addMinutes(
+                            parse(dateString, "dd/MM/yyyy", new Date()),
+                            330
+                        ),
+                    };
+                    let update = { shift: [scheduledShift] };
+                    let doc = await Shift_sch.findOneAndUpdate(filter, update, {
+                        new: true,
+                        upsert: true,
+                    });
+                    await doc.save();
                 }
             }
         }
+    } catch (e) {
+        console.log(e);
+        throw e;
+    } finally {
+        await browser.close();
+        puppeteerCount -= 1;
     }
 }
 
@@ -188,19 +142,31 @@ module.exports.uploadShiftPlan = async (req, res, next) => {
         if (err) {
             next(err);
         } else {
-            if (req.file === undefined) {
-                next(new ExpressError("No file selected", 404));
-            } else {
-                await processExcelFile(
-                    req,
-                    res,
-                    path.resolve(
-                        fileDestinationFolder,
-                        req.body.costcode + ".xls"
-                    )
+            if (!req.body.costcode) {
+                req.flash(
+                    "error",
+                    "Please select a department from dropdown menu."
                 );
-                req.flash("success", "Shift plan updated.");
                 res.redirect("/admin/shift-plan");
+            } else if (req.file === undefined) {
+                req.flash("error", "No file selected.");
+                res.redirect("/admin/shift-plan");
+            } else {
+                if (puppeteerCount >= maxPuppeteer) {
+                    req.flash("error", "Server busy try after some time.");
+                    res.redirect("/admin/shift-plan");
+                } else {
+                    await processExcelFile(
+                        req,
+                        res,
+                        path.resolve(
+                            fileDestinationFolder,
+                            req.body.costcode + ".htm"
+                        )
+                    );
+                    req.flash("success", "Shift plan updated.");
+                    res.redirect("/admin/shift-plan");
+                }
             }
         }
     });

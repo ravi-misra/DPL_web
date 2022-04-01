@@ -41,8 +41,8 @@
         <button type="submit" name="button" class="btn login-btn">Submit</button>
     </div> -->
 </form>
-<div id="file-upload-modal" style="display: none;position: fixed;height: 100vh;width: 100vw;z-index: 9999;background-color: transparent;text-align: center;">
-    <img src="/assets/images/loading.gif" alt="Loading..." width="414" height="233" style="vertical-align:middle;">
+<div id="file-upload-modal" style="display: none;position: fixed;height: 100vh;width: 100vw;z-index: 9999;background-color: transparent;text-align: center;top: 0;left: 0;justify-content: center;">
+    <img src="/assets/images/loading.gif" alt="Loading..." width="414" height="233" style="align-self: center;">
 </div>
 
 <script>
@@ -53,7 +53,7 @@
     let excelUploadForm = document.querySelector(".shift-plan-action.excel");
     uploadButton.addEventListener("click", (e) => {
         e.preventDefault(),
-        modalPage.style.display = "block";
+        modalPage.style.display = "flex";
         excelUploadForm.submit();
     })
     function highlightClickedButton() {

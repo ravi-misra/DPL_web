@@ -95,7 +95,7 @@ async function scrape() {
             await buttonFirst.dispose();
         }
     }
-    browser.close();
+    await browser.close();
     return { data, allPN };
 }
 

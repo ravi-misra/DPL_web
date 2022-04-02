@@ -104,12 +104,18 @@ async function processExcelFile(req, res, fileUri) {
                 validShifts.includes(scheduledShift) &&
                 scheduledStatus !== "WO"
             ) {
-                if (!Object.keys(empRefMap).includes(personalNumber)) {
-                    let doc = await Employee.findOne({
-                        username: personalNumber,
-                    });
-                    if (doc) {
-                        empRefMap[personalNumber] = doc._id;
+                let empDoc = await Employee.findOne({
+                    username: personalNumber,
+                }).populate({
+                    path: "dept",
+                });
+                if (empDoc) {
+                    //confirm whether employee belongs to selected dept
+                    if (!empDoc.dept.costcode === req.body.costcode) {
+                        continue;
+                    }
+                    if (!Object.keys(empRefMap).includes(personalNumber)) {
+                        empRefMap[personalNumber] = empDoc._id;
                     }
                 }
                 if (empRefMap[personalNumber]) {
@@ -121,14 +127,18 @@ async function processExcelFile(req, res, fileUri) {
                         shiftCycleRef = runningDate;
                         firstIteration = false;
                     }
+                    let finalShift = scheduledShift;
                     if (validShifts.includes(modifiedShift)) {
-                        scheduledStatus = modifiedShift;
+                        finalShift = modifiedShift;
                     }
                     let filter = {
                         employee: empRefMap[personalNumber],
                         date: runningDate,
                     };
-                    let update = { shift: [scheduledShift] };
+                    let update = {
+                        shift: [finalShift],
+                        sch_shift: scheduledShift,
+                    };
                     let doc = await Shift_sch.findOneAndUpdate(filter, update, {
                         new: true,
                         upsert: true,
@@ -137,24 +147,22 @@ async function processExcelFile(req, res, fileUri) {
                 }
             }
         }
-        if (req.body.cycle3week) {
-            if (differenceInCalendarDays(runningDate, shiftCycleRef) > 21) {
-                const cycleDep = await Dept.findOne({
-                    costcode: req.body.costcode,
-                });
-                const newCycle = await Shift_cycle.findOneAndUpdate(
-                    { dept: cycleDep._id },
-                    {
-                        shift_cycle_ref: shiftCycleRef,
-                        next_start_ref: addDays(runningDate, 1),
-                    },
-                    {
-                        new: true,
-                        upsert: true,
-                    }
-                );
-                await newCycle.save();
-            }
+        if (differenceInCalendarDays(runningDate, shiftCycleRef) >= 20) {
+            const cycleDep = await Dept.findOne({
+                costcode: req.body.costcode,
+            });
+            const newCycle = await Shift_cycle.findOneAndUpdate(
+                { dept: cycleDep._id },
+                {
+                    shift_cycle_ref: shiftCycleRef,
+                    next_start_ref: addDays(runningDate, 1),
+                },
+                {
+                    new: true,
+                    upsert: true,
+                }
+            );
+            await newCycle.save();
         }
     } catch (e) {
         console.log(e);

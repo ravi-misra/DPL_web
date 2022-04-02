@@ -3,7 +3,12 @@ const Dept = require("../models/department");
 const Employee = require("../models/employee");
 const Shift_sch = require("../models/shift_sch");
 const Shift_cycle = require("../models/shift_cycle");
-const { startOfDay, addDays, differenceInCalendarDays } = require("date-fns");
+const {
+    startOfDay,
+    addDays,
+    differenceInCalendarDays,
+    addMinutes,
+} = require("date-fns");
 const { defaultHash, defaultSalt } = require("../utils/defaultPassword");
 const exceptionUsers = require("../utils/exceptionUsers");
 const { pl_dept } = require("../config");
@@ -168,6 +173,82 @@ async function deleteolddata() {
     await Shift_sch.deleteMany({ date: { $lt: addDays(today, -30) } });
 }
 
-async function cycle_schedule() {}
+async function repeatCycle() {
+    const today = addMinutes(startOfDay(new Date()), 330);
+    const target_cycle_ref = addDays(today, -19);
+    const targetCycles = await Shift_cycle.find({
+        shift_cycle_ref: { $lte: target_cycle_ref },
+    });
+    //only one cycle per department
+    for (let t of targetCycles) {
+        let nextCycleOffset =
+            differenceInCalendarDays(t.next_start_ref, t.shift_cycle_ref) % 21;
+        let startCopyFrom = addDays(t.shift_cycle_ref, nextCycleOffset);
+        let copyUpto = addDays(t.shift_cycle_ref, 20);
+        let offsetCounter = differenceInCalendarDays(copyUpto, startCopyFrom);
+        let targetDate = t.next_start_ref;
+        for (let i = 0; i <= offsetCounter; i++) {
+            let copySch = await Shift_sch.find({
+                date: addDays(startCopyFrom, i),
+            }).populate({
+                path: "employee",
+            });
+            targetDate = addDays(targetDate, i);
+            for (let j of copySch) {
+                if (j.employee.dept === t.dept) {
+                    let filter = {
+                        employee: j.employee._id,
+                        date: targetDate,
+                    };
+                    let update = {
+                        $setOnInsert: { shift: j.shift }, //change main shift only if not already set
+                        sch_shift: j.sch_shift,
+                    };
+                    let doc = await Shift_sch.findOneAndUpdate(filter, update, {
+                        new: true,
+                        upsert: true,
+                    });
+                    await doc.save();
+                }
+            }
+        }
+        for (let i = 0; i < nextCycleOffset; i++) {
+            let copySch = await Shift_sch.find({
+                date: addDays(t.shift_cycle_ref, i),
+            }).populate({
+                path: "employee",
+            });
+            targetDate = addDays(targetDate, i + 1);
+            for (let j of copySch) {
+                if (j.employee.dept === t.dept) {
+                    let filter = {
+                        employee: j.employee._id,
+                        date: targetDate,
+                    };
+                    let update = {
+                        $setOnInsert: { shift: j.shift }, //change main shift only if not already set
+                        sch_shift: j.sch_shift,
+                    };
+                    let doc = await Shift_sch.findOneAndUpdate(filter, update, {
+                        new: true,
+                        upsert: true,
+                    });
+                    await doc.save();
+                }
+            }
+        }
+        let updateCycle = await Shift_cycle.findOneAndUpdate(
+            { dept: t.dept },
+            {
+                shift_cycle_ref: t.next_start_ref,
+                next_start_ref: addDays(targetDate, 1),
+            },
+            {
+                new: true,
+            }
+        );
+        await updateCycle.save();
+    }
+}
 
-module.exports = { scrape, dbUpdate, deleteolddata };
+module.exports = { scrape, dbUpdate, deleteolddata, repeatCycle };

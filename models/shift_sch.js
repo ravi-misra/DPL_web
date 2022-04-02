@@ -17,6 +17,7 @@ const ShiftScheduleSchema = new mongoose.Schema({
             required: true,
         },
     ],
+    sch_shift: String,
     editby: {
         type: Schema.Types.ObjectId,
         ref: "Employee",

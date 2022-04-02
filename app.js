@@ -27,6 +27,7 @@ const {
     scrape,
     dbUpdate,
     deleteolddata,
+    repeatCycle,
 } = require("./web-scraping/getPotlineEmployees");
 const shutdownResponse = require("./utils/shutdownResponse");
 const http = require("http");
@@ -152,12 +153,15 @@ async function dbMaintenance() {
         console.log("scraping done");
         startDBUpdate = true;
         await dbUpdate(data, allPN);
-        console.log("update done");
+        console.log("Update done");
+        await repeatCycle();
+        console.log("Shift cycles updated");
+        await deleteolddata();
+        console.log("Cleaning done");
+        console.log(`Completed at ${new Date()}`);
     } catch (err) {
         console.log(err);
     } finally {
-        await deleteolddata();
-        console.log("cleaning done");
         startDBUpdate = false;
     }
 }

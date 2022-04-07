@@ -13,10 +13,10 @@
 </head>
 <body>
     <div class="user-section hod">
-        <form action="" method="post">
+        <form class="reset-password" action="" method="post">
             <h2>Reset Password</h2>
             <label for="browser">Choose your browser from the list:</label>
-            <input list="browsers" name="browser" id="browser" placeholder="Search persobal number or name">
+            <input list="browsers" name="browser" id="browser" placeholder="Search by personal number or name">
 
             <datalist id="browsers">
                 <option value="Edge 103">
@@ -52,6 +52,63 @@
 
         </form>
     </div>
+    <script>
+        const resetButton = document.querySelector(".reset-password > .login-button-container");
+
+        async function postData(url = '', data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+            return response.json(); // parses JSON response into native JavaScript objects
+        }
+
+        function flash(message, typeClass) {
+            const card = document.querySelector("#flash-mesage").content.querySelector(typeClass).cloneNode(true);
+            card.querySelector("p").textContent = message;
+            document.body.appendChild(card);
+            document.querySelector(".flash").classList.add("animate--drop-in-fade-out");
+        setTimeout(function () {
+            document.querySelector(".flash").classList.remove("animate--drop-in-fade-out");
+            document.querySelector(".flash").remove();
+        }, 3500);
+        }
+
+        function resetPassword(e) {
+            e.preventDefault();
+
+        }
+
+        resetButton.addEventListener("click", resetPassword);
+    </script>
+    <template id="flash-mesage">
+        <div class="flash success" style="z-index: 9999;">
+            <div class="flash__icon">
+                <i class="icon fa fa-check-circle"></i>
+            </div>
+            <p class="flash__body">
+                success
+            </p>
+        </div>
+        <div class="flash fail" style="z-index: 9999;">
+            <div class="flash__icon">
+                <i class="icon fa fa-exclamation-triangle"></i>
+            </div>
+            <p class="flash__body">
+                Failure
+            </p>
+        </div>
+    </template>
 
 </body>
 </html>

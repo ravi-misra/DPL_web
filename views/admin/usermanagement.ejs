@@ -1,0 +1,156 @@
+<% layout('layouts/boilerplate.ejs') %>
+<div class="user-section hod">
+    <form class="reset-password" action="" method="post">
+        <h2>Reset Password</h2>
+        <select name="dept" class="dept-selector">
+            <option value="">--Please choose department--</option>
+        </select>
+        <select name="emp" class="emp-selector">
+            <option value="">--Please select employee name--</option>
+        </select>
+        <div class="login-button-container">
+            <button type="submit" class="btn login-btn">Reset Password</button>
+        </div>
+    </form>
+</div>
+
+<% if (currentUser.role === "DPLAdmin") { %>
+    <hr>
+    <div class="user-section dpladmin">
+        <form action="" method="post">
+            <h2>Create new exception users</h2>
+
+        </form>
+        <hr>
+        <form action="" method="post">
+            <h2>Create new normal users</h2>
+
+        </form>
+        <hr>
+        <form action="" method="post">
+            <h2>Edit user role</h2>
+
+        </form>
+        <hr>
+        <form action="" method="post">
+            <h2>Edit department details</h2>
+
+        </form>
+    </div>
+<% } %>
+<template id="flash-mesage">
+    <div class="flash success" style="z-index: 9999;">
+        <div class="flash__icon">
+            <i class="icon fa fa-check-circle"></i>
+        </div>
+        <p class="flash__body">
+            success
+        </p>
+    </div>
+    <div class="flash fail" style="z-index: 9999;">
+        <div class="flash__icon">
+            <i class="icon fa fa-exclamation-triangle"></i>
+        </div>
+        <p class="flash__body">
+            Failure
+        </p>
+    </div>
+</template>
+<script>
+    let employeeObject = {}, hodObject = {};
+    if (!window.fetch) {
+        flash("This browser is not supported.", ".fail");
+        setTimeout(redirectHome, 3000);            
+    } else {
+        loadInitiaData();
+    }
+    async function loadInitiaData() {
+        ({employeeObject, hodObject} = await postData("/admin/user-management/api/get-employee-data",{}));
+        populateDeptSelector();
+    }
+    function redirectHome() {
+        window.location.replace(window.location.origin);
+    }
+    //Password Reset form//////////////////////////////////////////////////
+    const resetForm = document.querySelector(".reset-password");
+    const resetButton = resetForm.querySelector(".login-button-container");
+    const resetFormDeptSelector = resetForm.querySelector(".dept-selector");
+    const resetFormEmpSelector = resetForm.querySelector(".emp-selector");
+    resetButton.addEventListener("click", resetPassword);
+    resetFormDeptSelector.addEventListener("change", resetEmployeeSelector);
+
+    function populateDeptSelector() {
+        for( let d of Object.keys(hodObject) ) {
+            let option = document.createElement("option");
+            option.value = d;
+            option.innerText = hodObject[d];
+            resetFormDeptSelector.add(option);
+        }
+    }
+     
+    function resetEmployeeSelector(e) {
+        let option = document.createElement("option");
+        option.value = "";
+        option.innerText = "--Please select employee name--";
+        resetFormEmpSelector.innerHTML = "";
+        resetFormEmpSelector.add(option);
+        if (employeeObject[resetFormDeptSelector.value]) {
+            for (let e of employeeObject[resetFormDeptSelector.value]) {
+                option = document.createElement("option");
+                option.value = e.slice(-5);
+                option.innerText = e;
+                resetFormEmpSelector.add(option);
+            }
+        }
+    }
+
+    async function resetPassword(e) {
+        e.preventDefault();
+        if (!resetFormDeptSelector.value || !resetFormEmpSelector.value) {
+            flash("Please fill all required fields.", ".fail");
+        } else {
+            let data = {'dept':resetFormDeptSelector.value, 'emp':resetFormEmpSelector.value};
+            let response = await postData("/admin/user-management/api/password-reset",data);
+            if (response.fail) {
+                if (!response.message) response.message = "Unknown Error!!!";
+                flash(response.message, ".fail");
+            } else {
+
+            }
+        }                
+    }
+    ////////////////////////////////////////////////////////////////////////
+
+    async function postData(url = '', data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        if (response.ok) {
+            return response.json(); // parses JSON response into native JavaScript objects
+        } else {
+            return {"fail": true, "message": "Error: Operation failed."}; 
+        }
+    }
+
+    function flash(message, typeClass) {
+        const card = document.querySelector("#flash-mesage").content.querySelector(typeClass).cloneNode(true);
+        card.querySelector("p").textContent = message;
+        document.body.appendChild(card);
+        document.querySelector(".flash").classList.add("animate--drop-in-fade-out");
+        setTimeout(function () {
+            document.querySelector(".flash").classList.remove("animate--drop-in-fade-out");
+            document.querySelector(".flash").remove();
+        }, 3500);
+    }
+</script>

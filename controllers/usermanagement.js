@@ -11,7 +11,9 @@ async function handleShiftPlan(req, res, selection = "") {
         let doc = await Employee.find({ dept: d._id });
         let completeList = [];
         for (let e of doc) {
-            completeList.push(e.name + " - " + e.username);
+            if (e.username !== req.user.username && req.user.role!=="DPLAdmin") {
+                completeList.push(e.name + " - " + e.username);
+            }
         }
         employeeObject[d.costcode] = completeList.sort();
     }

@@ -3,6 +3,8 @@ const Dept = require("../models/department");
 const Employee = require("../models/employee");
 const { defaultPassword } = require("../config");
 
+let deptWiseEmp = {};
+
 async function getInitialData(req, res) {
     let hodDeps = await Dept.find({ hod: req.user._id });
     let hodObject = {};
@@ -34,14 +36,14 @@ module.exports.loadInitialData = async (req, res) => {
 };
 
 module.exports.resetPassword = async (req, res) => {
-    console.log(req.body);
     let user = await Employee.findOne({ username: req.body.emp });
     try {
         await user.setPassword(defaultPassword);
         await user.save();
-        res.json({ message: `Password has been reset for: ${req.body.emp}` });
+        res.json({
+            message: `Password has been reset for: ${req.body.emp}`,
+        });
     } catch (e) {
-        console.log(e);
         res.json({ fail: true, message: e });
     }
 };

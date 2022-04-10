@@ -16,7 +16,6 @@ const EmployeeSchema = new Schema({
     dept: {
         type: Schema.Types.ObjectId,
         ref: "Department",
-        required: true,
     },
     designation: {
         type: String,

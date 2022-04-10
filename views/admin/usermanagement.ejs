@@ -1,11 +1,11 @@
 <% layout('layouts/boilerplate.ejs') %>
 <div class="user-section hod">
+    <h2 class="usermanagement-form-headings">Reset Password</h2>
     <form class="reset-password" action="" method="post">
-        <h2>Reset Password</h2>
-        <select name="dept" class="dept-selector">
+        <select name="dept" class="reset-form-dept-selector">
             <option value="">--Please choose department--</option>
         </select>
-        <select name="emp" class="emp-selector">
+        <select name="emp" class="reset-form-emp-selector">
             <option value="">--Please select employee name--</option>
         </select>
         <div class="login-button-container">
@@ -13,7 +13,6 @@
         </div>
     </form>
 </div>
-
 <% if (currentUser.role === "DPLAdmin") { %>
     <hr>
     <div class="user-section dpladmin">
@@ -62,9 +61,9 @@
         flash("This browser is not supported.", ".fail");
         setTimeout(redirectHome, 3000);            
     } else {
-        loadInitiaData();
+        loadInitialData();
     }
-    async function loadInitiaData() {
+    async function loadInitialData() {
         ({employeeObject, hodObject} = await postData("/admin/user-management/api/get-employee-data",{}));
         populateDeptSelector();
     }
@@ -74,8 +73,8 @@
     //Password Reset form//////////////////////////////////////////////////
     const resetForm = document.querySelector(".reset-password");
     const resetButton = resetForm.querySelector(".login-button-container");
-    const resetFormDeptSelector = resetForm.querySelector(".dept-selector");
-    const resetFormEmpSelector = resetForm.querySelector(".emp-selector");
+    const resetFormDeptSelector = resetForm.querySelector(".reset-form-dept-selector");
+    const resetFormEmpSelector = resetForm.querySelector(".reset-form-emp-selector");
     resetButton.addEventListener("click", resetPassword);
     resetFormDeptSelector.addEventListener("change", resetEmployeeSelector);
 
@@ -111,11 +110,13 @@
         } else {
             let data = {'dept':resetFormDeptSelector.value, 'emp':resetFormEmpSelector.value};
             let response = await postData("/admin/user-management/api/password-reset",data);
+            resetFormDeptSelector.selectedIndex = 0;
+            resetFormEmpSelector.selectedIndex = 0;
             if (response.fail) {
                 if (!response.message) response.message = "Unknown Error!!!";
                 flash(response.message, ".fail");
             } else {
-
+                flash(response.message, ".success");
             }
         }                
     }

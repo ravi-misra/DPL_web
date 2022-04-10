@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const passportLocalMongoose = require("passport-local-mongoose");
 const Shift_sch = require("./shift_sch");
-const { defaultHash, defaultSalt } = require("../utils/defaultPassword");
 
 const EmployeeSchema = new Schema({
     username: {

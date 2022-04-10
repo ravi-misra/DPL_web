@@ -27,6 +27,7 @@ module.exports = {
         "027-POTLINE-III(OPRN.)",
         "028-POTLINE-IV(OPRN.)",
     ],
+    defaultPassword: "password",
 };
 
 // .env file contents

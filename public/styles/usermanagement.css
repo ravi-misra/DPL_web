@@ -1,0 +1,21 @@
+.user-section form{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+.user-section form select {
+    margin-right: 20px;
+    width: 300px;
+    font-size: 1rem;
+}
+
+.user-section {
+    padding-top: 50px;
+}
+
+.usermanagement-form-headings {
+    text-align: center;
+    text-decoration: underline;
+}

@@ -1,7 +1,7 @@
 const Shift_sch = require("../models/shift_sch");
 const { startOfDay, subDays, format, addMinutes } = require("date-fns");
 const { deptGroups } = require("../config");
-const exceptionUsers = require("../utils/exceptionUsers");
+const { getExceptionUsers } = require("../utils/exceptionUsers");
 
 module.exports.renderLogin = (req, res) => {
     res.render("login.ejs");
@@ -15,6 +15,7 @@ module.exports.login = (req, res) => {
     let redirectUrl = req.session.returnTo || "/home";
     delete req.session.returnTo;
     //Handle exception users
+    let exceptionUsers = getExceptionUsers();
     if (req.user.role && exceptionUsers[req.user.username]) {
         if (exceptionUsers[req.user.username].defaultRoute) {
             redirectUrl = exceptionUsers[req.user.username].defaultRoute;

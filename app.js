@@ -117,9 +117,6 @@ app.use((req, res, next) => {
     } else {
         res.locals.role = undefined;
     }
-    if (!allowedURLs.includes("/home")) {
-        allowedURLs.push("/home");
-    }
     res.locals.allowedURLs = allowedURLs;
     res.locals.validShifts = validShifts;
     res.locals.success = req.flash("success");

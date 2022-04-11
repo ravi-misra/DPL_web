@@ -10,7 +10,7 @@ const {
     addMinutes,
 } = require("date-fns");
 const { defaultHash, defaultSalt } = require("../utils/defaultPassword");
-const exceptionUsers = require("../utils/exceptionUsers");
+const { getExceptionUsers } = require("../utils/exceptionUsers");
 const { pl_dept } = require("../config");
 // let pl_dept = ["530-E & I - POTLINE"];
 
@@ -125,6 +125,7 @@ async function dbUpdate(data = [], allPN = []) {
             if (invalidPN.length) {
                 for (let pn of invalidPN) {
                     //dont delete usernames defined in exceptioUsers
+                    let exceptionUsers = getExceptionUsers();
                     if (!Object.keys(exceptionUsers).includes(pn)) {
                         await Employee.findOneAndDelete({ username: pn });
                     }

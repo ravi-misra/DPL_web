@@ -1,7 +1,6 @@
 // Role type --> Main tabs --> Sub menu
 let roles = {
     departmentCA: {
-        Home: "/home",
         Dashboard: {
             Transport: "/dashboard/transport",
         },

@@ -1,9 +1,8 @@
 const Shift_sch = require("../models/shift_sch");
 const Dept = require("../models/department");
 const Employee = require("../models/employee");
+const ExceptionUser = require("../models/exception_users");
 const { defaultPassword } = require("../config");
-
-let deptWiseEmp = {};
 
 async function getInitialData(req, res) {
     let hodDeps = await Dept.find({ hod: req.user._id });
@@ -47,3 +46,8 @@ module.exports.resetPassword = async (req, res) => {
         res.json({ fail: true, message: e });
     }
 };
+
+
+module.exports.getExceptioUsers = async (req, res) => {
+    
+}

@@ -110,7 +110,6 @@ async function homeController(req, res, depList = [], deptName = undefined) {
 }
 
 module.exports.goHome = (req, res, next) => {
-    // res.redirect('/dashboard/transport');
     homeController(req, res).catch(next);
 };
 

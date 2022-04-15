@@ -10,6 +10,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const ExpressError = require("./utils/ExpressErrors");
 const roles = require("./utils/role");
+const populateDashboards = require("./utils/populateDashboards");
 const {
     PORT,
     LOCAL_HOST,
@@ -97,12 +98,18 @@ passport.use(new LocalStrategy(Employee.authenticate()));
 passport.serializeUser(Employee.serializeUser());
 passport.deserializeUser(Employee.deserializeUser());
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
     let allowedURLs = [];
     res.locals.currentUser = req.user;
     if (req.user && req.user.role) {
-        //enter dashboard logic here
         res.locals.role = roles[req.user.role];
+        //dashboard logic
+        let finalDashboard = await populateDashboards(
+            res.locals.currentUser._id
+        );
+        if (finalDashboard) {
+            res.locals.role["Dashboard"] = finalDashboard;
+        }
         if (res.locals.role) {
             for (let i of Object.keys(res.locals.role)) {
                 if (typeof res.locals.role[i] === "string") {

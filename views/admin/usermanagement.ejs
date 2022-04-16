@@ -14,82 +14,87 @@
     </form>
 </div>
 <% if (currentUser.role === "DPLAdmin") { %>
-    <hr>
-    <div class="user-section dpladmin">
-        <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
-        <form class="exception-user-form" action="" method="post">
-            <div class="login-button-container">
-                <button type="submit" class="btn login-btn">Reset Password</button>
-            </div>
-        </form>
-        <hr>
-        <form action="" method="post">
-            <h2>Create new normal users</h2>
-
-        </form>
-        <hr>
-        <form action="" method="post">
-            <h2>Edit user role</h2>
-
-        </form>
-        <hr>
-        <form action="" method="post">
-            <h2>Edit department details</h2>
-
-        </form>
-    </div>
+<hr />
+<div class="user-section dpladmin">
+    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
+    <form class="exception-user-form" action="" method="post">
+        <select name="emp" class="exception-form-emp-selector">
+            <option value="">--Please select Exception user--</option>
+        </select>
+        <div class="login-button-container">
+            <button type="submit" class="btn login-btn">Reset Password</button>
+        </div>
+    </form>
+    <hr />
+    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
+    <form action="" method="post"></form>
+    <hr />
+    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
+    <form action="" method="post"></form>
+    <hr />
+    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
+    <form action="" method="post"></form>
+</div>
 <% } %>
 <template id="flash-mesage">
-    <div class="flash success" style="z-index: 9999;">
+    <div class="flash success" style="z-index: 9999">
         <div class="flash__icon">
             <i class="icon fa fa-check-circle"></i>
         </div>
-        <p class="flash__body">
-            success
-        </p>
+        <p class="flash__body">success</p>
     </div>
-    <div class="flash fail" style="z-index: 9999;">
+    <div class="flash fail" style="z-index: 9999">
         <div class="flash__icon">
             <i class="icon fa fa-exclamation-triangle"></i>
         </div>
-        <p class="flash__body">
-            Failure
-        </p>
+        <p class="flash__body">Failure</p>
     </div>
 </template>
 <script>
-    let employeeObject = {}, hodObject = {};
+    let employeeObject = {},
+        hodObject = {};
+    let allExceptionUser = {};
     if (!window.fetch) {
         flash("This browser is not supported.", ".fail");
-        setTimeout(redirectHome, 3000);            
+        setTimeout(redirectHome, 3000);
     } else {
         loadInitialData();
     }
     async function loadInitialData() {
-        ({employeeObject, hodObject} = await postData("/admin/user-management/api/get-employee-data",{}));
+        ({ employeeObject, hodObject } = await postData(
+            "/admin/user-management/api/get-employee-data",
+            {}
+        ));
         populateDeptSelector();
-        ({employeeObject, hodObject} = await postData("/admin/user-management/api/get-exception-users",{}));
+        ({ employeeObject, hodObject } = await postData(
+            "/admin/user-management/api/get-exception-users",
+            {}
+        ));
     }
     function redirectHome() {
         window.location.replace(window.location.origin);
     }
-    //Password Reset form//////////////////////////////////////////////////
+    //Password Reset form///////////////////////////////////////////////////
     const resetForm = document.querySelector(".reset-password");
     const resetButton = resetForm.querySelector(".login-button-container");
-    const resetFormDeptSelector = resetForm.querySelector(".reset-form-dept-selector");
-    const resetFormEmpSelector = resetForm.querySelector(".reset-form-emp-selector");
+    const resetFormDeptSelector = resetForm.querySelector(
+        ".reset-form-dept-selector"
+    );
+    const resetFormEmpSelector = resetForm.querySelector(
+        ".reset-form-emp-selector"
+    );
     resetButton.addEventListener("click", resetPassword);
     resetFormDeptSelector.addEventListener("change", resetEmployeeSelector);
 
     function populateDeptSelector() {
-        for( let d of Object.keys(hodObject) ) {
+        for (let d of Object.keys(hodObject)) {
             let option = document.createElement("option");
             option.value = d;
             option.innerText = hodObject[d];
             resetFormDeptSelector.add(option);
         }
     }
-     
+
     function resetEmployeeSelector(e) {
         let option = document.createElement("option");
         option.value = "";
@@ -111,8 +116,14 @@
         if (!resetFormDeptSelector.value || !resetFormEmpSelector.value) {
             flash("Please fill all required fields.", ".fail");
         } else {
-            let data = {'dept':resetFormDeptSelector.value, 'emp':resetFormEmpSelector.value};
-            let response = await postData("/admin/user-management/api/password-reset",data);
+            let data = {
+                dept: resetFormDeptSelector.value,
+                emp: resetFormEmpSelector.value,
+            };
+            let response = await postData(
+                "/admin/user-management/api/password-reset",
+                data
+            );
             resetFormDeptSelector.selectedIndex = 0;
             resetFormEmpSelector.selectedIndex = 0;
             if (response.fail) {
@@ -121,39 +132,71 @@
             } else {
                 flash(response.message, ".success");
             }
-        }                
+        }
     }
     ////////////////////////////////////////////////////////////////////////
+    //Exception user form///////////////////////////////////////////////////
+    const exceptionUserForm = document.querySelector(".exception-user-form");
+    const exceptionUserSubmitButton = exceptionUserForm.querySelector(
+        ".login-button-container"
+    );
+    const exceptionUserSelector = exceptionUserForm.querySelector(
+        ".exception-form-emp-selector"
+    );
+    ////////////////////////////////////////////////////////////////////////
 
-    async function postData(url = '', data = {}) {
+    async function postData(url = "", data = {}) {
         // Default options are marked with *
         const response = await fetch(url, {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            mode: 'cors', // no-cors, *cors, same-origin
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'same-origin', // include, *same-origin, omit
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            mode: "cors", // no-cors, *cors, same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "same-origin", // include, *same-origin, omit
             headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
+                "Content-Type": "application/json",
+                // 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            redirect: 'follow', // manual, *follow, error
-            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-            body: JSON.stringify(data) // body data type must match "Content-Type" header
+            redirect: "follow", // manual, *follow, error
+            referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data), // body data type must match "Content-Type" header
         });
         if (response.ok) {
             return response.json(); // parses JSON response into native JavaScript objects
         } else {
-            return {"fail": true, "message": "Error: Operation failed."}; 
+            return { fail: true, message: "Error: Operation failed." };
+        }
+    }
+    async function getData(url = "") {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: "GET", // *GET, POST, PUT, DELETE, etc.
+            mode: "cors", // no-cors, *cors, same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "same-origin", // include, *same-origin, omit
+            redirect: "follow", // manual, *follow, error
+            referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        });
+        if (response.ok) {
+            return response.json(); // parses JSON response into native JavaScript objects
+        } else {
+            return { fail: true, message: "Error: Operation failed." };
         }
     }
 
     function flash(message, typeClass) {
-        const card = document.querySelector("#flash-mesage").content.querySelector(typeClass).cloneNode(true);
+        const card = document
+            .querySelector("#flash-mesage")
+            .content.querySelector(typeClass)
+            .cloneNode(true);
         card.querySelector("p").textContent = message;
         document.body.appendChild(card);
-        document.querySelector(".flash").classList.add("animate--drop-in-fade-out");
+        document
+            .querySelector(".flash")
+            .classList.add("animate--drop-in-fade-out");
         setTimeout(function () {
-            document.querySelector(".flash").classList.remove("animate--drop-in-fade-out");
+            document
+                .querySelector(".flash")
+                .classList.remove("animate--drop-in-fade-out");
             document.querySelector(".flash").remove();
         }, 3500);
     }

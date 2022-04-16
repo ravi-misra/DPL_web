@@ -1,17 +1,33 @@
 const Employee = require("../models/employee");
+const Department = require("../models/department");
 
-module.exports = async (emp_id) => {
-    let doc = await Employee.findById(emp_id).populate({ path: "dept" });
-    // console.log(doc);
+module.exports = async (user) => {
+    let doc, dept;
     let finalDashboard = {},
         userDashboard = {},
         deptDashboard = {};
-    if (doc) {
-        userDashboard = doc.dashboards;
-        if (doc.dept) {
-            deptDashboard = doc.dept.dashboards;
+    if (user.role === "DPLAdmin") {
+        dept = await Department.find({});
+        for (let d of dept) {
+            if (d.dashboards) {
+                deptDashboard = { ...deptDashboard, ...d.dashboards };
+            }
         }
-        finalDashboard = { ...deptDashboard, ...userDashboard };
+        doc = await Employee.find({});
+        for (let e of doc) {
+            if (e.dashboards) {
+                userDashboard = { ...userDashboard, ...e.dashboards };
+            }
+        }
+    } else {
+        doc = await Employee.findById(user._id).populate({ path: "dept" });
+        if (doc) {
+            userDashboard = doc.dashboards;
+            if (doc.dept) {
+                deptDashboard = doc.dept.dashboards;
+            }
+            finalDashboard = { ...deptDashboard, ...userDashboard };
+        }
     }
 
     if (Object.keys(finalDashboard).length > 0) {

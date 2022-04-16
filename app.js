@@ -104,9 +104,7 @@ app.use(async (req, res, next) => {
     if (req.user && req.user.role) {
         res.locals.role = roles[req.user.role];
         //dashboard logic
-        let finalDashboard = await populateDashboards(
-            res.locals.currentUser._id
-        );
+        let finalDashboard = await populateDashboards(res.locals.currentUser);
         if (finalDashboard) {
             res.locals.role["Dashboard"] = finalDashboard;
         }

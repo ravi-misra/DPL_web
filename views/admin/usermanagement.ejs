@@ -13,29 +13,6 @@
         </div>
     </form>
 </div>
-<% if (currentUser.role === "DPLAdmin") { %>
-<hr />
-<div class="user-section dpladmin">
-    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
-    <form class="exception-user-form" action="" method="post">
-        <select name="emp" class="exception-form-emp-selector">
-            <option value="">--Please select Exception user--</option>
-        </select>
-        <div class="login-button-container">
-            <button type="submit" class="btn login-btn">Reset Password</button>
-        </div>
-    </form>
-    <hr />
-    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
-    <form action="" method="post"></form>
-    <hr />
-    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
-    <form action="" method="post"></form>
-    <hr />
-    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
-    <form action="" method="post"></form>
-</div>
-<% } %>
 <template id="flash-mesage">
     <div class="flash success" style="z-index: 9999">
         <div class="flash__icon">
@@ -53,7 +30,6 @@
 <script>
     let employeeObject = {},
         hodObject = {};
-    let allExceptionUser = {};
     if (!window.fetch) {
         flash("This browser is not supported.", ".fail");
         setTimeout(redirectHome, 3000);
@@ -61,15 +37,17 @@
         loadInitialData();
     }
     async function loadInitialData() {
-        ({ employeeObject, hodObject } = await postData(
+        let response = await postData(
             "/admin/user-management/api/get-employee-data",
             {}
-        ));
-        populateDeptSelector();
-        ({ employeeObject, hodObject } = await postData(
-            "/admin/user-management/api/get-exception-users",
-            {}
-        ));
+        );
+        if (!response.fail) {
+            ({ employeeObject, hodObject } = response);
+            populateDeptSelector();
+        } else {
+            flash("Failed to load initial data.", ".fail");
+        }
+        
     }
     function redirectHome() {
         window.location.replace(window.location.origin);
@@ -95,7 +73,7 @@
         }
     }
 
-    function resetEmployeeSelector(e) {
+    function resetEmployeeSelector(eve) {
         let option = document.createElement("option");
         option.value = "";
         option.innerText = "--Please select employee name--";
@@ -121,9 +99,8 @@
                 emp: resetFormEmpSelector.value,
             };
             let response = await postData(
-                "/admin/user-management/api/password-reset",
-                data
-            );
+                "/admin/user-management/api/password-reset", data );
+
             resetFormDeptSelector.selectedIndex = 0;
             resetFormEmpSelector.selectedIndex = 0;
             if (response.fail) {
@@ -135,52 +112,47 @@
         }
     }
     ////////////////////////////////////////////////////////////////////////
-    //Exception user form///////////////////////////////////////////////////
-    const exceptionUserForm = document.querySelector(".exception-user-form");
-    const exceptionUserSubmitButton = exceptionUserForm.querySelector(
-        ".login-button-container"
-    );
-    const exceptionUserSelector = exceptionUserForm.querySelector(
-        ".exception-form-emp-selector"
-    );
-    ////////////////////////////////////////////////////////////////////////
 
     async function postData(url = "", data = {}) {
-        // Default options are marked with *
-        const response = await fetch(url, {
-            method: "POST", // *GET, POST, PUT, DELETE, etc.
-            mode: "cors", // no-cors, *cors, same-origin
-            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: "same-origin", // include, *same-origin, omit
-            headers: {
-                "Content-Type": "application/json",
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            redirect: "follow", // manual, *follow, error
-            referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-            body: JSON.stringify(data), // body data type must match "Content-Type" header
-        });
-        if (response.ok) {
-            return response.json(); // parses JSON response into native JavaScript objects
-        } else {
+        try {
+            // Default options are marked with *
+            const response = await fetch(url, {
+                method: "POST", // *GET, POST, PUT, DELETE, etc.
+                mode: "cors", // no-cors, *cors, same-origin
+                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: "same-origin", // include, *same-origin, omit
+                headers: {
+                    "Content-Type": "application/json",
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: "follow", // manual, *follow, error
+                referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                body: JSON.stringify(data), // body data type must match "Content-Type" header
+                });
+            if (response.ok) {
+                let resData = await response.json();// parses JSON response into native JavaScript objects
+                return resData; 
+            } else {
+                return { fail: true, message: "Error: Operation failed." };
+            }
+        } catch(err) {
             return { fail: true, message: "Error: Operation failed." };
         }
+        
     }
     async function getData(url = "") {
-        // Default options are marked with *
-        const response = await fetch(url, {
-            method: "GET", // *GET, POST, PUT, DELETE, etc.
-            mode: "cors", // no-cors, *cors, same-origin
-            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: "same-origin", // include, *same-origin, omit
-            redirect: "follow", // manual, *follow, error
-            referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        });
-        if (response.ok) {
-            return response.json(); // parses JSON response into native JavaScript objects
-        } else {
+        try {
+            const response = await fetch(url, {cache: "no-cache"});
+            if (response.ok) {
+                let resData = await response.json();
+                return resData;
+            } else {
+                return { fail: true, message: "Error: Operation failed." };
+            }
+        } catch(err) {
             return { fail: true, message: "Error: Operation failed." };
         }
+        
     }
 
     function flash(message, typeClass) {
@@ -201,3 +173,112 @@
         }, 3500);
     }
 </script>
+<% if (currentUser.role === "DPLAdmin") { %>
+<hr />
+<div class="user-section dpladmin">
+    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
+    <form class="exception-user-form" action="" method="post">
+        <div class="div-inside-form">
+            <select name="emp" class="exception-form-emp-selector">
+            </select>
+            <textarea class="exception-user-json" name="" id="" cols="10" rows="10" spellcheck="false"></textarea>
+            <div>
+                <input type="checkbox" name="delete" id="exception-user-delete-option" class="delete-option">
+                <label for="exception-user-delete-option">Delete User</label>
+            </div>
+        </div>        
+        <div class="login-button-container">
+            <button type="submit" class="btn login-btn">Submit</button>
+        </div>
+    </form>
+    <hr />
+    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
+    <form action="" method="post"></form>
+    <hr />
+    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
+    <form action="" method="post"></form>
+    <hr />
+    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
+    <form action="" method="post"></form>
+</div>
+<script>
+    //Exception user form///////////////////////////////////////////////////
+    let allExceptionUser = {};
+    const exceptionUserForm = document.querySelector(".exception-user-form");
+    const exceptionUserSubmitButton = exceptionUserForm.querySelector(
+        ".login-button-container"
+    );
+    const exceptionUserSelector = exceptionUserForm.querySelector(
+        ".exception-form-emp-selector"
+    );
+
+    const exceptionUserDetails = exceptionUserForm.querySelector(
+        ".exception-user-json"
+    );
+    const deleteExcpetionUserChkBox = exceptionUserForm.querySelector(
+        "#exception-user-delete-option"
+    );
+
+    exceptionUserSelector.addEventListener("change", fillExceptionUserDetails);
+    exceptionUserSubmitButton.addEventListener("click", updateExceptionUser);
+    loadExceptionUsers();
+
+    function fillExceptionUserDetails(e) {
+        if (e.target.value) {
+            if (e.target.value === "addNew") {            
+                exceptionUserDetails.value = JSON.stringify({userId:"",name:"",type:"",password:"",dashboards:{key:"value"},defaultRoute:"",scadaMode:false});
+            } else {
+                exceptionUserDetails.value = JSON.stringify(allExceptionUser[e.target.value]);
+            }
+        } else {
+            exceptionUserDetails.value = "";
+        }
+    }
+
+    async function updateExceptionUser(e) {
+        e.preventDefault();
+        let deleteUser = deleteExcpetionUserChkBox.checked;
+        let username = exceptionUserSelector.value;
+        let userData;
+        try{
+            userData = JSON.parse(exceptionUserDetails.value);
+        } catch {
+            userData = {};
+        }
+        if (username && Object.keys(userData).length>0) {
+            let finalData = {username, userData, deleteUser};
+            let response = await postData("/admin/user-management/api/exception-users", finalData);
+            if (response.fail) {
+                if (!response.message) response.message = "Unknown Error!!!";
+                flash(response.message, ".fail");
+            } else {
+                flash(response.message, ".success");
+            }
+        } else {
+            flash("No user/details provided.", ".fail");
+        }
+    }
+
+    async function loadExceptionUsers() {
+        exceptionUserSelector.innerHTML = "";
+        allExceptionUser = await getData("/admin/user-management/api/exception-users");
+        if(!allExceptionUser.fail) {
+            let option = document.createElement("option");
+            option.value = "";
+            option.innerText = "--Please select Exception user--";
+            exceptionUserSelector.add(option);
+            option = document.createElement("option");
+            option.value = "addNew";
+            option.innerText = "Create new";
+            exceptionUserSelector.add(option);
+            for (let e of Object.keys(allExceptionUser)) {
+                option = document.createElement("option");
+                option.value = e;
+                option.innerText = e;
+                resetFormEmpSelector.add(option);
+            }
+        }        
+    }
+    ////////////////////////////////////////////////////////////////////////
+</script>
+<% } %>

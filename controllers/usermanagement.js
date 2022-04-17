@@ -1,9 +1,8 @@
-const Shift_sch = require("../models/shift_sch");
 const Dept = require("../models/department");
 const Employee = require("../models/employee");
 const ExceptionUser = require("../models/exception_users");
 const { defaultPassword } = require("../config");
-const { loadExceptionUsers } = require("../utils/exceptionUsers");
+const { getExceptionUsers } = require("../utils/exceptionUsers");
 
 async function getInitialData(req, res) {
     let hodDeps = await Dept.find({ hod: req.user._id });
@@ -14,10 +13,7 @@ async function getInitialData(req, res) {
         let doc = await Employee.find({ dept: d._id });
         let completeList = [];
         for (let e of doc) {
-            if (
-                e.username !== req.user.username &&
-                req.user.role !== "DPLAdmin"
-            ) {
+            if (e.username !== req.user.username) {
                 completeList.push(e.name + " - " + e.username);
             }
         }
@@ -48,7 +44,49 @@ module.exports.resetPassword = async (req, res) => {
     }
 };
 
-module.exports.getExceptioUsers = async (req, res) => {
-    let exceptionUsers = loadExceptionUsers();
+module.exports.getExceptioUsersData = async (req, res) => {
+    let exceptionUsers = getExceptionUsers();
     res.json(exceptionUsers);
+};
+
+module.exports.updateExceptioUsersData = async (req, res) => {
+    console.log(req.body);
+    let exceptionUser;
+    if (req.body.username === "addNew") {
+        exceptionUser = await Employee.findOne({
+            username: req.body.userData.userId,
+        });
+        if (exceptionUser) {
+            exceptionUser.name = req.body.userData.name;
+            if (
+                req.body.userData.dashboards &&
+                typeof req.body.userData.dashboards === "object" &&
+                Object.keys(req.body.userData.dashboards).length > 0
+            ) {
+                exceptionUser.dashboards = req.body.userData.dashboards;
+            }
+            await exceptionUser.setPassword(req.body.userData.password);
+            await exceptionUser.save();
+            let exceptionAccount = await ExceptionUser.findOne({
+                user: exceptionUser._id,
+            });
+            if (exceptionAccount) {
+                exceptionAccount.type = req.body.userData.type;
+                exceptionAccount.password = req.body.userData.password;
+                exceptionAccount.defaultRoute = req.body.userData.defaultRoute;
+                exceptionAccount.scadaMode = req.body.userData.scadaMode;
+                await exceptionAccount.save();
+            } else {
+                exceptionAccount = new ExceptionUser({
+                    user: exceptionUser._id,
+                    type: req.body.userData.type,
+                    password: req.body.userData.password,
+                    defaultRoute: req.body.userData.defaultRoute,
+                    scadaMode: req.body.userData.scadaMode,
+                });
+                await exceptionAccount.save();
+            }
+        }
+    }
+    res.json({ message: "User updated successfully." });
 };

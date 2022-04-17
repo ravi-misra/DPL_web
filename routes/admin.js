@@ -27,7 +27,8 @@ router
     .post(isLoggedIn, catchAsync(usermanagement.resetPassword));
 
 router
-    .route("/user-management/api/get-exception-users")
-    .get(isLoggedIn, catchAsync(usermanagement.getExceptioUsers));
+    .route("/user-management/api/exception-users")
+    .get(isLoggedIn, catchAsync(usermanagement.getExceptioUsersData))
+    .post(isLoggedIn, catchAsync(usermanagement.updateExceptioUsersData));
 
 module.exports = router;

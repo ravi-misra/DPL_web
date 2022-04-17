@@ -4,9 +4,18 @@
     justify-content: center;
     padding: 20px 0;
 }
+.user-section .exception-user-form .div-inside-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
 .user-section form select {
     margin-right: 20px;
+    width: 300px;
+    font-size: 1rem;
+}
+textarea {
     width: 300px;
     font-size: 1rem;
 }

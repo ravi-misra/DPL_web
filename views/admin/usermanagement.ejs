@@ -253,6 +253,9 @@
                 flash(response.message, ".fail");
             } else {
                 flash(response.message, ".success");
+                loadExceptionUsers();
+                exceptionUserSelector.selectedIndex = 0;
+                exceptionUserDetails.value = "";
             }
         } else {
             flash("No user/details provided.", ".fail");
@@ -275,7 +278,7 @@
                 option = document.createElement("option");
                 option.value = e;
                 option.innerText = e;
-                resetFormEmpSelector.add(option);
+                exceptionUserSelector.add(option);
             }
         }        
     }

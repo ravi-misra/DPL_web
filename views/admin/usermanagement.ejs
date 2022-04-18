@@ -47,7 +47,6 @@
         } else {
             flash("Failed to load initial data.", ".fail");
         }
-        
     }
     function redirectHome() {
         window.location.replace(window.location.origin);
@@ -99,7 +98,9 @@
                 emp: resetFormEmpSelector.value,
             };
             let response = await postData(
-                "/admin/user-management/api/password-reset", data );
+                "/admin/user-management/api/password-reset",
+                data
+            );
 
             resetFormDeptSelector.selectedIndex = 0;
             resetFormEmpSelector.selectedIndex = 0;
@@ -128,31 +129,29 @@
                 redirect: "follow", // manual, *follow, error
                 referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
                 body: JSON.stringify(data), // body data type must match "Content-Type" header
-                });
+            });
             if (response.ok) {
-                let resData = await response.json();// parses JSON response into native JavaScript objects
-                return resData; 
+                let resData = await response.json(); // parses JSON response into native JavaScript objects
+                return resData;
             } else {
                 return { fail: true, message: "Error: Operation failed." };
             }
-        } catch(err) {
+        } catch (err) {
             return { fail: true, message: "Error: Operation failed." };
         }
-        
     }
     async function getData(url = "") {
         try {
-            const response = await fetch(url, {cache: "no-cache"});
+            const response = await fetch(url, { cache: "no-cache" });
             if (response.ok) {
                 let resData = await response.json();
                 return resData;
             } else {
                 return { fail: true, message: "Error: Operation failed." };
             }
-        } catch(err) {
+        } catch (err) {
             return { fail: true, message: "Error: Operation failed." };
         }
-        
     }
 
     function flash(message, typeClass) {
@@ -179,27 +178,58 @@
     <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
     <form class="exception-user-form" action="" method="post">
         <div class="div-inside-form">
-            <select name="emp" class="exception-form-emp-selector">
-            </select>
-            <textarea class="exception-user-json" name="" id="" cols="10" rows="10" spellcheck="false"></textarea>
+            <select name="emp" class="exception-form-emp-selector"></select>
+            <textarea
+                class="exception-user-json"
+                name=""
+                id=""
+                cols="10"
+                rows="10"
+                spellcheck="false"
+            ></textarea>
             <div>
-                <input type="checkbox" name="delete" id="exception-user-delete-option" class="delete-option">
+                <input
+                    type="checkbox"
+                    name="delete"
+                    id="exception-user-delete-option"
+                    class="delete-option"
+                />
                 <label for="exception-user-delete-option">Delete User</label>
             </div>
-        </div>        
+        </div>
         <div class="login-button-container">
             <button type="submit" class="btn login-btn">Submit</button>
         </div>
     </form>
     <hr />
-    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
-    <form action="" method="post"></form>
+    <h2 class="usermanagement-form-headings">Assign User Role</h2>
+    <form class="user-role-form" action="" method="post">
+        <select name="dept" class="role-form-dept-selector">
+            <option value="">--Please choose department--</option>
+        </select>
+        <select name="emp" class="role-form-emp-selector">
+            <option value="">--Please select employee name--</option>
+        </select>
+        <select name="role" class="role-form-role-selector">
+            <option value="">--Please select role--</option>
+        </select>
+        <div class="login-button-container">
+            <button type="submit" class="btn login-btn">Submit</button>
+        </div>
+    </form>
     <hr />
-    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
-    <form action="" method="post"></form>
-    <hr />
-    <h2 class="usermanagement-form-headings">Exception User Accounts</h2>
-    <form action="" method="post"></form>
+    <h2 class="usermanagement-form-headings">Assign HoD</h2>
+    <form class="dept-hod-form" action="" method="post">
+        <select name="dept" class="hod-form-dept-selector">
+            <option value="">--Please choose department--</option>
+        </select>
+        <select name="role" class="hod-form-hod-selector">
+            <option value="">--Please select HoD--</option>
+        </select>
+        <div class="login-button-container">
+            <button type="submit" class="btn login-btn">Submit</button>
+        </div>
+    </form>
 </div>
 <script>
     //Exception user form///////////////////////////////////////////////////
@@ -225,10 +255,20 @@
 
     function fillExceptionUserDetails(e) {
         if (e.target.value) {
-            if (e.target.value === "addNew") {            
-                exceptionUserDetails.value = JSON.stringify({userId:"",name:"",type:"",password:"",dashboards:{key:"value"},defaultRoute:"",scadaMode:false});
+            if (e.target.value === "addNew") {
+                exceptionUserDetails.value = JSON.stringify({
+                    userId: "",
+                    name: "",
+                    type: "",
+                    password: "",
+                    dashboards: { key: "value" },
+                    defaultRoute: "",
+                    scadaMode: false,
+                });
             } else {
-                exceptionUserDetails.value = JSON.stringify(allExceptionUser[e.target.value]);
+                exceptionUserDetails.value = JSON.stringify(
+                    allExceptionUser[e.target.value]
+                );
             }
         } else {
             exceptionUserDetails.value = "";
@@ -240,14 +280,17 @@
         let deleteUser = deleteExcpetionUserChkBox.checked;
         let username = exceptionUserSelector.value;
         let userData;
-        try{
+        try {
             userData = JSON.parse(exceptionUserDetails.value);
         } catch {
             userData = {};
         }
-        if (username && Object.keys(userData).length>0) {
-            let finalData = {username, userData, deleteUser};
-            let response = await postData("/admin/user-management/api/exception-users", finalData);
+        if (username && Object.keys(userData).length > 0) {
+            let finalData = { username, userData, deleteUser };
+            let response = await postData(
+                "/admin/user-management/api/exception-users",
+                finalData
+            );
             if (response.fail) {
                 if (!response.message) response.message = "Unknown Error!!!";
                 flash(response.message, ".fail");
@@ -264,8 +307,10 @@
 
     async function loadExceptionUsers() {
         exceptionUserSelector.innerHTML = "";
-        allExceptionUser = await getData("/admin/user-management/api/exception-users");
-        if(!allExceptionUser.fail) {
+        allExceptionUser = await getData(
+            "/admin/user-management/api/exception-users"
+        );
+        if (!allExceptionUser.fail) {
             let option = document.createElement("option");
             option.value = "";
             option.innerText = "--Please select Exception user--";
@@ -280,7 +325,7 @@
                 option.innerText = e;
                 exceptionUserSelector.add(option);
             }
-        }        
+        }
     }
     ////////////////////////////////////////////////////////////////////////
 </script>

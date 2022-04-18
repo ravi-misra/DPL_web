@@ -13,7 +13,7 @@ async function getInitialData(req, res) {
         let doc = await Employee.find({ dept: d._id });
         let completeList = [];
         for (let e of doc) {
-            if (e.username !== req.user.username) {
+            if (e.username !== req.user.username || e.role === "DPLAdmin") {
                 completeList.push(e.name + " - " + e.username);
             }
         }

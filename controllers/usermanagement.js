@@ -75,6 +75,7 @@ module.exports.updateExceptioUsersData = async (req, res) => {
             });
             if (exceptionUser) {
                 exceptionUser.name = req.body.userData.name;
+                exceptionUser.role = req.body.userData.role;
                 exceptionUser.dashboards = exceptionUserDashboard;
                 await exceptionUser.setPassword(req.body.userData.password);
                 await exceptionUser.save();
@@ -101,6 +102,7 @@ module.exports.updateExceptioUsersData = async (req, res) => {
                 let newExceptionUser = new Employee({
                     username: req.body.userData.userId,
                     name: req.body.userData.name,
+                    role: req.body.userData.role,
                     dashboards: exceptionUserDashboard,
                 });
                 await newExceptionUser.save();
@@ -128,6 +130,7 @@ module.exports.updateExceptioUsersData = async (req, res) => {
                 } else {
                     exceptionUser.name = req.body.userData.name;
                     exceptionUser.dashboards = exceptionUserDashboard;
+                    exceptionUser.role = req.body.userData.role;
                     await exceptionUser.setPassword(req.body.userData.password);
                     await exceptionUser.save();
                     let exceptionAccount = await ExceptionUser.findOne({

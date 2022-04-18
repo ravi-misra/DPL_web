@@ -15,15 +15,15 @@ module.exports.getExceptionUsers = async () => {
     let exceptionUsers = {};
     if (doc) {
         for (let u of doc) {
-            let emp = await Employee.findOne({ username: u.user.username });
             exceptionUsers[u.user.username] = {
                 userId: u.user.username,
-                name: emp.name,
+                name: u.user.name,
+                role: u.user.role,
                 type: u.type,
                 password: u.password,
                 defaultRoute: u.defaultRoute,
                 scadaMode: u.scadaMode,
-                dashboards: emp.dashboards,
+                dashboards: u.user.dashboards,
             };
         }
     }

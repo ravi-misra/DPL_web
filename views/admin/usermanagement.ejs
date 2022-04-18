@@ -28,92 +28,6 @@
     </div>
 </template>
 <script>
-    let employeeObject = {},
-        hodObject = {};
-    if (!window.fetch) {
-        flash("This browser is not supported.", ".fail");
-        setTimeout(redirectHome, 3000);
-    } else {
-        loadInitialData();
-    }
-    async function loadInitialData() {
-        let response = await postData(
-            "/admin/user-management/api/get-employee-data",
-            {}
-        );
-        if (!response.fail) {
-            ({ employeeObject, hodObject } = response);
-            populateDeptSelector();
-        } else {
-            flash("Failed to load initial data.", ".fail");
-        }
-    }
-    function redirectHome() {
-        window.location.replace(window.location.origin);
-    }
-    //Password Reset form///////////////////////////////////////////////////
-    const resetForm = document.querySelector(".reset-password");
-    const resetButton = resetForm.querySelector(".login-button-container");
-    const resetFormDeptSelector = resetForm.querySelector(
-        ".reset-form-dept-selector"
-    );
-    const resetFormEmpSelector = resetForm.querySelector(
-        ".reset-form-emp-selector"
-    );
-    resetButton.addEventListener("click", resetPassword);
-    resetFormDeptSelector.addEventListener("change", resetEmployeeSelector);
-
-    function populateDeptSelector() {
-        for (let d of Object.keys(hodObject)) {
-            let option = document.createElement("option");
-            option.value = d;
-            option.innerText = hodObject[d];
-            resetFormDeptSelector.add(option);
-        }
-    }
-
-    function resetEmployeeSelector(eve) {
-        let option = document.createElement("option");
-        option.value = "";
-        option.innerText = "--Please select employee name--";
-        resetFormEmpSelector.innerHTML = "";
-        resetFormEmpSelector.add(option);
-        if (employeeObject[resetFormDeptSelector.value]) {
-            for (let e of employeeObject[resetFormDeptSelector.value]) {
-                option = document.createElement("option");
-                option.value = e.slice(-5);
-                option.innerText = e;
-                resetFormEmpSelector.add(option);
-            }
-        }
-    }
-
-    async function resetPassword(e) {
-        e.preventDefault();
-        if (!resetFormDeptSelector.value || !resetFormEmpSelector.value) {
-            flash("Please fill all required fields.", ".fail");
-        } else {
-            let data = {
-                dept: resetFormDeptSelector.value,
-                emp: resetFormEmpSelector.value,
-            };
-            let response = await postData(
-                "/admin/user-management/api/password-reset",
-                data
-            );
-
-            resetFormDeptSelector.selectedIndex = 0;
-            resetFormEmpSelector.selectedIndex = 0;
-            if (response.fail) {
-                if (!response.message) response.message = "Unknown Error!!!";
-                flash(response.message, ".fail");
-            } else {
-                flash(response.message, ".success");
-            }
-        }
-    }
-    ////////////////////////////////////////////////////////////////////////
-
     async function postData(url = "", data = {}) {
         try {
             // Default options are marked with *
@@ -259,6 +173,7 @@
                 exceptionUserDetails.value = JSON.stringify({
                     userId: "",
                     name: "",
+                    role:"",
                     type: "",
                     password: "",
                     dashboards: { key: "value" },
@@ -299,6 +214,7 @@
                 loadExceptionUsers();
                 exceptionUserSelector.selectedIndex = 0;
                 exceptionUserDetails.value = "";
+                deleteExcpetionUserChkBox.checked = false;
             }
         } else {
             flash("No user/details provided.", ".fail");
@@ -328,5 +244,105 @@
         }
     }
     ////////////////////////////////////////////////////////////////////////
+    //User Role form///////////////////////////////////////////////////
+    const roleForm = document.querySelector(".user-role-form");
+    const roleButton = roleForm.querySelector(".login-button-container");
+    const roleFormDeptSelector = roleForm.querySelector(
+        ".role-form-dept-selector"
+    );
+    const roleFormEmpSelector = roleForm.querySelector(
+        ".role-form-emp-selector"
+    );
+    const roleFormRoleSelector = roleForm.querySelector(
+        ".role-form-role-selector"
+    );
+    ////////////////////////////////////////////////////////////////////////
 </script>
 <% } %>
+<script>
+    let employeeObject = {},
+    hodObject = {};
+    if (!window.fetch) {
+        flash("This browser is not supported.", ".fail");
+        setTimeout(redirectHome, 3000);
+    } else {
+        loadInitialData();
+    }
+    async function loadInitialData() {
+        let response = await postData(
+            "/admin/user-management/api/get-employee-data",
+            {}
+        );
+        if (!response.fail) {
+            ({ employeeObject, hodObject } = response);
+            populateDeptSelector();
+        } else {
+            flash("Failed to load initial data.", ".fail");
+        }
+    }
+    function redirectHome() {
+        window.location.replace(window.location.origin);
+    }
+    //Password Reset form///////////////////////////////////////////////////
+    const resetForm = document.querySelector(".reset-password");
+    const resetButton = resetForm.querySelector(".login-button-container");
+    const resetFormDeptSelector = resetForm.querySelector(
+        ".reset-form-dept-selector"
+    );
+    const resetFormEmpSelector = resetForm.querySelector(
+        ".reset-form-emp-selector"
+    );
+    resetButton.addEventListener("click", resetPassword);
+    resetFormDeptSelector.addEventListener("change", resetEmployeeSelector);
+
+    function populateDeptSelector() {
+        for (let d of Object.keys(hodObject)) {
+            let option = document.createElement("option");
+            option.value = d;
+            option.innerText = hodObject[d];
+            resetFormDeptSelector.add(option);
+        }
+    }
+
+    function resetEmployeeSelector(eve) {
+        let option = document.createElement("option");
+        option.value = "";
+        option.innerText = "--Please select employee name--";
+        resetFormEmpSelector.innerHTML = "";
+        resetFormEmpSelector.add(option);
+        if (employeeObject[resetFormDeptSelector.value]) {
+            for (let e of employeeObject[resetFormDeptSelector.value]) {
+                option = document.createElement("option");
+                option.value = e.slice(-5);
+                option.innerText = e;
+                resetFormEmpSelector.add(option);
+            }
+        }
+    }
+
+    async function resetPassword(e) {
+        e.preventDefault();
+        if (!resetFormDeptSelector.value || !resetFormEmpSelector.value) {
+            flash("Please fill all required fields.", ".fail");
+        } else {
+            let data = {
+                dept: resetFormDeptSelector.value,
+                emp: resetFormEmpSelector.value,
+            };
+            let response = await postData(
+                "/admin/user-management/api/password-reset",
+                data
+            );
+
+            resetFormDeptSelector.selectedIndex = 0;
+            resetFormEmpSelector.selectedIndex = 0;
+            if (response.fail) {
+                if (!response.message) response.message = "Unknown Error!!!";
+                flash(response.message, ".fail");
+            } else {
+                flash(response.message, ".success");
+            }
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////
+</script>

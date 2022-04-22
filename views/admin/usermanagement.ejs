@@ -262,6 +262,14 @@
 <script>
     let employeeObject = {},
     hodObject = {};
+    const resetForm = document.querySelector(".reset-password");
+    const resetButton = resetForm.querySelector(".login-button-container");
+    const resetFormDeptSelector = resetForm.querySelector(
+        ".reset-form-dept-selector"
+    );
+    const resetFormEmpSelector = resetForm.querySelector(
+        ".reset-form-emp-selector"
+    );
     if (!window.fetch) {
         flash("This browser is not supported.", ".fail");
         setTimeout(redirectHome, 3000);
@@ -275,7 +283,10 @@
         );
         if (!response.fail) {
             ({ employeeObject, hodObject } = response);
-            populateDeptSelector();
+            populateDeptSelector(resetFormDeptSelector);
+            if (document.querySelector(".exception-user-form")) {
+
+            }
         } else {
             flash("Failed to load initial data.", ".fail");
         }
@@ -284,23 +295,15 @@
         window.location.replace(window.location.origin);
     }
     //Password Reset form///////////////////////////////////////////////////
-    const resetForm = document.querySelector(".reset-password");
-    const resetButton = resetForm.querySelector(".login-button-container");
-    const resetFormDeptSelector = resetForm.querySelector(
-        ".reset-form-dept-selector"
-    );
-    const resetFormEmpSelector = resetForm.querySelector(
-        ".reset-form-emp-selector"
-    );
     resetButton.addEventListener("click", resetPassword);
     resetFormDeptSelector.addEventListener("change", resetEmployeeSelector);
 
-    function populateDeptSelector() {
+    function populateDeptSelector(element) {
         for (let d of Object.keys(hodObject)) {
             let option = document.createElement("option");
             option.value = d;
             option.innerText = hodObject[d];
-            resetFormDeptSelector.add(option);
+            element.add(option);
         }
     }
 

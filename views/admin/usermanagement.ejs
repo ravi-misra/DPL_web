@@ -284,8 +284,10 @@
         if (!response.fail) {
             ({ employeeObject, hodObject } = response);
             populateDeptSelector(resetFormDeptSelector);
-            if (document.querySelector(".exception-user-form")) {
-
+            if (document.querySelector(".user-role-form")) {
+                populateDeptSelector(roleFormDeptSelector);
+                roleFormDeptSelector.addEventListener("change", resetEmployeeSelector);
+                populateRoleSelector();
             }
         } else {
             flash("Failed to load initial data.", ".fail");
@@ -294,7 +296,7 @@
     function redirectHome() {
         window.location.replace(window.location.origin);
     }
-    //Password Reset form///////////////////////////////////////////////////
+
     resetButton.addEventListener("click", resetPassword);
     resetFormDeptSelector.addEventListener("change", resetEmployeeSelector);
 
@@ -307,18 +309,43 @@
         }
     }
 
+    async function populateRoleSelector() {
+        const allRoles = await getData(
+            "/admin/user-management/api/get-roles"
+        );
+        if (!allRoles.fail) {
+            for (let d of allRoles) {
+                let option = document.createElement("option");
+                option.value = d;
+                option.innerText = d;
+                element.add(option);
+            }
+        }
+    }
+
     function resetEmployeeSelector(eve) {
         let option = document.createElement("option");
         option.value = "";
         option.innerText = "--Please select employee name--";
-        resetFormEmpSelector.innerHTML = "";
-        resetFormEmpSelector.add(option);
-        if (employeeObject[resetFormDeptSelector.value]) {
-            for (let e of employeeObject[resetFormDeptSelector.value]) {
-                option = document.createElement("option");
-                option.value = e.slice(-5);
-                option.innerText = e;
-                resetFormEmpSelector.add(option);
+        eve.target.innerHTML = "";
+        eve.target.add(option);
+        if (eve.target === resetFormDeptSelector) {
+            if (employeeObject[resetFormDeptSelector.value]) {
+                for (let e of employeeObject[resetFormDeptSelector.value]) {
+                    option = document.createElement("option");
+                    option.value = e.slice(-5);
+                    option.innerText = e;
+                    resetFormEmpSelector.add(option);
+                }
+            }
+        } else if (eve.target === roleFormDeptSelector) {
+            if (employeeObject[roleFormDeptSelector.value]) {
+                for (let e of employeeObject[roleFormDeptSelector.value]) {
+                    option = document.createElement("option");
+                    option.value = e.slice(-5);
+                    option.innerText = e;
+                    roleFormEmpSelector.add(option);
+                }
             }
         }
     }

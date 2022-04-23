@@ -3,6 +3,7 @@ const Employee = require("../models/employee");
 const ExceptionUser = require("../models/exception_users");
 const { defaultPassword } = require("../config");
 const { getExceptionUsers } = require("../utils/exceptionUsers");
+const roles = require("../utils/role");
 
 async function getInitialData(req, res) {
     let hodDeps = await Dept.find({ hod: req.user._id });
@@ -161,4 +162,8 @@ module.exports.updateExceptioUsersData = async (req, res) => {
     } catch (err) {
         res.json({ fail: true, message: err });
     }
+};
+
+module.exports.getAllRoles = (req, res) => {
+    res.json(Object.keys(roles));
 };

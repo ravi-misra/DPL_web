@@ -150,7 +150,7 @@
     let allExceptionUser = {};
     const exceptionUserForm = document.querySelector(".exception-user-form");
     const exceptionUserSubmitButton = exceptionUserForm.querySelector(
-        ".login-button-container"
+        ".login-button-container > .btn"
     );
     const exceptionUserSelector = exceptionUserForm.querySelector(
         ".exception-form-emp-selector"
@@ -246,7 +246,7 @@
     ////////////////////////////////////////////////////////////////////////
     //User Role form///////////////////////////////////////////////////
     const roleForm = document.querySelector(".user-role-form");
-    const roleButton = roleForm.querySelector(".login-button-container");
+    const roleButton = roleForm.querySelector(".login-button-container > .btn");
     const roleFormDeptSelector = roleForm.querySelector(
         ".role-form-dept-selector"
     );
@@ -263,7 +263,7 @@
     let employeeObject = {},
     hodObject = {};
     const resetForm = document.querySelector(".reset-password");
-    const resetButton = resetForm.querySelector(".login-button-container");
+    const resetButton = resetForm.querySelector(".login-button-container > .btn");
     const resetFormDeptSelector = resetForm.querySelector(
         ".reset-form-dept-selector"
     );
@@ -287,7 +287,8 @@
             if (document.querySelector(".user-role-form")) {
                 populateDeptSelector(roleFormDeptSelector);
                 roleFormDeptSelector.addEventListener("change", resetEmployeeSelector);
-                populateRoleSelector();
+                roleButton.addEventListener("click", updateRole);
+                populateRoleSelector(roleFormRoleSelector);
             }
         } else {
             flash("Failed to load initial data.", ".fail");
@@ -309,9 +310,9 @@
         }
     }
 
-    async function populateRoleSelector() {
+    async function populateRoleSelector(element) {
         const allRoles = await getData(
-            "/admin/user-management/api/get-roles"
+            "/admin/user-management/api/roles"
         );
         if (!allRoles.fail) {
             for (let d of allRoles) {
@@ -327,9 +328,9 @@
         let option = document.createElement("option");
         option.value = "";
         option.innerText = "--Please select employee name--";
-        eve.target.innerHTML = "";
-        eve.target.add(option);
         if (eve.target === resetFormDeptSelector) {
+            resetFormEmpSelector.innerHTML = "";
+            resetFormEmpSelector.add(option);
             if (employeeObject[resetFormDeptSelector.value]) {
                 for (let e of employeeObject[resetFormDeptSelector.value]) {
                     option = document.createElement("option");
@@ -339,6 +340,8 @@
                 }
             }
         } else if (eve.target === roleFormDeptSelector) {
+            roleFormEmpSelector.innerHTML = "";
+            roleFormEmpSelector.add(option);
             if (employeeObject[roleFormDeptSelector.value]) {
                 for (let e of employeeObject[roleFormDeptSelector.value]) {
                     option = document.createElement("option");
@@ -348,6 +351,13 @@
                 }
             }
         }
+    }
+
+    async function updateRole(e) {
+        e.preventDefault();
+        if (roleFormDeptSelector.value && roleFormEmpSelector.value && roleFormRoleSelector.value) {
+            const response = await postData("/admin/user-management/api/roles");
+        }        
     }
 
     async function resetPassword(e) {

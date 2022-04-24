@@ -31,4 +31,8 @@ router
     .get(isLoggedIn, catchAsync(usermanagement.getExceptioUsersData))
     .post(isLoggedIn, catchAsync(usermanagement.updateExceptioUsersData));
 
+router
+    .route("/user-management/api/roles")
+    .get(isLoggedIn, usermanagement.getAllRoles)
+    .post(isLoggedIn, usermanagement.getAllRoles);
 module.exports = router;

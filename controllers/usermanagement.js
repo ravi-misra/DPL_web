@@ -43,7 +43,7 @@ module.exports.resetPassword = async (req, res) => {
         await user.setPassword(defaultPassword);
         await user.save();
         res.json({
-            message: `Password has been reset for: ${req.body.emp}`,
+            message: `Password has been reset for: ${user.name}-[${user.username}]`,
         });
     } catch (e) {
         res.json({ fail: true, message: e });
@@ -171,4 +171,36 @@ module.exports.updateExceptioUsersData = async (req, res) => {
 
 module.exports.getAllRoles = (req, res) => {
     res.json(Object.keys(roles));
+};
+
+module.exports.updateRoles = async (req, res) => {
+    const doc = await Employee.findOne({ username: req.body.emp });
+    if (doc) {
+        let oldRole = doc.role;
+        let newRole = req.body.role;
+        if (oldRole === newRole) {
+            return res.json({ message: "Role already assigned." });
+        } else if (oldRole === "DPLAdmin" || oldRole === "HoD") {
+            doc.role = newRole;
+            await doc.save();
+            await Dept.updateMany({}, { $pullAll: { hod: [doc._id] } });
+        } else if (newRole === "DPLAdmin") {
+            doc.role = newRole;
+            await doc.save();
+            await Dept.updateMany({}, { $push: { hod: doc._id } });
+        } else if (newRole === "HoD") {
+            doc.role = newRole;
+            await doc.save();
+            await Dept.updateOne(
+                { costcode: req.body.dept },
+                { $push: { hod: doc._id } }
+            );
+        } else {
+            doc.role = newRole;
+            await doc.save();
+        }
+        res.json({ message: `${doc.name} is now ${newRole}.` });
+    } else {
+        res.json({ fail: true, message: "Record not found." });
+    }
 };

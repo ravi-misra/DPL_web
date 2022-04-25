@@ -356,7 +356,18 @@
     async function updateRole(e) {
         e.preventDefault();
         if (roleFormDeptSelector.value && roleFormEmpSelector.value && roleFormRoleSelector.value) {
-            const response = await postData("/admin/user-management/api/roles");
+            const response = await postData("/admin/user-management/api/roles", {dept:roleFormDeptSelector.value, emp:roleFormEmpSelector.value, role:roleFormRoleSelector.value});
+            roleFormDeptSelector.selectedIndex = 0;
+            roleFormEmpSelector.selectedIndex = 0;
+            roleFormRoleSelector.selectedIndex = 0;
+            if (response.fail) {
+                if (!response.message) response.message = "Unknown Error!!!";
+                flash(response.message, ".fail");
+            } else {
+                flash(response.message, ".success");
+            }
+        } else {
+            flash("Please fill all required fields.", ".fail");
         }        
     }
 

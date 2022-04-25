@@ -34,5 +34,5 @@ router
 router
     .route("/user-management/api/roles")
     .get(isLoggedIn, usermanagement.getAllRoles)
-    .post(isLoggedIn, usermanagement.getAllRoles);
+    .post(isLoggedIn, catchAsync(usermanagement.updateRoles));
 module.exports = router;

@@ -6,24 +6,25 @@ const listenerObject = {
         cars1listener(io) {
             io.of("ca-rs1").on("connection", (socket) => {
                 setTimeout(() => {
-                    if (this.caRS1) {
+                    const socketCount = io.of("ca-rs1").sockets.size;
+                    if (socketCount == 1 && this.caRS1) {
+                        this.caRS1 = false;
                         console.log(
                             `CA RS1 connected (id:${
                                 socket.id
                             }) at ${new Date()}`
                         );
                         socHandle.socketCarbonAreaRS1(io, socket);
-                        this.caRS1 = false;
                         socket.on("disconnect", (reason) => {
+                            this.caRS1 = true;
                             console.log(
                                 `CA RS1 disconnected (id:${
                                     socket.id
                                 }) at ${new Date()}`
                             );
-                            this.caRS1 = true;
                             socHandle.socketCarbonAreaRS1Disconnect(io);
                         });
-                    } else {
+                    } else if (socketCount > 1) {
                         socket.emit("reject");
                         socket.disconnect(true);
                         console.log(
@@ -41,24 +42,25 @@ const listenerObject = {
         cars2listener(io) {
             io.of("ca-rs2").on("connection", (socket) => {
                 setTimeout(() => {
-                    if (this.caRS2) {
+                    const socketCount = io.of("ca-rs2").sockets.size;
+                    if (socketCount == 1 && this.caRS2) {
+                        this.caRS2 = false;
                         console.log(
                             `CA RS2 connected (id:${
                                 socket.id
                             }) at ${new Date()}`
                         );
                         socHandle.socketCarbonAreaRS2(io, socket);
-                        this.caRS2 = false;
                         socket.on("disconnect", (reason) => {
+                            this.caRS2 = true;
                             console.log(
                                 `CA RS2 disconnected (id:${
                                     socket.id
                                 }) at ${new Date()}`
                             );
-                            this.caRS2 = true;
                             socHandle.socketCarbonAreaRS2Disconnect(io);
                         });
-                    } else {
+                    } else if (socketCount > 1) {
                         socket.emit("reject");
                         socket.disconnect(true);
                         console.log(

@@ -132,14 +132,19 @@
         </div>
     </form>
     <hr />
-    <h2 class="usermanagement-form-headings">Assign HoD</h2>
-    <form class="dept-hod-form" action="" method="post">
-        <select name="dept" class="hod-form-dept-selector">
+    <h2 class="usermanagement-form-headings">Department Params</h2>
+    <form class="dept-param-form" action="" method="post">
+        <select name="dept" class="dep-param-form-dept-selector">
             <option value="">--Please choose department--</option>
         </select>
-        <select name="role" class="hod-form-hod-selector">
-            <option value="">--Please select HoD--</option>
-        </select>
+        <textarea
+            class="dep-param-json"
+            name=""
+            id=""
+            cols="10"
+            rows="10"
+            spellcheck="false"
+        ></textarea>
         <div class="login-button-container">
             <button type="submit" class="btn login-btn">Submit</button>
         </div>
@@ -173,7 +178,7 @@
                 exceptionUserDetails.value = JSON.stringify({
                     userId: "",
                     name: "",
-                    role:"",
+                    role: "",
                     type: "",
                     password: "",
                     dashboards: { key: "value" },
@@ -244,7 +249,7 @@
         }
     }
     ////////////////////////////////////////////////////////////////////////
-    //User Role form///////////////////////////////////////////////////
+    //User Role form////////////////////////////////////////////////////////
     const roleForm = document.querySelector(".user-role-form");
     const roleButton = roleForm.querySelector(".login-button-container > .btn");
     const roleFormDeptSelector = roleForm.querySelector(
@@ -257,13 +262,20 @@
         ".role-form-role-selector"
     );
     ////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////
+    //Dept Params form//////////////////////////////////////////////////////
+    const deptParamsForm = document.querySelector(".dept-param-form");
+    ////////////////////////////////////////////////////////////////////////
 </script>
 <% } %>
 <script>
     let employeeObject = {},
-    hodObject = {};
+        hodObject = {};
     const resetForm = document.querySelector(".reset-password");
-    const resetButton = resetForm.querySelector(".login-button-container > .btn");
+    const resetButton = resetForm.querySelector(
+        ".login-button-container > .btn"
+    );
     const resetFormDeptSelector = resetForm.querySelector(
         ".reset-form-dept-selector"
     );
@@ -286,7 +298,10 @@
             populateDeptSelector(resetFormDeptSelector);
             if (document.querySelector(".user-role-form")) {
                 populateDeptSelector(roleFormDeptSelector);
-                roleFormDeptSelector.addEventListener("change", resetEmployeeSelector);
+                roleFormDeptSelector.addEventListener(
+                    "change",
+                    resetEmployeeSelector
+                );
                 roleButton.addEventListener("click", updateRole);
                 populateRoleSelector(roleFormRoleSelector);
             }
@@ -311,9 +326,7 @@
     }
 
     async function populateRoleSelector(element) {
-        const allRoles = await getData(
-            "/admin/user-management/api/roles"
-        );
+        const allRoles = await getData("/admin/user-management/api/roles");
         if (!allRoles.fail) {
             for (let d of allRoles) {
                 let option = document.createElement("option");
@@ -355,8 +368,19 @@
 
     async function updateRole(e) {
         e.preventDefault();
-        if (roleFormDeptSelector.value && roleFormEmpSelector.value && roleFormRoleSelector.value) {
-            const response = await postData("/admin/user-management/api/roles", {dept:roleFormDeptSelector.value, emp:roleFormEmpSelector.value, role:roleFormRoleSelector.value});
+        if (
+            roleFormDeptSelector.value &&
+            roleFormEmpSelector.value &&
+            roleFormRoleSelector.value
+        ) {
+            const response = await postData(
+                "/admin/user-management/api/roles",
+                {
+                    dept: roleFormDeptSelector.value,
+                    emp: roleFormEmpSelector.value,
+                    role: roleFormRoleSelector.value,
+                }
+            );
             roleFormDeptSelector.selectedIndex = 0;
             roleFormEmpSelector.selectedIndex = 0;
             roleFormRoleSelector.selectedIndex = 0;
@@ -368,7 +392,7 @@
             }
         } else {
             flash("Please fill all required fields.", ".fail");
-        }        
+        }
     }
 
     async function resetPassword(e) {

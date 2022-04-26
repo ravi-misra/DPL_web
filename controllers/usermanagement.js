@@ -181,6 +181,7 @@ module.exports.updateRoles = async (req, res) => {
         if (oldRole === newRole) {
             return res.json({ message: "Role already assigned." });
         } else if (oldRole === "DPLAdmin" || oldRole === "HoD") {
+            //Downgrading from HoD or DPLAdmin to other roles
             doc.role = newRole;
             await doc.save();
             await Dept.updateMany({}, { $pullAll: { hod: [doc._id] } });
@@ -203,4 +204,9 @@ module.exports.updateRoles = async (req, res) => {
     } else {
         res.json({ fail: true, message: "Record not found." });
     }
+};
+
+module.exports.getDeptParams = async (req, res) => {
+    let listDeps = await Dept.find({ hod: req.user._id });
+    let deptParams = {}; //{costcode:{ALL PARAMS}}
 };

@@ -14,7 +14,7 @@ const DepartmentSchema = new Schema({
     area: {
         type: String,
     },
-    dashboards: Schema.Types.Mixed, //{key(name of submenu item): vale(link for that item), }
+    dashboards: Schema.Types.Mixed, //{key(name of submenu item): value(link for that item), }
     hod: [
         {
             type: Schema.Types.ObjectId,

@@ -265,7 +265,14 @@
 
     ////////////////////////////////////////////////////////////////////////
     //Dept Params form//////////////////////////////////////////////////////
+    let deptJSONDB = {};
     const deptParamsForm = document.querySelector(".dept-param-form");
+    const deptParamFormDeptSelector = deptParamsForm.querySelector(
+        ".dep-param-form-dept-selector"
+    );
+    const deptParamSubmitButton = deptParamsForm.querySelector(
+        ".login-button-container > .btn"
+    );
     ////////////////////////////////////////////////////////////////////////
 </script>
 <% } %>
@@ -304,6 +311,9 @@
                 );
                 roleButton.addEventListener("click", updateRole);
                 populateRoleSelector(roleFormRoleSelector);
+            }
+            if (document.querySelector(".dept-param-form")) {
+                populateDeptSelector(deptParamFormDeptSelector);
             }
         } else {
             flash("Failed to load initial data.", ".fail");

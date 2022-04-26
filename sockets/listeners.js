@@ -32,7 +32,7 @@ const listenerObject = {
                             }) at ${new Date()}`
                         );
                     }
-                }, 10000);
+                }, 20000);
             });
         },
     },
@@ -67,7 +67,7 @@ const listenerObject = {
                             }) at ${new Date()}`
                         );
                     }
-                }, 10000);
+                }, 20000);
             });
         },
     },

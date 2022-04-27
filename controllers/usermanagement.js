@@ -207,6 +207,23 @@ module.exports.updateRoles = async (req, res) => {
 };
 
 module.exports.getDeptParams = async (req, res) => {
-    let listDeps = await Dept.find({ hod: req.user._id });
+    let listDeps = await Dept.find({ hod: req.user._id }).populate({
+        path: "hod",
+    });
     let deptParams = {}; //{costcode:{ALL PARAMS}}
+    for (let d of listDeps) {
+        deptParams[d.costcode] = { name: d.name };
+        if (d.dashboards) {
+            deptParams[d.costcode].dashboards = d.dashboards;
+        }
+        if (d.hod) {
+            deptParams[d.costcode].hod = [];
+            for (let e of d.hod) {
+                deptParams[d.costcode].hod.push(e.username);
+            }
+        }
+    }
+    res.json(deptParams);
 };
+
+module.exports.updateDeptParams = async (req, res) => {};

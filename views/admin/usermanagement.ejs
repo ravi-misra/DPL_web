@@ -270,9 +270,25 @@
     const deptParamFormDeptSelector = deptParamsForm.querySelector(
         ".dep-param-form-dept-selector"
     );
+    const deptParamFormDeptJSON =
+        deptParamsForm.querySelector(".dep-param-json");
     const deptParamSubmitButton = deptParamsForm.querySelector(
         ".login-button-container > .btn"
     );
+
+    function resetDeptDetails(eve) {
+        if (eve.target === deptParamFormDeptSelector) {
+            if (eve.target.value) {
+                deptParamFormDeptJSON.value = JSON.stringify(
+                    deptJSONDB[eve.target.value]
+                );
+            } else {
+                deptParamFormDeptJSON.value = "";
+            }
+        }
+    }
+
+    function updateDeptDetails(eve) {}
     ////////////////////////////////////////////////////////////////////////
 </script>
 <% } %>
@@ -314,6 +330,14 @@
             }
             if (document.querySelector(".dept-param-form")) {
                 populateDeptSelector(deptParamFormDeptSelector);
+                deptParamFormDeptSelector.addEventListener(
+                    "change",
+                    resetDeptDetails
+                );
+                deptParamSubmitButton.addEventListener(
+                    "click",
+                    updateDeptDetails
+                );
             }
         } else {
             flash("Failed to load initial data.", ".fail");
@@ -333,6 +357,10 @@
             option.innerText = hodObject[d];
             element.add(option);
         }
+    }
+
+    async function getDeptParams() {
+        deptJSONDB = await getData("/admin/user-management/api/dept-params");
     }
 
     async function populateRoleSelector(element) {

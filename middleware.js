@@ -14,3 +14,19 @@ module.exports.isAuthorized = (req, res, next) => {
     }
     next();
 };
+
+module.exports.isDPLAdmin = (req, res, next) => {
+    if (req.user.role === "DPLAdmin") {
+        req.flash("error", "Unauthorized request");
+        return res.redirect("/home");
+    }
+    next();
+};
+
+module.exports.isHOD = (req, res, next) => {
+    if (req.user.role === "HoD") {
+        req.flash("error", "Unauthorized request");
+        return res.redirect("/home");
+    }
+    next();
+};

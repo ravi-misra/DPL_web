@@ -226,4 +226,27 @@ module.exports.getDeptParams = async (req, res) => {
     res.json(deptParams);
 };
 
-module.exports.updateDeptParams = async (req, res) => {};
+module.exports.updateDeptParams = async (req, res) => {
+    //req.body = {costcode:xxx,params:xxxx}
+    try {
+        let dept = await Dept.findOne({ costcode: req.body.costcode });
+        for (let p of Object.keys(req.body.params)) {
+            if (dept[p]) {
+                if (p === "hod") {
+                    dept[p] = req.body.params[p].map(async (e) => {
+                        let emp = await Employee.findOne({ username: e });
+                        return emp._id;
+                    });
+                } else if (p !== "costcode") {
+                    dept[p] = req.body.params[p];
+                }
+            }
+        }
+        dept.save();
+        res.json({
+            message: `Department: ${dept.costcode} parameters updated.`,
+        });
+    } catch (e) {
+        res.json({ fail: true, message: e });
+    }
+};

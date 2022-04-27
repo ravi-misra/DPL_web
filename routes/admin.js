@@ -3,7 +3,12 @@ const router = express.Router();
 const shiftplan = require("../controllers/shiftplan");
 const usermanagement = require("../controllers/usermanagement");
 const catchAsync = require("../utils/catchAsync");
-const { isLoggedIn, isAuthorized } = require("../middleware");
+const {
+    isLoggedIn,
+    isAuthorized,
+    isDPLAdmin,
+    isHOD,
+} = require("../middleware");
 
 router
     .route("/shift-plan")
@@ -16,23 +21,41 @@ router
 
 router
     .route("/user-management")
-    .get(isLoggedIn, catchAsync(usermanagement.renderUserManagementPage));
+    .get(
+        isLoggedIn,
+        isHOD,
+        catchAsync(usermanagement.renderUserManagementPage)
+    );
 
 router
     .route("/user-management/api/get-employee-data")
-    .post(isLoggedIn, catchAsync(usermanagement.loadInitialData));
+    .post(isLoggedIn, isHOD, catchAsync(usermanagement.loadInitialData));
 
 router
     .route("/user-management/api/password-reset")
-    .post(isLoggedIn, catchAsync(usermanagement.resetPassword));
+    .post(isLoggedIn, isHOD, catchAsync(usermanagement.resetPassword));
 
 router
     .route("/user-management/api/exception-users")
-    .get(isLoggedIn, catchAsync(usermanagement.getExceptioUsersData))
-    .post(isLoggedIn, catchAsync(usermanagement.updateExceptioUsersData));
+    .get(
+        isLoggedIn,
+        isDPLAdmin,
+        catchAsync(usermanagement.getExceptioUsersData)
+    )
+    .post(
+        isLoggedIn,
+        isDPLAdmin,
+        catchAsync(usermanagement.updateExceptioUsersData)
+    );
 
 router
     .route("/user-management/api/roles")
-    .get(isLoggedIn, usermanagement.getAllRoles)
-    .post(isLoggedIn, catchAsync(usermanagement.updateRoles));
+    .get(isLoggedIn, isDPLAdmin, usermanagement.getAllRoles)
+    .post(isLoggedIn, isDPLAdmin, catchAsync(usermanagement.updateRoles));
+
+router
+    .route("/user-management/api/dept-params")
+    .get(isLoggedIn, isDPLAdmin, catchAsync(usermanagement.getDeptParams))
+    .post(isLoggedIn, isDPLAdmin, catchAsync(usermanagement.updateDeptParams));
+
 module.exports = router;

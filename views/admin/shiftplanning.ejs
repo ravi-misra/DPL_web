@@ -7,48 +7,173 @@
         <p>Manually Change Shift Plan</p>
     </button>
 </div>
-<hr>
-<form action="/admin/shift-plan" method="post" enctype="multipart/form-data" class="shift-plan-action excel" style="display: none;">
+<hr />
+<form
+    action="/admin/shift-plan"
+    method="post"
+    enctype="multipart/form-data"
+    class="shift-plan-action excel"
+    style="display: none"
+>
     <div class="file-selection">
         <select name="costcode" id="">
             <option value="">--Please choose department--</option>
             <% for( let d of Object.keys(hodObject) ) { %>
-                <option value=<%= d %>><%= hodObject[d] %></option>
+            <option value="<%= d %>"><%= hodObject[d] %></option>
             <% } %>
         </select>
-        <input type="file" accept=".xls, .xlsx" name="attendance-sheet" id="file">
+        <input
+            type="file"
+            accept=".xls, .xlsx"
+            name="attendance-sheet"
+            id="file"
+        />
     </div>
     <div class="login-button-container">
-        <button type="submit" name="button" class="btn login-btn">Submit</button>
+        <button type="submit" name="button" class="btn login-btn">
+            Submit
+        </button>
     </div>
 </form>
-<form action="" method="post" class="shift-plan-action view" style="display: none;">
-    <div>
-        <br><br>
-        Page under development. Coming soon...
+<div class="shift-plan-action view" style="display: none">
+    <div class="sh-shdl-inputs">
+        <select name="dept" class="sh-shdl-dept-selector">
+            <option value="">--Please choose department--</option>
+        </select>
+        <select name="emp" class="sh-shdl-emp-selector">
+            <option value="">--Please select employee name--</option>
+        </select>
+        <div class="login-button-container">
+            <button type="submit" class="btn login-btn">View</button>
+        </div>
     </div>
-</form>
-<div id="file-upload-modal" style="display: none;position: fixed;height: 100vh;width: 100vw;z-index: 9999;background-color: transparent;text-align: center;top: 0;left: 0;justify-content: center;">
-    <img src="/assets/images/loading.gif" alt="Loading..." width="414" height="233" style="align-self: center;">
+    <hr />
+    <form action="/profile/shift-schedule" method="POST" class="shift-sch-frm">
+        <table>
+            <thead class="schd-head">
+                <tr class="row-1">
+                    <th class="cell-1" colspan="2">Shift Scheduler</th>
+                </tr>
+                <tr class="row-2">
+                    <th class="cell-1">Date</th>
+                    <th class="cell-2">Shift</th>
+                </tr>
+            </thead>
+            <tbody class="schd-body">
+                <% for( let index = 3, i = 1; index < 33; index++, i++ ) { %>
+                <tr class="row-<%= index %>">
+                    <td class="cell-1">
+                        <%= format(addDays(today, (i-1)), 'dd/MM/yyyy') %>
+                    </td>
+                    <td class="cell-2">
+                        <i style="display: none"
+                            ><input
+                                type="date"
+                                name="Date<%= i %>[date]"
+                                value="<%= format(addDays(today, (i-1)), 'yyyy-MM-dd') %>"
+                        /></i>
+                        <% for( let j of validShifts ) { %> <% if
+                        (Object.keys(scheduledShifts).includes(format(addDays(today,
+                        (i-1)), 'dd/MM/yyyy'))) { %> <% if
+                        (scheduledShifts[format(addDays(today, (i-1)),
+                        'dd/MM/yyyy')].includes(j)) { %>
+                        <input
+                            type="checkbox"
+                            name="Date<%= i %>[shift][<%= j %>]"
+                            id="shift<%= j %>"
+                            class="shift<%= j %>"
+                            checked
+                        />
+                        <label for="shift<%= j %>" class="label-shift<%= j %>"
+                            ><%= j %>
+                        </label>
+                        <% } else { %>
+                        <input
+                            type="checkbox"
+                            name="Date<%= i %>[shift][<%= j %>]"
+                            id="shift<%= j %>"
+                            class="shift<%= j %>"
+                        /><label for="shift<%= j %>" class="label-shift<%= j %>"
+                            ><%= j %>
+                        </label>
+                        <% } %> <% } else { %>
+                        <input
+                            type="checkbox"
+                            name="Date<%= i %>[shift][<%= j %>]"
+                            id="shift<%= j %>"
+                            class="shift<%= j %>"
+                        /><label for="shift<%= j %>" class="label-shift<%= j %>"
+                            ><%= j %>
+                        </label>
+                        <% } %> <% } %>
+                    </td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+        <div class="login-button-container">
+            <button type="submit" name="button" class="btn login-btn">
+                Submit
+            </button>
+        </div>
+    </form>
 </div>
+<div
+    id="file-upload-modal"
+    style="
+        display: none;
+        position: fixed;
+        height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        background-color: transparent;
+        text-align: center;
+        top: 0;
+        left: 0;
+        justify-content: center;
+    "
+>
+    <img
+        src="/assets/images/loading.gif"
+        alt="Loading..."
+        width="414"
+        height="233"
+        style="align-self: center"
+    />
+</div>
+<template id="flash-mesage">
+    <div class="flash success" style="z-index: 9999">
+        <div class="flash__icon">
+            <i class="icon fa fa-check-circle"></i>
+        </div>
+        <p class="flash__body">success</p>
+    </div>
+    <div class="flash fail" style="z-index: 9999">
+        <div class="flash__icon">
+            <i class="icon fa fa-exclamation-triangle"></i>
+        </div>
+        <p class="flash__body">Failure</p>
+    </div>
+</template>
 
 <script>
-    let buttonContainer  = document.querySelector(".shift-plan-strategy");
+    let buttonContainer = document.querySelector(".shift-plan-strategy");
     let choiceButtons = buttonContainer.querySelectorAll(".choice-button");
-    let uploadButton = document.querySelector(".excel > .login-button-container");
+    let uploadButton = document.querySelector(
+        ".excel > .login-button-container"
+    );
     let modalPage = document.querySelector("#file-upload-modal");
     let excelUploadForm = document.querySelector(".shift-plan-action.excel");
     uploadButton.addEventListener("click", (e) => {
-        e.preventDefault(),
-        modalPage.style.display = "flex";
+        e.preventDefault(), (modalPage.style.display = "flex");
         excelUploadForm.submit();
-    })
+    });
     function highlightClickedButton() {
-        let currentActive = buttonContainer.querySelector('.selected-choice');
-        if(currentActive) {
+        let currentActive = buttonContainer.querySelector(".selected-choice");
+        if (currentActive) {
             currentActive.classList.remove("selected-choice");
         }
-        this.classList.add('selected-choice');
+        this.classList.add("selected-choice");
         if (this.classList.contains("file-upload")) {
             document.querySelector(".excel").style.display = "block";
             document.querySelector(".view").style.display = "none";
@@ -57,8 +182,39 @@
             document.querySelector(".excel").style.display = "none";
             document.querySelector(".view").style.display = "block";
         }
-    } 
-    for(let i of choiceButtons) {
-        i.addEventListener('click', highlightClickedButton);
+    }
+    for (let i of choiceButtons) {
+        i.addEventListener("click", highlightClickedButton);
+    }
+    async function getData(url = "") {
+        try {
+            const response = await fetch(url, { cache: "no-cache" });
+            if (response.ok) {
+                let resData = await response.json();
+                return resData;
+            } else {
+                return { fail: true, message: "Error: Operation failed." };
+            }
+        } catch (err) {
+            return { fail: true, message: "Error: Operation failed." };
+        }
+    }
+
+    function flash(message, typeClass) {
+        const card = document
+            .querySelector("#flash-mesage")
+            .content.querySelector(typeClass)
+            .cloneNode(true);
+        card.querySelector("p").textContent = message;
+        document.body.appendChild(card);
+        document
+            .querySelector(".flash")
+            .classList.add("animate--drop-in-fade-out");
+        setTimeout(function () {
+            document
+                .querySelector(".flash")
+                .classList.remove("animate--drop-in-fade-out");
+            document.querySelector(".flash").remove();
+        }, 3500);
     }
 </script>

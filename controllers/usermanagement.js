@@ -241,7 +241,9 @@ module.exports.updateDeptParams = async (req, res) => {
                         role: "DPLAdmin",
                     });
                     for (let a of listDPLAdmins) {
-                        hodArray.push(a.username);
+                        if (!hodArray.includes(a.username)) {
+                            hodArray.push(a.username);
+                        }
                     }
                     hodArray = await Promise.allSettled(
                         hodArray.map(async (e) => {

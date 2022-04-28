@@ -16,17 +16,15 @@ module.exports.isAuthorized = (req, res, next) => {
 };
 
 module.exports.isDPLAdmin = (req, res, next) => {
-    if (req.user.role === "DPLAdmin") {
-        req.flash("error", "Unauthorized request");
-        return res.redirect("/home");
+    if (req.user.role !== "DPLAdmin") {
+        return res.end();
     }
     next();
 };
 
 module.exports.isHOD = (req, res, next) => {
-    if (req.user.role === "HoD") {
-        req.flash("error", "Unauthorized request");
-        return res.redirect("/home");
+    if (req.user.role !== "HoD" && req.user.role !== "DPLAdmin") {
+        return res.end();
     }
     next();
 };

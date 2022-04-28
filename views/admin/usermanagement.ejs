@@ -134,17 +134,19 @@
     <hr />
     <h2 class="usermanagement-form-headings">Department Params</h2>
     <form class="dept-param-form" action="" method="post">
-        <select name="dept" class="dep-param-form-dept-selector">
-            <option value="">--Please choose department--</option>
-        </select>
-        <textarea
-            class="dep-param-json"
-            name=""
-            id=""
-            cols="10"
-            rows="10"
-            spellcheck="false"
-        ></textarea>
+        <div class="div-inside-form">
+            <select name="dept" class="dep-param-form-dept-selector">
+                <option value="">--Please choose department--</option>
+            </select>
+            <textarea
+                class="dep-param-json"
+                name=""
+                id=""
+                cols="10"
+                rows="10"
+                spellcheck="false"
+            ></textarea>
+        </div>        
         <div class="login-button-container">
             <button type="submit" class="btn login-btn">Submit</button>
         </div>
@@ -288,7 +290,34 @@
         }
     }
 
-    function updateDeptDetails(eve) {}
+    async function updateDeptDetails(eve) {
+        eve.preventDefault();
+        let params;
+        let costcode = deptParamFormDeptSelector.value;
+        try {
+            params = JSON.parse(deptParamFormDeptJSON.value);
+        } catch (e) {
+            params ={};
+        }
+        if (costcode && Object.keys(params).length > 0) {
+            let finalData = { costcode, params };
+            let response = await postData(
+                "/admin/user-management/api/dept-params",
+                finalData
+            );
+            if (response.fail) {
+                if (!response.message) response.message = "Unknown Error!!!";
+                flash(response.message, ".fail");
+            } else {
+                flash(response.message, ".success");
+                await getDeptParams();
+                deptParamFormDeptSelector.selectedIndex = 0;
+                deptParamFormDeptJSON.value = "";
+            }
+        } else {
+            flash("No department/details provided.", ".fail");
+        }
+    }
     ////////////////////////////////////////////////////////////////////////
 </script>
 <% } %>
@@ -329,6 +358,7 @@
                 populateRoleSelector(roleFormRoleSelector);
             }
             if (document.querySelector(".dept-param-form")) {
+                await getDeptParams();
                 populateDeptSelector(deptParamFormDeptSelector);
                 deptParamFormDeptSelector.addEventListener(
                     "change",

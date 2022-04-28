@@ -18,7 +18,8 @@ async function getInitialData(req, res) {
                 completeList.push(e.name + " - " + e.username);
             } else if (
                 e.username !== req.user.username &&
-                e.role !== "DPLAdmin"
+                e.role !== "DPLAdmin" &&
+                e.role !== "HoD"
             ) {
                 completeList.push(e.name + " - " + e.username);
             }
@@ -188,13 +189,13 @@ module.exports.updateRoles = async (req, res) => {
         } else if (newRole === "DPLAdmin") {
             doc.role = newRole;
             await doc.save();
-            await Dept.updateMany({}, { $push: { hod: doc._id } });
+            await Dept.updateMany({}, { $addToSet: { hod: doc._id } });
         } else if (newRole === "HoD") {
             doc.role = newRole;
             await doc.save();
             await Dept.updateOne(
                 { costcode: req.body.dept },
-                { $push: { hod: doc._id } }
+                { $addToSet: { hod: doc._id } }
             );
         } else {
             doc.role = newRole;
@@ -219,7 +220,9 @@ module.exports.getDeptParams = async (req, res) => {
         if (d.hod) {
             deptParams[d.costcode].hod = [];
             for (let e of d.hod) {
-                deptParams[d.costcode].hod.push(e.username);
+                if (e.role !== "DPLAdmin") {
+                    deptParams[d.costcode].hod.push(e.username);
+                }
             }
         }
     }
@@ -233,20 +236,45 @@ module.exports.updateDeptParams = async (req, res) => {
         for (let p of Object.keys(req.body.params)) {
             if (dept[p]) {
                 if (p === "hod") {
-                    dept[p] = req.body.params[p].map(async (e) => {
-                        let emp = await Employee.findOne({ username: e });
-                        return emp._id;
+                    let hodArray = [...new Set(req.body.params[p])];
+                    let listDPLAdmins = await Employee.find({
+                        role: "DPLAdmin",
                     });
+                    for (let a of listDPLAdmins) {
+                        hodArray.push(a.username);
+                    }
+                    hodArray = await Promise.allSettled(
+                        hodArray.map(async (e) => {
+                            try {
+                                let emp = await Employee.findOne({
+                                    username: e,
+                                });
+                                if (
+                                    emp.role === "HoD" ||
+                                    emp.role === "DPLAdmin"
+                                ) {
+                                    return emp._id;
+                                } else {
+                                    return false;
+                                }
+                            } catch {
+                                return false;
+                            }
+                        })
+                    );
+                    hodArray = hodArray.map((e) => e.value);
+                    dept[p] = hodArray.filter((o) => o);
                 } else if (p !== "costcode") {
                     dept[p] = req.body.params[p];
                 }
             }
         }
-        dept.save();
+        await dept.save();
         res.json({
             message: `Department: ${dept.costcode} parameters updated.`,
         });
     } catch (e) {
+        console.log(e);
         res.json({ fail: true, message: e });
     }
 };

@@ -195,4 +195,5 @@ app.use((err, req, res, next) => {
 
 server.listen(PORT, host, () => {
     console.log(`Listening at ${host}:${PORT}`);
+    // console.log(process.env.NODE_ENV);
 });

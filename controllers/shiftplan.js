@@ -10,6 +10,7 @@ const {
     addDays,
     parse,
     differenceInCalendarDays,
+    startOfDay,
 } = require("date-fns");
 const { validShifts } = require("../config");
 const puppeteer = require("puppeteer");

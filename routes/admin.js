@@ -15,8 +15,12 @@ router
     .get(isLoggedIn, isAuthorized, catchAsync(shiftplan.renderShiftPlanForm))
     .post(isLoggedIn, isAuthorized, catchAsync(shiftplan.uploadShiftPlan));
 
+router
+    .route("/shift-feed/:username")
+    .get(isLoggedIn, isHOD, catchAsync(shiftplan.renderShiftFeedForm))
+    .post(isLoggedIn, isHOD, catchAsync(shiftplan.updateShiftFeed));
 ////////////////////////////////////////////////////////////////////////////////
-//User Management rotes
+//User Management routes
 ////////////////////////////////////////////////////////////////////////////////
 
 router

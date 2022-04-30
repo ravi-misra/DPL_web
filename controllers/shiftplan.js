@@ -213,3 +213,56 @@ module.exports.uploadShiftPlan = async (req, res, next) => {
         }
     });
 };
+
+module.exports.renderShiftFeedForm = async (req, res) => {
+    const today = startOfDay(new Date());
+    const scheduledShifts = {};
+    const emp = req.params.username;
+    const data = await Shift_sch.find({
+        employee: emp,
+        date: { $gte: today, $lte: addDays(today, 30) },
+    });
+    for (let i of data) {
+        scheduledShifts[format(i.date, "dd/MM/yyyy")] = i.shift;
+    }
+    res.render("partials/shift-feed", {
+        scheduledShifts,
+        today,
+        addDays,
+        format,
+        emp,
+    });
+};
+
+module.exports.updateShiftFeed = async (req, res) => {
+    const body = req.body;
+    delete body.button;
+    const emp = req.params.username;
+    for (let i of Object.keys(body)) {
+        if (body[i]["shift"]) {
+            let checker = (arr, target) => target.every((v) => arr.includes(v));
+            if (
+                checker(res.locals.validShifts, Object.keys(body[i]["shift"]))
+            ) {
+                let filter = {
+                    employee: emp,
+                    date: new Date(body[i]["date"]),
+                };
+                let update = { shift: Object.keys(body[i]["shift"]) };
+                let doc = await Shift_sch.findOneAndUpdate(filter, update, {
+                    new: true,
+                    upsert: true,
+                });
+                await doc.save();
+            }
+        } else {
+            let filter = {
+                employee: emp,
+                date: new Date(body[i]["date"]),
+            };
+            let doc = await Shift_sch.findOneAndDelete(filter);
+        }
+    }
+    req.flash("success", "Shift schedule updated.");
+    res.redirect("/admin/shift-plan");
+};

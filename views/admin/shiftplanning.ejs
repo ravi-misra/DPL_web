@@ -35,7 +35,7 @@
         </button>
     </div>
 </form>
-<div class="shift-plan-action view" style="display: none">
+<div class="shift-plan-action view feed-form-container" style="display: none">
     <div class="sh-shdl-inputs">
         <select name="dept" class="sh-shdl-dept-selector">
             <option value="">--Please choose department--</option>
@@ -88,6 +88,8 @@
 </template>
 
 <script>
+    let employeeObject = {},
+        hodObject = {};
     let buttonContainer = document.querySelector(".shift-plan-strategy");
     let choiceButtons = buttonContainer.querySelectorAll(".choice-button");
     let uploadButton = document.querySelector(
@@ -117,11 +119,104 @@
     for (let i of choiceButtons) {
         i.addEventListener("click", highlightClickedButton);
     }
+    //Shift feeding
+    const feedFormContainer = document.querySelector(".feed-form-container");
+    const shiftFeedSearch = document.querySelector(".sh-shdl-inputs");
+    const shiftFeedDept = shiftFeedSearch.querySelector(
+        "sh-shdl-dept-selector"
+    );
+    const shiftFeedEmp = shiftFeedSearch.querySelector("sh-shdl-emp-selector");
+    const shiftFeedSearchButton = shiftFeedSearch.querySelector(".login-btn");
+    if (!window.fetch) {
+        flash("This browser is not supported.", ".fail");
+        setTimeout(redirectHome, 3000);
+    } else {
+        loadInitialData();
+    }
+    async function loadInitialData() {
+        let response = await postData(
+            "/admin/user-management/api/get-employee-data",
+            {}
+        );
+        if (!response.fail) {
+            ({ employeeObject, hodObject } = response);
+            populateDeptSelector(shiftFeedDept);
+            shiftFeedDept.addEventListener("change", resetEmployeeSelector);
+            shiftFeedSearchButton.addEventListener("click", pullFeedForm);
+        } else {
+            flash("Failed to load initial data.", ".fail");
+        }
+    }
+
+    async function pullFeedForm() {
+        if (shiftFeedEmp.value) {
+            let feedForm = getData("/shift-feed/" + shiftFeedEmp.value);
+            feedFormContainer.appendChild(feedForm);
+        }
+    }
+
+    function redirectHome() {
+        window.location.replace(window.location.origin);
+    }
+
+    function populateDeptSelector(element) {
+        for (let d of Object.keys(hodObject)) {
+            let option = document.createElement("option");
+            option.value = d;
+            option.innerText = hodObject[d];
+            element.add(option);
+        }
+    }
+
+    function resetEmployeeSelector(eve) {
+        let option = document.createElement("option");
+        option.value = "";
+        option.innerText = "--Please select employee name--";
+        shiftFeedEmp.innerHTML = "";
+        shiftFeedEmp.add(option);
+        if (employeeObject[shiftFeedDept.value]) {
+            for (let e of employeeObject[shiftFeedDept.value]) {
+                option = document.createElement("option");
+                option.value = e.slice(-5);
+                option.innerText = e;
+                shiftFeedEmp.add(option);
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////
     async function getData(url = "") {
         try {
             const response = await fetch(url, { cache: "no-cache" });
             if (response.ok) {
-                let resData = await response.json();
+                let resData = await response.text();
+                return resData;
+            } else {
+                return false;
+            }
+        } catch (err) {
+            return false;
+        }
+    }
+
+    async function postData(url = "", data = {}) {
+        try {
+            // Default options are marked with *
+            const response = await fetch(url, {
+                method: "POST", // *GET, POST, PUT, DELETE, etc.
+                mode: "cors", // no-cors, *cors, same-origin
+                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: "same-origin", // include, *same-origin, omit
+                headers: {
+                    "Content-Type": "application/json",
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: "follow", // manual, *follow, error
+                referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                body: JSON.stringify(data), // body data type must match "Content-Type" header
+            });
+            if (response.ok) {
+                let resData = await response.json(); // parses JSON response into native JavaScript objects
                 return resData;
             } else {
                 return { fail: true, message: "Error: Operation failed." };

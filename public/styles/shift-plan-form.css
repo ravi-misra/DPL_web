@@ -2,6 +2,8 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .shift-plan-action > * {
@@ -48,4 +50,10 @@
     padding: 2px 0;
     font-size: 16px;
     font-weight: bold;
+}
+
+.sh-shdl-inputs,
+.sh-shdl-inputs > .login-button-container {
+    padding-top: 10px;
+    padding-bottom: 10px;
 }

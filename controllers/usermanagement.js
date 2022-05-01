@@ -181,7 +181,10 @@ module.exports.updateRoles = async (req, res) => {
         let newRole = req.body.role;
         if (oldRole === newRole) {
             return res.json({ message: "Role already assigned." });
-        } else if (oldRole === "DPLAdmin" || oldRole === "HoD") {
+        } else if (
+            oldRole === "DPLAdmin" ||
+            (oldRole === "HoD" && newRole !== "DPLAdmin")
+        ) {
             //Downgrading from HoD or DPLAdmin to other roles
             doc.role = newRole;
             await doc.save();

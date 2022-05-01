@@ -4,13 +4,13 @@
         <p>Upload System Generated Excel File</p>
     </button>
     <% if (emp) { %>
-        <button class="choice-button view-plan">
-            <p>Manually Change Shift Plan</p>
-        </button>
-    <% } else { %>   
-        <button class="choice-button view-plan selected-choice">
-            <p>Manually Change Shift Plan</p>
-        </button>
+    <button class="choice-button view-plan selected-choice">
+        <p>Manually Change Shift Plan</p>
+    </button>
+    <% } else { %>
+    <button class="choice-button view-plan">
+        <p>Manually Change Shift Plan</p>
+    </button>
     <% } %>
 </div>
 <hr />
@@ -42,28 +42,31 @@
     </div>
 </form>
 <% if (emp) { %>
-    <div class="shift-plan-action view feed-form-container">
-<% } else { %>
-    <div class="shift-plan-action view feed-form-container" style="display: none">
-<% } %>
-    <div class="sh-shdl-inputs">
-        <select name="dept" class="sh-shdl-dept-selector">
-            <option value="">--Please choose department--</option>
-        </select>
-        <select name="emp" class="sh-shdl-emp-selector">
-            <option value="">--Please select employee name--</option>
-        </select>
-        <div class="login-button-container">
-            <button type="submit" class="btn login-btn">View</button>
+<div class="shift-plan-action view feed-form-container">
+    <% } else { %>
+    <div
+        class="shift-plan-action view feed-form-container"
+        style="display: none"
+    >
+        <% } %>
+        <div class="sh-shdl-inputs">
+            <select name="dept" class="sh-shdl-dept-selector">
+                <option value="">--Please choose department--</option>
+            </select>
+            <select name="emp" class="sh-shdl-emp-selector">
+                <option value="">--Please select employee name--</option>
+            </select>
+            <div class="login-button-container">
+                <button type="submit" class="btn login-btn">View</button>
+            </div>
         </div>
-    </div>
-    <hr />
-    <% if (emp) { %>
-        <p>Shift Schedule for: <%= emp %></p>
+        <hr />
+        <% if (emp) { %>
+        <p>Shift Schedule for: <%= empName %></p>
         <form
             action="/admin/shift-feed/<%= emp %>"
             method="POST"
-            class="shift-feed-frm"
+            class="shift-feed-frm shift-sch-frm"
         >
             <table>
                 <thead class="schd-head">
@@ -76,7 +79,8 @@
                     </tr>
                 </thead>
                 <tbody class="schd-body">
-                    <% for( let index = 3, i = 1; index < 33; index++, i++ ) { %>
+                    <% for( let index = 3, i = 1; index < 33; index++, i++ ) {
+                    %>
                     <tr class="row-<%= index %>">
                         <td class="cell-1">
                             <%= format(addDays(today, (i-1)), 'dd/MM/yyyy') %>
@@ -99,7 +103,9 @@
                                 id="shift<%= j %>"
                                 class="shift<%= j %>"
                                 checked
-                            /><label for="shift<%= j %>" class="label-shift<%= j %>"
+                            /><label
+                                for="shift<%= j %>"
+                                class="label-shift<%= j %>"
                                 ><%= j %></label
                             >
                             <% } else { %>
@@ -108,7 +114,9 @@
                                 name="Date<%= i %>[shift][<%= j %>]"
                                 id="shift<%= j %>"
                                 class="shift<%= j %>"
-                            /><label for="shift<%= j %>" class="label-shift<%= j %>"
+                            /><label
+                                for="shift<%= j %>"
+                                class="label-shift<%= j %>"
                                 ><%= j %></label
                             >
                             <% } %> <% } else { %>
@@ -117,7 +125,9 @@
                                 name="Date<%= i %>[shift][<%= j %>]"
                                 id="shift<%= j %>"
                                 class="shift<%= j %>"
-                            /><label for="shift<%= j %>" class="label-shift<%= j %>"
+                            /><label
+                                for="shift<%= j %>"
+                                class="label-shift<%= j %>"
                                 ><%= j %></label
                             >
                             <% } %> <% } %>
@@ -132,205 +142,215 @@
                 </button>
             </div>
         </form>
-    <% } %>
-</div>
-<div
-    id="file-upload-modal"
-    style="
-        display: none;
-        position: fixed;
-        height: 100vh;
-        width: 100vw;
-        z-index: 9999;
-        background-color: transparent;
-        text-align: center;
-        top: 0;
-        left: 0;
-        justify-content: center;
-    "
->
-    <img
-        src="/assets/images/loading.gif"
-        alt="Loading..."
-        width="414"
-        height="233"
-        style="align-self: center"
-    />
-</div>
-<template id="flash-mesage">
-    <div class="flash success" style="z-index: 9999">
-        <div class="flash__icon">
-            <i class="icon fa fa-check-circle"></i>
-        </div>
-        <p class="flash__body">success</p>
+        <% } %>
     </div>
-    <div class="flash fail" style="z-index: 9999">
-        <div class="flash__icon">
-            <i class="icon fa fa-exclamation-triangle"></i>
-        </div>
-        <p class="flash__body">Failure</p>
+    <div
+        id="file-upload-modal"
+        style="
+            display: none;
+            position: fixed;
+            height: 100vh;
+            width: 100vw;
+            z-index: 9999;
+            background-color: transparent;
+            text-align: center;
+            top: 0;
+            left: 0;
+            justify-content: center;
+        "
+    >
+        <img
+            src="/assets/images/loading.gif"
+            alt="Loading..."
+            width="414"
+            height="233"
+            style="align-self: center"
+        />
     </div>
-</template>
+    <template id="flash-mesage">
+        <div class="flash success" style="z-index: 9999">
+            <div class="flash__icon">
+                <i class="icon fa fa-check-circle"></i>
+            </div>
+            <p class="flash__body">success</p>
+        </div>
+        <div class="flash fail" style="z-index: 9999">
+            <div class="flash__icon">
+                <i class="icon fa fa-exclamation-triangle"></i>
+            </div>
+            <p class="flash__body">Failure</p>
+        </div>
+    </template>
 
-<script>
-    let employeeObject = {},
-        hodObject = {};
-    let buttonContainer = document.querySelector(".shift-plan-strategy");
-    let choiceButtons = buttonContainer.querySelectorAll(".choice-button");
-    let uploadButton = document.querySelector(
-        ".excel > .login-button-container"
-    );
-    let modalPage = document.querySelector("#file-upload-modal");
-    let excelUploadForm = document.querySelector(".shift-plan-action.excel");
-    uploadButton.addEventListener("click", (e) => {
-        e.preventDefault(); 
-        modalPage.style.display = "flex";
-        excelUploadForm.submit();
-    });
-    function highlightClickedButton() {
-        let currentActive = buttonContainer.querySelector(".selected-choice");
-        if (currentActive) {
-            currentActive.classList.remove("selected-choice");
-        }
-        this.classList.add("selected-choice");
-        if (this.classList.contains("file-upload")) {
-            document.querySelector(".excel").style.display = "block";
-            document.querySelector(".view").style.display = "none";
-        }
-        if (this.classList.contains("view-plan")) {
-            document.querySelector(".excel").style.display = "none";
-            document.querySelector(".view").style.display = "block";
-        }
-    }
-    for (let i of choiceButtons) {
-        i.addEventListener("click", highlightClickedButton);
-    }
-    //Shift feeding
-    const feedFormContainer = document.querySelector(".feed-form-container");
-    const shiftFeedSearch = document.querySelector(".sh-shdl-inputs");
-    const shiftFeedDept = shiftFeedSearch.querySelector(
-        ".sh-shdl-dept-selector"
-    );
-    const shiftFeedEmp = shiftFeedSearch.querySelector(".sh-shdl-emp-selector");
-    const shiftFeedSearchButton = shiftFeedSearch.querySelector(".login-btn");
-    if (!window.fetch) {
-        flash("This browser is not supported.", ".fail");
-        setTimeout(redirectHome, 3000);
-    } else {
-        loadInitialData();
-    }
-    async function loadInitialData() {
-        let response = await postData(
-            "/admin/user-management/api/get-employee-data",
-            {}
+    <script>
+        let employeeObject = {},
+            hodObject = {};
+        let buttonContainer = document.querySelector(".shift-plan-strategy");
+        let choiceButtons = buttonContainer.querySelectorAll(".choice-button");
+        let uploadButton = document.querySelector(
+            ".excel > .login-button-container"
         );
-        if (!response.fail) {
-            ({ employeeObject, hodObject } = response);
-            populateDeptSelector(shiftFeedDept);
-            shiftFeedDept.addEventListener("change", resetEmployeeSelector);
-            shiftFeedSearchButton.addEventListener("click", pullFeedForm);
-        } else {
-            flash("Failed to load initial data.", ".fail");
-        }
-    }
-
-    async function pullFeedForm() {
-        // if (shiftFeedEmp.value) {
-        //     let feedForm = await getData("/shift-feed/" + shiftFeedEmp.value);
-        //     console.log(feedForm);
-        //     feedFormContainer.appendChild(feedForm);
-        // } else {
-        //     flash("Fill all details.", ".fail");
-        // }
-        window.location.replace(window.location.origin+"/admin/shift-feed/" + shiftFeedEmp.value);
-    }
-
-    function redirectHome() {
-        window.location.replace(window.location.origin);
-    }
-
-    function populateDeptSelector(element) {
-        for (let d of Object.keys(hodObject)) {
-            let option = document.createElement("option");
-            option.value = d;
-            option.innerText = hodObject[d];
-            element.add(option);
-        }
-    }
-
-    function resetEmployeeSelector(eve) {
-        let option = document.createElement("option");
-        option.value = "";
-        option.innerText = "--Please select employee name--";
-        shiftFeedEmp.innerHTML = "";
-        shiftFeedEmp.add(option);
-        if (employeeObject[shiftFeedDept.value]) {
-            for (let e of employeeObject[shiftFeedDept.value]) {
-                option = document.createElement("option");
-                option.value = e.slice(-5);
-                option.innerText = e;
-                shiftFeedEmp.add(option);
+        let modalPage = document.querySelector("#file-upload-modal");
+        let excelUploadForm = document.querySelector(
+            ".shift-plan-action.excel"
+        );
+        uploadButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            modalPage.style.display = "flex";
+            excelUploadForm.submit();
+        });
+        function highlightClickedButton() {
+            let currentActive =
+                buttonContainer.querySelector(".selected-choice");
+            if (currentActive) {
+                currentActive.classList.remove("selected-choice");
+            }
+            this.classList.add("selected-choice");
+            if (this.classList.contains("file-upload")) {
+                document.querySelector(".excel").style.display = "block";
+                document.querySelector(".view").style.display = "none";
+            }
+            if (this.classList.contains("view-plan")) {
+                document.querySelector(".excel").style.display = "none";
+                document.querySelector(".view").style.display = "block";
             }
         }
-    }
-
-    /////////////////////////////////////////////////////////////////////
-    async function getData(url = "") {
-        try {
-            const response = await fetch(url, { cache: "no-cache" });
-            if (response.ok) {
-                let resData = await response.text();
-                return resData;
+        for (let i of choiceButtons) {
+            i.addEventListener("click", highlightClickedButton);
+        }
+        //Shift feeding
+        const feedFormContainer = document.querySelector(
+            ".feed-form-container"
+        );
+        const shiftFeedSearch = document.querySelector(".sh-shdl-inputs");
+        const shiftFeedDept = shiftFeedSearch.querySelector(
+            ".sh-shdl-dept-selector"
+        );
+        const shiftFeedEmp = shiftFeedSearch.querySelector(
+            ".sh-shdl-emp-selector"
+        );
+        const shiftFeedSearchButton =
+            shiftFeedSearch.querySelector(".login-btn");
+        if (!window.fetch) {
+            flash("This browser is not supported.", ".fail");
+            setTimeout(redirectHome, 3000);
+        } else {
+            loadInitialData();
+        }
+        async function loadInitialData() {
+            let response = await postData(
+                "/admin/user-management/api/get-employee-data",
+                {}
+            );
+            if (!response.fail) {
+                ({ employeeObject, hodObject } = response);
+                populateDeptSelector(shiftFeedDept);
+                shiftFeedDept.addEventListener("change", resetEmployeeSelector);
+                shiftFeedSearchButton.addEventListener("click", pullFeedForm);
             } else {
+                flash("Failed to load initial data.", ".fail");
+            }
+        }
+
+        async function pullFeedForm() {
+            if (shiftFeedEmp.value) {
+                window.location.replace(
+                    window.location.origin +
+                        "/admin/shift-feed/" +
+                        shiftFeedEmp.value
+                );
+            } else {
+                flash("Please fill all details.", ".fail");
+            }
+        }
+
+        function redirectHome() {
+            window.location.replace(window.location.origin);
+        }
+
+        function populateDeptSelector(element) {
+            for (let d of Object.keys(hodObject)) {
+                let option = document.createElement("option");
+                option.value = d;
+                option.innerText = hodObject[d];
+                element.add(option);
+            }
+        }
+
+        function resetEmployeeSelector(eve) {
+            let option = document.createElement("option");
+            option.value = "";
+            option.innerText = "--Please select employee name--";
+            shiftFeedEmp.innerHTML = "";
+            shiftFeedEmp.add(option);
+            if (employeeObject[shiftFeedDept.value]) {
+                for (let e of employeeObject[shiftFeedDept.value]) {
+                    option = document.createElement("option");
+                    option.value = e.slice(-5);
+                    option.innerText = e;
+                    shiftFeedEmp.add(option);
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////
+        async function getData(url = "") {
+            try {
+                const response = await fetch(url, { cache: "no-cache" });
+                if (response.ok) {
+                    let resData = await response.text();
+                    return resData;
+                } else {
+                    return false;
+                }
+            } catch (err) {
                 return false;
             }
-        } catch (err) {
-            return false;
         }
-    }
 
-    async function postData(url = "", data = {}) {
-        try {
-            // Default options are marked with *
-            const response = await fetch(url, {
-                method: "POST", // *GET, POST, PUT, DELETE, etc.
-                mode: "cors", // no-cors, *cors, same-origin
-                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-                credentials: "same-origin", // include, *same-origin, omit
-                headers: {
-                    "Content-Type": "application/json",
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                redirect: "follow", // manual, *follow, error
-                referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                body: JSON.stringify(data), // body data type must match "Content-Type" header
-            });
-            if (response.ok) {
-                let resData = await response.json(); // parses JSON response into native JavaScript objects
-                return resData;
-            } else {
+        async function postData(url = "", data = {}) {
+            try {
+                // Default options are marked with *
+                const response = await fetch(url, {
+                    method: "POST", // *GET, POST, PUT, DELETE, etc.
+                    mode: "cors", // no-cors, *cors, same-origin
+                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                    credentials: "same-origin", // include, *same-origin, omit
+                    headers: {
+                        "Content-Type": "application/json",
+                        // 'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    redirect: "follow", // manual, *follow, error
+                    referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                    body: JSON.stringify(data), // body data type must match "Content-Type" header
+                });
+                if (response.ok) {
+                    let resData = await response.json(); // parses JSON response into native JavaScript objects
+                    return resData;
+                } else {
+                    return { fail: true, message: "Error: Operation failed." };
+                }
+            } catch (err) {
                 return { fail: true, message: "Error: Operation failed." };
             }
-        } catch (err) {
-            return { fail: true, message: "Error: Operation failed." };
         }
-    }
 
-    function flash(message, typeClass) {
-        const card = document
-            .querySelector("#flash-mesage")
-            .content.querySelector(typeClass)
-            .cloneNode(true);
-        card.querySelector("p").textContent = message;
-        document.body.appendChild(card);
-        document
-            .querySelector(".flash")
-            .classList.add("animate--drop-in-fade-out");
-        setTimeout(function () {
+        function flash(message, typeClass) {
+            const card = document
+                .querySelector("#flash-mesage")
+                .content.querySelector(typeClass)
+                .cloneNode(true);
+            card.querySelector("p").textContent = message;
+            document.body.appendChild(card);
             document
                 .querySelector(".flash")
-                .classList.remove("animate--drop-in-fade-out");
-            document.querySelector(".flash").remove();
-        }, 3500);
-    }
-</script>
+                .classList.add("animate--drop-in-fade-out");
+            setTimeout(function () {
+                document
+                    .querySelector(".flash")
+                    .classList.remove("animate--drop-in-fade-out");
+                document.querySelector(".flash").remove();
+            }, 3500);
+        }
+    </script>
+</div>

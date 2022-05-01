@@ -176,9 +176,9 @@ async function processExcelFile(req, res, fileUri) {
 }
 
 module.exports.renderShiftPlanForm = async (req, res) => {
-    let emp;
+    let emp, empName;
     let hodObject = await handleShiftPlan(req, res);
-    res.render("admin/shiftplanning", { hodObject, emp });
+    res.render("admin/shiftplanning", { hodObject, emp, empName });
 };
 
 module.exports.uploadShiftPlan = async (req, res, next) => {
@@ -221,6 +221,7 @@ module.exports.renderShiftFeedForm = async (req, res) => {
     const scheduledShifts = {};
     const emp = req.params.username;
     const empDoc = await Employee.findOne({ username: emp });
+    const empName = empDoc.name;
     const data = await Shift_sch.find({
         employee: empDoc._id,
         date: { $gte: today, $lte: addDays(today, 30) },
@@ -236,6 +237,7 @@ module.exports.renderShiftFeedForm = async (req, res) => {
         addDays,
         format,
         emp,
+        empName,
     });
 };
 

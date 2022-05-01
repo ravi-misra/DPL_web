@@ -3,9 +3,15 @@
     <button class="choice-button file-upload">
         <p>Upload System Generated Excel File</p>
     </button>
-    <button class="choice-button view-plan">
-        <p>Manually Change Shift Plan</p>
-    </button>
+    <% if (emp) { %>
+        <button class="choice-button view-plan">
+            <p>Manually Change Shift Plan</p>
+        </button>
+    <% } else { %>   
+        <button class="choice-button view-plan selected-choice">
+            <p>Manually Change Shift Plan</p>
+        </button>
+    <% } %>
 </div>
 <hr />
 <form
@@ -35,7 +41,11 @@
         </button>
     </div>
 </form>
-<div class="shift-plan-action view feed-form-container" style="display: none">
+<% if (emp) { %>
+    <div class="shift-plan-action view feed-form-container">
+<% } else { %>
+    <div class="shift-plan-action view feed-form-container" style="display: none">
+<% } %>
     <div class="sh-shdl-inputs">
         <select name="dept" class="sh-shdl-dept-selector">
             <option value="">--Please choose department--</option>
@@ -48,6 +58,81 @@
         </div>
     </div>
     <hr />
+    <% if (emp) { %>
+        <p>Shift Schedule for: <%= emp %></p>
+        <form
+            action="/admin/shift-feed/<%= emp %>"
+            method="POST"
+            class="shift-feed-frm"
+        >
+            <table>
+                <thead class="schd-head">
+                    <tr class="row-1">
+                        <th class="cell-1" colspan="2">Shift Scheduler</th>
+                    </tr>
+                    <tr class="row-2">
+                        <th class="cell-1">Date</th>
+                        <th class="cell-2">Shift</th>
+                    </tr>
+                </thead>
+                <tbody class="schd-body">
+                    <% for( let index = 3, i = 1; index < 33; index++, i++ ) { %>
+                    <tr class="row-<%= index %>">
+                        <td class="cell-1">
+                            <%= format(addDays(today, (i-1)), 'dd/MM/yyyy') %>
+                        </td>
+                        <td class="cell-2">
+                            <i style="display: none"
+                                ><input
+                                    type="date"
+                                    name="Date<%= i %>[date]"
+                                    value="<%= format(addDays(today, (i-1)), 'yyyy-MM-dd') %>"
+                            /></i>
+                            <% for( let j of validShifts ) { %> <% if
+                            (Object.keys(scheduledShifts).includes(format(addDays(today,
+                            (i-1)), 'dd/MM/yyyy'))) { %> <% if
+                            (scheduledShifts[format(addDays(today, (i-1)),
+                            'dd/MM/yyyy')].includes(j)) { %>
+                            <input
+                                type="checkbox"
+                                name="Date<%= i %>[shift][<%= j %>]"
+                                id="shift<%= j %>"
+                                class="shift<%= j %>"
+                                checked
+                            /><label for="shift<%= j %>" class="label-shift<%= j %>"
+                                ><%= j %></label
+                            >
+                            <% } else { %>
+                            <input
+                                type="checkbox"
+                                name="Date<%= i %>[shift][<%= j %>]"
+                                id="shift<%= j %>"
+                                class="shift<%= j %>"
+                            /><label for="shift<%= j %>" class="label-shift<%= j %>"
+                                ><%= j %></label
+                            >
+                            <% } %> <% } else { %>
+                            <input
+                                type="checkbox"
+                                name="Date<%= i %>[shift][<%= j %>]"
+                                id="shift<%= j %>"
+                                class="shift<%= j %>"
+                            /><label for="shift<%= j %>" class="label-shift<%= j %>"
+                                ><%= j %></label
+                            >
+                            <% } %> <% } %>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <div class="login-button-container">
+                <button type="submit" name="button" class="btn login-btn">
+                    Submit
+                </button>
+            </div>
+        </form>
+    <% } %>
 </div>
 <div
     id="file-upload-modal"
@@ -98,7 +183,8 @@
     let modalPage = document.querySelector("#file-upload-modal");
     let excelUploadForm = document.querySelector(".shift-plan-action.excel");
     uploadButton.addEventListener("click", (e) => {
-        e.preventDefault(), (modalPage.style.display = "flex");
+        e.preventDefault(); 
+        modalPage.style.display = "flex";
         excelUploadForm.submit();
     });
     function highlightClickedButton() {
@@ -123,9 +209,9 @@
     const feedFormContainer = document.querySelector(".feed-form-container");
     const shiftFeedSearch = document.querySelector(".sh-shdl-inputs");
     const shiftFeedDept = shiftFeedSearch.querySelector(
-        "sh-shdl-dept-selector"
+        ".sh-shdl-dept-selector"
     );
-    const shiftFeedEmp = shiftFeedSearch.querySelector("sh-shdl-emp-selector");
+    const shiftFeedEmp = shiftFeedSearch.querySelector(".sh-shdl-emp-selector");
     const shiftFeedSearchButton = shiftFeedSearch.querySelector(".login-btn");
     if (!window.fetch) {
         flash("This browser is not supported.", ".fail");
@@ -149,10 +235,14 @@
     }
 
     async function pullFeedForm() {
-        if (shiftFeedEmp.value) {
-            let feedForm = getData("/shift-feed/" + shiftFeedEmp.value);
-            feedFormContainer.appendChild(feedForm);
-        }
+        // if (shiftFeedEmp.value) {
+        //     let feedForm = await getData("/shift-feed/" + shiftFeedEmp.value);
+        //     console.log(feedForm);
+        //     feedFormContainer.appendChild(feedForm);
+        // } else {
+        //     flash("Fill all details.", ".fail");
+        // }
+        window.location.replace(window.location.origin+"/admin/shift-feed/" + shiftFeedEmp.value);
     }
 
     function redirectHome() {

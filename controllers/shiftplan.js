@@ -11,6 +11,7 @@ const {
     parse,
     differenceInCalendarDays,
     startOfDay,
+    format,
 } = require("date-fns");
 const { validShifts } = require("../config");
 const puppeteer = require("puppeteer");
@@ -175,8 +176,9 @@ async function processExcelFile(req, res, fileUri) {
 }
 
 module.exports.renderShiftPlanForm = async (req, res) => {
+    let emp;
     let hodObject = await handleShiftPlan(req, res);
-    res.render("admin/shiftplanning", { hodObject });
+    res.render("admin/shiftplanning", { hodObject, emp });
 };
 
 module.exports.uploadShiftPlan = async (req, res, next) => {
@@ -218,14 +220,17 @@ module.exports.renderShiftFeedForm = async (req, res) => {
     const today = startOfDay(new Date());
     const scheduledShifts = {};
     const emp = req.params.username;
+    const empDoc = await Employee.findOne({ username: emp });
     const data = await Shift_sch.find({
-        employee: emp,
+        employee: empDoc._id,
         date: { $gte: today, $lte: addDays(today, 30) },
     });
+    let hodObject = await handleShiftPlan(req, res);
     for (let i of data) {
         scheduledShifts[format(i.date, "dd/MM/yyyy")] = i.shift;
     }
-    res.render("partials/shift-feed", {
+    res.render("admin/shiftplanning", {
+        hodObject,
         scheduledShifts,
         today,
         addDays,
@@ -238,6 +243,7 @@ module.exports.updateShiftFeed = async (req, res) => {
     const body = req.body;
     delete body.button;
     const emp = req.params.username;
+    const empDoc = await Employee.findOne({ username: emp });
     for (let i of Object.keys(body)) {
         if (body[i]["shift"]) {
             let checker = (arr, target) => target.every((v) => arr.includes(v));
@@ -245,7 +251,7 @@ module.exports.updateShiftFeed = async (req, res) => {
                 checker(res.locals.validShifts, Object.keys(body[i]["shift"]))
             ) {
                 let filter = {
-                    employee: emp,
+                    employee: empDoc._id,
                     date: new Date(body[i]["date"]),
                 };
                 let update = { shift: Object.keys(body[i]["shift"]) };
@@ -257,10 +263,10 @@ module.exports.updateShiftFeed = async (req, res) => {
             }
         } else {
             let filter = {
-                employee: emp,
+                employee: empDoc._id,
                 date: new Date(body[i]["date"]),
             };
-            let doc = await Shift_sch.findOneAndDelete(filter);
+            await Shift_sch.findOneAndDelete(filter);
         }
     }
     req.flash("success", "Shift schedule updated.");

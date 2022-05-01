@@ -1,6 +1,7 @@
 .transport-container {
     display: flex;
     flex-direction: column;
+    background-color: white;
 }
 
 .ca-rs1 > h1,

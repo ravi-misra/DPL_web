@@ -7,7 +7,7 @@ module.exports.renderLogin = (req, res) => {
     res.render("login.ejs");
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = async (req, res) => {
     if (req.body["remember-checkbox"]) {
         req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30;
     }
@@ -15,7 +15,7 @@ module.exports.login = (req, res) => {
     let redirectUrl = req.session.returnTo || "/home";
     delete req.session.returnTo;
     //Handle exception users
-    let exceptionUsers = getExceptionUsers();
+    let exceptionUsers = await getExceptionUsers();
     if (req.user.role && exceptionUsers[req.user.username]) {
         if (exceptionUsers[req.user.username].defaultRoute) {
             redirectUrl = exceptionUsers[req.user.username].defaultRoute;

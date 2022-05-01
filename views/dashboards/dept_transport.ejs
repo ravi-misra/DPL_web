@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    <hr>
+    <hr />
     <div class="ca-rs2">
         <h1>Carbon Area RS-2 Silo Levels</h1>
         <div class="ca-rs2-indicator">
@@ -34,7 +34,7 @@
     let a1 = document.querySelector("#rs1-alumina-silo");
     let c2 = document.querySelector("#rs2-cb-silo");
     let a2 = document.querySelector("#rs2-alumina-silo");
-    let initialValue = 'xxxxxx';
+    let initialValue = "xxxxxx";
     c1.textContent = initialValue;
     a1.textContent = initialValue;
     c2.textContent = initialValue;
@@ -43,15 +43,32 @@
     socket.on("ca-rs1-update", (data) => {
         c1.textContent = data.cb + " %";
         a1.textContent = data.alumina + " %";
-    })
+    });
     socket.on("ca-rs2-update", (data) => {
         c2.textContent = data.cb + " %";
         a2.textContent = data.alumina + " %";
-    })
+    });
     socket.on("disconnect", (data) => {
         c1.textContent = initialValue;
         a1.textContent = initialValue;
         c2.textContent = initialValue;
         a2.textContent = initialValue;
-    })
+    });
 </script>
+<% if (scadaMode) { %>
+<script>
+    let elem = document.querySelector(".transport-container");
+    function openFullscreen() {
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+            /* Safari */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+            /* IE11 */
+            elem.msRequestFullscreen();
+        }
+    }
+    openFullscreen();
+</script>
+<% } %>

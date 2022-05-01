@@ -112,6 +112,7 @@ module.exports.updateExceptioUsersData = async (req, res) => {
                     role: req.body.userData.role,
                     dashboards: exceptionUserDashboard,
                 });
+                await newExceptionUser.setPassword(req.body.userData.password);
                 await newExceptionUser.save();
                 let exceptionAccount = new ExceptionUser({
                     user: newExceptionUser._id,
@@ -237,42 +238,39 @@ module.exports.updateDeptParams = async (req, res) => {
     try {
         let dept = await Dept.findOne({ costcode: req.body.costcode });
         for (let p of Object.keys(req.body.params)) {
-            if (dept[p]) {
-                if (p === "hod") {
-                    let hodArray = [...new Set(req.body.params[p])];
-                    let listDPLAdmins = await Employee.find({
-                        role: "DPLAdmin",
-                    });
-                    for (let a of listDPLAdmins) {
-                        if (!hodArray.includes(a.username)) {
-                            hodArray.push(a.username);
-                        }
+            // if (dept[p]) {
+            if (p === "hod") {
+                let hodArray = [...new Set(req.body.params[p])];
+                let listDPLAdmins = await Employee.find({
+                    role: "DPLAdmin",
+                });
+                for (let a of listDPLAdmins) {
+                    if (!hodArray.includes(a.username)) {
+                        hodArray.push(a.username);
                     }
-                    hodArray = await Promise.allSettled(
-                        hodArray.map(async (e) => {
-                            try {
-                                let emp = await Employee.findOne({
-                                    username: e,
-                                });
-                                if (
-                                    emp.role === "HoD" ||
-                                    emp.role === "DPLAdmin"
-                                ) {
-                                    return emp._id;
-                                } else {
-                                    return false;
-                                }
-                            } catch {
+                }
+                hodArray = await Promise.allSettled(
+                    hodArray.map(async (e) => {
+                        try {
+                            let emp = await Employee.findOne({
+                                username: e,
+                            });
+                            if (emp.role === "HoD" || emp.role === "DPLAdmin") {
+                                return emp._id;
+                            } else {
                                 return false;
                             }
-                        })
-                    );
-                    hodArray = hodArray.map((e) => e.value);
-                    dept[p] = hodArray.filter((o) => o);
-                } else if (p !== "costcode") {
-                    dept[p] = req.body.params[p];
-                }
+                        } catch {
+                            return false;
+                        }
+                    })
+                );
+                hodArray = hodArray.map((e) => e.value);
+                dept[p] = hodArray.filter((o) => o);
+            } else if (p !== "costcode") {
+                dept[p] = req.body.params[p];
             }
+            // }
         }
         await dept.save();
         res.json({

@@ -1,32 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
-    <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
-    <link rel="manifest" href="/assets/favicon/site.webmanifest">
-    <link rel="stylesheet" href="/styles/common.css">
-    <link rel="stylesheet" href="/styles/top-navbar.css">
-    <link rel="stylesheet" href="/styles/fa/css/all.css">
-    <link rel="stylesheet" href="/styles/flash.css">
-    <link rel="stylesheet" href="/styles/login.css">
-    <link rel="stylesheet" href="/styles/home.css">
-    <link rel="stylesheet" href="/styles/shift-schedule-form.css">
-    <link rel="stylesheet" href="/styles/change-pass.css">
-    <link rel="stylesheet" href="/styles/details.css">
-    <link rel="stylesheet" href="/styles/dept_transport.css">
-    <link rel="stylesheet" href="/styles/shift-plan-form.css">
-    <link rel="stylesheet" href="/styles/usermanagement.css">
-    <script src="/scripts/top-navbar.js" defer></script>
-    <title>DPL Portal</title>
-</head>
-<body>
-    <%- include("../partials/top-navbar.ejs")  %>
-    <%- include("../partials/flash.ejs")  %>
-    <%- body %>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/assets/favicon/apple-touch-icon.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/assets/favicon/favicon-32x32.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/assets/favicon/favicon-16x16.png"
+        />
+        <link
+            rel="shortcut icon"
+            type="image/x-icon"
+            href="/assets/favicon/favicon.ico"
+        />
+        <link rel="manifest" href="/assets/favicon/site.webmanifest" />
+        <link rel="stylesheet" href="/styles/common.css" />
+        <link rel="stylesheet" href="/styles/top-navbar.css" />
+        <link rel="stylesheet" href="/styles/fa/css/all.css" />
+        <link rel="stylesheet" href="/styles/flash.css" />
+        <link rel="stylesheet" href="/styles/login.css" />
+        <link rel="stylesheet" href="/styles/home.css" />
+        <link rel="stylesheet" href="/styles/shift-schedule-form.css" />
+        <link rel="stylesheet" href="/styles/change-pass.css" />
+        <link rel="stylesheet" href="/styles/details.css" />
+        <link rel="stylesheet" href="/styles/dept_transport.css" />
+        <link rel="stylesheet" href="/styles/shift-plan-form.css" />
+        <link rel="stylesheet" href="/styles/usermanagement.css" />
+        <script src="/scripts/top-navbar.js" defer></script>
+        <title>DPL Portal</title>
+    </head>
+    <body>
+        <%- include("../partials/top-navbar.ejs") %> <%-
+        include("../partials/flash.ejs") %> <%- body %>
+    </body>
 </html>

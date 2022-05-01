@@ -98,8 +98,8 @@
 //     },
 // };
 let roles = {
-    departmentCA: {
-    },
+    departmentCA: {},
+    departmentTr: {},
     ShiftIC: {
         Home: "/home",
         View: {

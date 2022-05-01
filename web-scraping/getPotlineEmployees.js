@@ -125,7 +125,7 @@ async function dbUpdate(data = [], allPN = []) {
             if (invalidPN.length) {
                 for (let pn of invalidPN) {
                     //dont delete usernames defined in exceptioUsers
-                    let exceptionUsers = getExceptionUsers();
+                    let exceptionUsers = await getExceptionUsers();
                     if (!Object.keys(exceptionUsers).includes(pn)) {
                         await Employee.findOneAndDelete({ username: pn });
                     }

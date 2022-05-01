@@ -19,6 +19,7 @@ module.exports = async (user) => {
                 userDashboard = { ...userDashboard, ...e.dashboards };
             }
         }
+        finalDashboard = { ...deptDashboard, ...userDashboard };
     } else {
         doc = await Employee.findById(user._id).populate({ path: "dept" });
         if (doc) {

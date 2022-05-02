@@ -62,7 +62,6 @@
         </div>
         <hr />
         <% if (emp) { %>
-        <p>Shift Schedule for: <%= empName %></p>
         <form
             action="/admin/shift-feed/<%= emp %>"
             method="POST"
@@ -71,7 +70,7 @@
             <table>
                 <thead class="schd-head">
                     <tr class="row-1">
-                        <th class="cell-1" colspan="2">Shift Scheduler</th>
+                        <th class="cell-1" colspan="2"><%= empName %></th>
                     </tr>
                     <tr class="row-2">
                         <th class="cell-1">Date</th>

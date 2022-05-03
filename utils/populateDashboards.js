@@ -21,11 +21,19 @@ module.exports = async (user) => {
         }
         finalDashboard = { ...deptDashboard, ...userDashboard };
     } else {
+        //For HoD role add all authorized department dashboards too
+        dept = await Department.find({ hod: user._id });
+        for (let d of dept) {
+            if (d.dashboards) {
+                deptDashboard = { ...deptDashboard, ...d.dashboards };
+            }
+        }
+        //For other users add only self department roles
         doc = await Employee.findById(user._id).populate({ path: "dept" });
         if (doc) {
             userDashboard = doc.dashboards;
             if (doc.dept) {
-                deptDashboard = doc.dept.dashboards;
+                deptDashboard = { ...deptDashboard, ...doc.dept.dashboards };
             }
             finalDashboard = { ...deptDashboard, ...userDashboard };
         }

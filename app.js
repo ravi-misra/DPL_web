@@ -34,8 +34,8 @@ const shutdownResponse = require("./utils/shutdownResponse");
 const http = require("http");
 const { Server } = require("socket.io");
 
-// const host = PLCI_HOST;
-const host = LOCAL_HOST;
+const host = PLCI_HOST;
+// const host = LOCAL_HOST;
 
 const app = express();
 const server = http.createServer(app);

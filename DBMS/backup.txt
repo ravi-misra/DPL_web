@@ -1,2 +1,12 @@
 cd "C:\Program Files\MongoDB\mongodb-database-tools-windows-x86_64-100.5.2\bin"
 .\mongodump --db=dpl --archive="D:\Work\DPL_DB_Backup\dpl_09_04_2022"
+
+
+
+Restore:
+//restore all dbs
+mongorestore --archive=test.20150715.archive
+//restore only test database
+mongorestore --archive=test.20150715.archive  --nsInclude="test.*"
+//restore with database name change
+mongorestore --archive="mongodump-test-db" --nsFrom='test.*' --nsTo='examples.*'

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const Gap1AnodeDataSchema = new Schema({
+const Gap2AnodeDataSchema = new Schema({
     DateAndTime: {
         type: Date,
         required: true,
@@ -31,4 +31,4 @@ const Gap1AnodeDataSchema = new Schema({
     TDP_MP_Ratio: Number,
 });
 
-module.exports = mongoose.model("Gap1AnodeData", Gap1AnodeDataSchema);
+module.exports = mongoose.model("Gap2AnodeData", Gap2AnodeDataSchema);

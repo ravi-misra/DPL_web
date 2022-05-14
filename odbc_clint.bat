@@ -1,1 +1,0 @@
-"C:/Program Files/MongoDB/Connector for BI/2.14/bin/mongosqld.exe" --mongo-uri "mongodb://127.0.0.1:27017"

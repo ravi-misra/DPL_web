@@ -1,3 +1,4 @@
+const { tr } = require("date-fns/locale");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -5,6 +6,7 @@ const Gap2AnodeDataSchema = new Schema({
     DateAndTime: {
         type: Date,
         required: true,
+        unique: true,
     },
     Shift: Number,
     Ejection_Day: Number,

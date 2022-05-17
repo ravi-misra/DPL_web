@@ -1,4 +1,3 @@
-const { tr } = require("date-fns/locale");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 

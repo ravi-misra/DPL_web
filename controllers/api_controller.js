@@ -1,7 +1,7 @@
 const Gap2AnodeData = require("../models/gap2AnodeData");
 const { addMinutes } = require("date-fns");
 
-module.exports.saveGap2AnodeData = (req, res) => {
+module.exports.saveGap2AnodeData = async (req, res) => {
     if (req.body.length) {
         for (let obj of req.body) {
             obj["DateAndTime"] = addMinutes(new Date(obj["DateAndTime"]), 330);

@@ -22,6 +22,7 @@ const mainRoutes = require("./routes/main");
 const profileRoutes = require("./routes/profile");
 const dashboardRoutes = require("./routes/dashboard");
 const adminRoutes = require("./routes/admin");
+const apiRoutes = require("./routes/api");
 const socListeners = require("./sockets/listeners");
 const Employee = require("./models/employee");
 const {
@@ -180,6 +181,7 @@ app.use("/", mainRoutes);
 app.use("/profile", profileRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/admin", adminRoutes);
+app.use("/api", apiRoutes);
 
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404));

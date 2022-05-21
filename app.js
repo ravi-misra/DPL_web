@@ -71,6 +71,9 @@ app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+//Trust proxy
+app.set("trust proxy", true);
+
 //session configuration
 const store = MongoStore.create({
     clientPromise: mongoose.connection.asPromise().then((c) => c.getClient()),
@@ -188,7 +191,10 @@ app.all("*", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-    console.log(err);
+    // console.log(err);
+    console.log("Error from following client ip");
+    let ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    console.log(ip);
     const { statusCode = 500 } = err;
     if (!err.message) err.message = "Something Went Wrong!";
     // res.status(statusCode).render("error", { err });

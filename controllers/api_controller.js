@@ -14,7 +14,7 @@ const maxMB = 100;
 const options = {
     destination: fileDestinationFolder,
     filename: function (req, file, cb) {
-        cb(null, "pot_process.db");
+        cb(null, file.originalname);
     },
 };
 const storage = multer.diskStorage(options);
@@ -22,13 +22,13 @@ const storage = multer.diskStorage(options);
 const upload = multer({
     storage: storage,
     limits: { fileSize: maxMB * 1000 * 1000 }, //Size in bytes
-}).single("potline-process-data");
+}).any();
 
 module.exports.uploadPotData = async (req, res, next) => {
     upload(req, res, async (err) => {
         if (err) {
             next(err);
-        } else if (req.file === undefined) {
+        } else if (req.files === undefined) {
             res.status(404).send("no file");
         } else {
             res.status(200).send("ok");

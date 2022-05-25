@@ -9,7 +9,7 @@ module.exports.renderLogin = (req, res) => {
 
 module.exports.login = async (req, res) => {
     if (req.body["remember-checkbox"]) {
-        req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 365 * 50; //Remember for 50 years
+        req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; //Remember for 1 month
     }
     // req.flash('success', 'Welcome!');
     let redirectUrl = req.session.returnTo || "/home";
@@ -17,6 +17,7 @@ module.exports.login = async (req, res) => {
     //Handle exception users
     let exceptionUsers = await getExceptionUsers();
     if (req.user.role && exceptionUsers[req.user.username]) {
+        req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 365 * 50; //Remember for 50 years
         if (exceptionUsers[req.user.username].defaultRoute) {
             redirectUrl = exceptionUsers[req.user.username].defaultRoute;
         }

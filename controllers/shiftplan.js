@@ -113,7 +113,7 @@ async function processExcelFile(req, res, fileUri) {
                 });
                 if (empDoc) {
                     //confirm whether employee belongs to selected dept
-                    if (!empDoc.dept.costcode === req.body.costcode) {
+                    if (empDoc.dept.costcode !== req.body.costcode) {
                         continue;
                     }
                     if (!Object.keys(empRefMap).includes(personalNumber)) {

@@ -180,6 +180,8 @@ async function repeatCycle() {
     const targetCycles = await Shift_cycle.find({
         shift_cycle_ref: { $lte: target_cycle_ref },
     });
+    console.log("targetCycles:", targetCycles);
+
     //only one cycle per department
     for (let t of targetCycles) {
         let nextCycleOffset =

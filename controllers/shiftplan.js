@@ -153,10 +153,11 @@ async function processExcelFile(req, res, fileUri) {
             const cycleDep = await Dept.findOne({
                 costcode: req.body.costcode,
             });
+
             const newCycle = await Shift_cycle.findOneAndUpdate(
                 { dept: cycleDep._id },
                 {
-                    shift_cycle_ref: shiftCycleRef,
+                    shift_cycle_ref: addDays(runningDate, -20),
                     next_start_ref: addDays(runningDate, 1),
                 },
                 {

@@ -143,7 +143,6 @@ let dbUpdateHour = 2;
 let checkIntervalMinutes = 30;
 setInterval(triggerDBMaintenance, 1000 * 60 * checkIntervalMinutes);
 
-dbMaintenance();
 function triggerDBMaintenance() {
     let myDate = new Date();
     if (myDate.getHours() == dbUpdateHour) {
@@ -155,14 +154,13 @@ function triggerDBMaintenance() {
 
 async function dbMaintenance() {
     try {
-        // console.log(`Scraping started at ${new Date()}`);
-        // const { data, allPN } = await scrape();
-        // console.log("scraping done");
-        // startDBUpdate = true;
-        // await dbUpdate(data, allPN);
-        // console.log("Update done");
+        console.log(`Scraping started at ${new Date()}`);
+        const { data, allPN } = await scrape();
+        console.log("scraping done");
+        startDBUpdate = true;
+        await dbUpdate(data, allPN);
+        console.log("Update done");
         await repeatCycle();
-        console.log("Shift cycles updated");
         await deleteolddata();
         console.log("Cleaning done");
         console.log(`Completed at ${new Date()}`);
@@ -199,6 +197,7 @@ app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = "Something Went Wrong!";
     // res.status(statusCode).render("error", { err });
+    // check if flash exists
     if (req.flash) {
         req.flash("error", err.message);
         res.redirect("/home");

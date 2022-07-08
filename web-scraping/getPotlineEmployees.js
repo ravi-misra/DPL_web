@@ -176,7 +176,7 @@ async function deleteolddata() {
 
 async function repeatCycle() {
     const today = addMinutes(startOfDay(new Date()), 330);
-    const target_cycle_ref = addDays(today, -1);
+    const target_cycle_ref = addDays(today, -18);
     const targetCycles = await Shift_cycle.find({
         shift_cycle_ref: { $lte: target_cycle_ref },
     });
@@ -231,8 +231,8 @@ async function repeatCycle() {
             );
             await updateCycle.save();
         }
-        console.log("Shift cycles updated");
     }
+    console.log("Shift cycles updated");
 }
 
 module.exports = { scrape, dbUpdate, deleteolddata, repeatCycle };

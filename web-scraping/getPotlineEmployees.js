@@ -176,7 +176,7 @@ async function deleteolddata() {
 
 async function repeatCycle() {
     const today = addMinutes(startOfDay(new Date()), 330);
-    const target_cycle_ref = addDays(today, -18);
+    const target_cycle_ref = addDays(today, -18); //repeat cycle on 18th day of current cycle
     const targetCycles = await Shift_cycle.find({
         shift_cycle_ref: { $lte: target_cycle_ref },
     });

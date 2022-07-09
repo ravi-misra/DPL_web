@@ -127,6 +127,30 @@ module.exports.goHomeMechanical = (req, res, next) => {
 module.exports.goHomeElectrical = (req, res, next) => {
     homeController(req, res, deptGroups.ELECTRICAL, "Electrical").catch(next);
 };
+
+module.exports.goHomePlo1 = (req, res, next) => {
+    homeController(req, res, deptGroups.PLO1, "PL(O)-1").catch(next);
+};
+
+module.exports.goHomePlo2 = (req, res, next) => {
+    homeController(req, res, deptGroups.PLO2, "PL(O)-2").catch(next);
+};
+
+module.exports.goHomePlo3 = (req, res, next) => {
+    homeController(req, res, deptGroups.PLO3, "PL(O)-3").catch(next);
+};
+
+module.exports.goHomePlo4 = (req, res, next) => {
+    homeController(req, res, deptGroups.PLO4, "PL(O)-4").catch(next);
+};
+
+module.exports.goHomeFtp = (req, res, next) => {
+    homeController(req, res, deptGroups.FTP, "FTP(O)").catch(next);
+};
+
+module.exports.goHomeTransport = (req, res, next) => {
+    homeController(req, res, deptGroups.TRANSPORT, "Transport").catch(next);
+};
 // input(todaySchedule) --> [{employee:{name, dept, mobile, alt, intercom}, date, shift, editby, locked}]
 // output(scheduleObject1) --> (date1) --> {
 // dept1: {

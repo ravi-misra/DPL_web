@@ -11,6 +11,12 @@ module.exports = {
         CI: ["530"],
         ELECTRICAL: ["359"],
         MECHANICAL: ["128", "131", "139"],
+        PLO1: ["020"],
+        PLO2: ["021"],
+        PLO3: ["027"],
+        PLO4: ["028"],
+        FTP: ["024"],
+        TRANSPORT: ["039"],
     },
     pl_dept: [
         "530-E & I - POTLINE",

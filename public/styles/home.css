@@ -51,6 +51,15 @@ th {
 .dept-selector > .ci {
     background: #fdb44b;
 }
+.dept-selector > [class^="plo"] {
+    background: #c94c4c;
+}
+.dept-selector > .ftp {
+    background: #f7786b;
+}
+.dept-selector > .transport {
+    background: #eea29a;
+}
 .dept-selector > .all {
     background: #d9ad7c;
 }

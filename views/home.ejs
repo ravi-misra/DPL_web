@@ -1,63 +1,68 @@
-<% layout('layouts/boilerplate.ejs') %>
-<% if (deptName) { %>
-    <h1><%= deptName %>  Manpower Availability</h1>
+<% layout('layouts/boilerplate.ejs') %> <% if (deptName) { %>
+<h1><%= deptName %> Manpower Availability</h1>
 <% } else { %>
 <h1>Shift Manpower Availability</h1>
-<% } %> 
+<% } %>
 <h2><%= date1 %></h2>
 <div class="dept-selector">
     <div class="mech"><a href="/home/mechanical">Mechanical</a></div>
     <div class="elec"><a href="/home/electrical">Electrical</a></div>
     <div class="ci"><a href="/home/ci">C&amp;I</a></div>
+    <div class="plo1"><a href="/home/plo1">PL(O)-1</a></div>
+    <div class="plo2"><a href="/home/plo2">PL(O)-2</a></div>
+    <div class="plo3"><a href="/home/plo3">PL(O)-3</a></div>
+    <div class="plo4"><a href="/home/plo4">PL(O)-4</a></div>
+    <div class="ftp"><a href="/home/ftp">FTP(O)</a></div>
+    <div class="transport"><a href="/home/transport">Transport</a></div>
     <div class="all"><a href="/home">All</a></div>
 </div>
 <% for( let dept of Object.keys(scheduleObject1) ) { %>
-    <table class="mini-sch-table">
-        <tr class="dept-row">
-            <th colspan="3" class="dept-name"><%= dept %></th>
-        </tr>
-        <tr class="col-row">
-            <th class="name-col">Name</th>
-            <th class="contact-col">Contacts</th>
-            <th class="intercom-col">Intercom</th>
-        </tr>
-        <% for( let shift of Object.keys(scheduleObject1[dept]) ) { %>
-            <tr class="shift-row">
-                <th colspan="3" class="shift-name"><%= shift %></th>
-            </tr>
-            <% for( let data of scheduleObject1[dept][shift] ) { %>
-                <tr class="data-row">
-                    <td class="name-data"><%= data[0] %></td>
-                    <td class="contact-data"><%= data[1] %></td>
-                    <td class="intercom-data"><%= data[2] %></td>
-                </tr>
-            <% } %>
-        <% } %>
-    </table>
+<table class="mini-sch-table">
+    <tr class="dept-row">
+        <th colspan="3" class="dept-name"><%= dept %></th>
+    </tr>
+    <tr class="col-row">
+        <th class="name-col">Name</th>
+        <th class="contact-col">Contacts</th>
+        <th class="intercom-col">Intercom</th>
+    </tr>
+    <% for( let shift of Object.keys(scheduleObject1[dept]) ) { %>
+    <tr class="shift-row">
+        <th colspan="3" class="shift-name"><%= shift %></th>
+    </tr>
+    <% for( let data of scheduleObject1[dept][shift] ) { %>
+    <tr class="data-row">
+        <td class="name-data"><%= data[0] %></td>
+        <td class="contact-data"><%= data[1] %></td>
+        <td class="intercom-data"><%= data[2] %></td>
+    </tr>
+    <% } %> <% } %>
+</table>
 <% } %>
-<br><hr><br>
+<br />
+<hr />
+<br />
 <h2><%= date2 %></h2>
 <% for( let dept of Object.keys(scheduleObject2) ) { %>
-    <table class="mini-sch-table">
-        <tr class="dept-row">
-            <th colspan="3" class="dept-name"><%= dept %></th>
-        </tr>
-        <tr class="col-row">
-            <th class="name-col">Name</th>
-            <th class="contact-col">Contacts</th>
-            <th class="intercom-col">Intercom</th>
-        </tr>
-        <% for( let shift of Object.keys(scheduleObject2[dept]) ) { %>
-            <tr class="shift-row">
-                <th colspan="3" class="shift-name"><%= shift %></th>
-            </tr>
-            <% for( let data of scheduleObject2[dept][shift] ) { %>
-                <tr class="data-row">
-                    <td class="name-data"><%= data[0] %></td>
-                    <td class="contact-data"><%= data[1] %></td>
-                    <td class="intercom-data"><%= data[2] %></td>
-                </tr>
-            <% } %>
-        <% } %>
-    </table>
+<table class="mini-sch-table">
+    <tr class="dept-row">
+        <th colspan="3" class="dept-name"><%= dept %></th>
+    </tr>
+    <tr class="col-row">
+        <th class="name-col">Name</th>
+        <th class="contact-col">Contacts</th>
+        <th class="intercom-col">Intercom</th>
+    </tr>
+    <% for( let shift of Object.keys(scheduleObject2[dept]) ) { %>
+    <tr class="shift-row">
+        <th colspan="3" class="shift-name"><%= shift %></th>
+    </tr>
+    <% for( let data of scheduleObject2[dept][shift] ) { %>
+    <tr class="data-row">
+        <td class="name-data"><%= data[0] %></td>
+        <td class="contact-data"><%= data[1] %></td>
+        <td class="intercom-data"><%= data[2] %></td>
+    </tr>
+    <% } %> <% } %>
+</table>
 <% } %>

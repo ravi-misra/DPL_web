@@ -13,7 +13,7 @@ const {
     startOfDay,
     format,
 } = require("date-fns");
-const { validShifts } = require("../config");
+const { validShifts, attendanceGrades } = require("../config");
 const puppeteer = require("puppeteer");
 
 const fileDestinationFolder = path.resolve(__dirname, "../uploads/shiftplans/");
@@ -96,6 +96,7 @@ async function processExcelFile(req, res, fileUri) {
             let depCode = rowData[1].trim();
             let dateString = rowData[2].trim();
             let personalNumber = rowData[3].trim();
+            let employeeGrade = rowData[5].trim();
             let scheduledShift = rowData[6].trim();
             let modifiedShift = rowData[7].trim();
             let scheduledStatus = rowData[8].trim();
@@ -104,6 +105,7 @@ async function processExcelFile(req, res, fileUri) {
                 dateString &&
                 personalNumber &&
                 validShifts.includes(scheduledShift) &&
+                attendanceGrades.includes(employeeGrade[0]) &&
                 scheduledStatus !== "WO"
             ) {
                 let empDoc = await Employee.findOne({

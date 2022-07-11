@@ -230,9 +230,9 @@ async function repeatCycle() {
                 }
             );
             await updateCycle.save();
+            console.log("Shift cycles updated");
         }
     }
-    console.log("Shift cycles updated");
 }
 
 module.exports = { scrape, dbUpdate, deleteolddata, repeatCycle };

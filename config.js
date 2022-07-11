@@ -7,6 +7,7 @@ module.exports = {
     PLCI_HOST: process.env.PLCI_HOST,
     DB_URL: process.env.DB_URL,
     validShifts: ["A", "B", "C", "G", "M", "N"],
+    attendanceGrades: ["I", "S"], //First letter of employee grade
     deptGroups: {
         CI: ["530"],
         ELECTRICAL: ["359"],

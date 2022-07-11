@@ -17,7 +17,7 @@ const { validShifts, attendanceGrades } = require("../config");
 const puppeteer = require("puppeteer");
 
 const fileDestinationFolder = path.resolve(__dirname, "../uploads/shiftplans/");
-const maxMB = 5;
+const maxMB = 20;
 let puppeteerCount = 0;
 const maxPuppeteer = 2;
 

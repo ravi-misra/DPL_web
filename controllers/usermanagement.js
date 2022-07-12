@@ -14,15 +14,16 @@ async function getInitialData(req, res) {
         let doc = await Employee.find({ dept: d._id });
         let completeList = [];
         for (let e of doc) {
-            if (req.user.role === "DPLAdmin") {
-                completeList.push(e.name + " - " + e.username);
-            } else if (
-                e.username !== req.user.username &&
-                e.role !== "DPLAdmin" &&
-                e.role !== "HoD"
-            ) {
+            if (e.role !== "DPLAdmin") {
                 completeList.push(e.name + " - " + e.username);
             }
+            // else if (
+            //     e.username !== req.user.username &&
+            //     e.role !== "DPLAdmin" &&
+            //     e.role !== "HoD"
+            // ) {
+            //     completeList.push(e.name + " - " + e.username);
+            // }
         }
         employeeObject[d.costcode] = completeList.sort();
     }

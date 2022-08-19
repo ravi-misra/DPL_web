@@ -111,6 +111,8 @@ app.use(async (req, res, next) => {
         let finalDashboard = await populateDashboards(res.locals.currentUser);
         if (finalDashboard) {
             res.locals.role["Dashboard"] = finalDashboard;
+        } else if (res.locals.role["Dashboard"]) {
+            delete res.locals.role["Dashboard"];
         }
         if (res.locals.role) {
             for (let i of Object.keys(res.locals.role)) {

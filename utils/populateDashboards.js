@@ -2,9 +2,10 @@ const Employee = require("../models/employee");
 const Department = require("../models/department");
 
 module.exports = async (user) => {
-    let doc, dept;
     let finalDashboard = {};
     if (user.role === "DPLAdmin") {
+        let doc, dept;
+        finalDashboard = {};
         let userDashboard = {},
             deptDashboard = {};
         dept = await Department.find({});
@@ -21,6 +22,8 @@ module.exports = async (user) => {
         }
         finalDashboard = { ...deptDashboard, ...userDashboard };
     } else {
+        let doc, dept;
+        finalDashboard = {};
         let userDashboard = {},
             deptDashboard = {};
         //For HoD role add all authorized department dashboards too
@@ -37,8 +40,8 @@ module.exports = async (user) => {
             if (doc.dept) {
                 deptDashboard = { ...deptDashboard, ...doc.dept.dashboards };
             }
-            finalDashboard = { ...deptDashboard, ...userDashboard };
         }
+        finalDashboard = { ...deptDashboard, ...userDashboard };
     }
 
     if (Object.keys(finalDashboard).length > 0) {

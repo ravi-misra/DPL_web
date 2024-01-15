@@ -209,5 +209,7 @@ app.use((err, req, res, next) => {
 });
 
 server.listen(PORT, host, () => {
+    console.log(`###################################`);
+    console.log(`Web server started at ${new Date()}`);
     console.log(`Listening at ${host}:${PORT}`);
 });

@@ -1,0 +1,136 @@
+<% layout('layouts/boilerplate.ejs') %>
+<h1 class="ftp-report-select">Edit/Print Shift Report</h1>
+<div class="container-ftp-report-select">
+    <form id="ftpReportSelectForm">
+        <input
+            type="date"
+            id="ftp-report-date"
+            placeholder="Select date"
+            required
+        />
+        <select id="ftp-selected-shift" required>
+            <option value="">Select Shift</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+        </select>
+        <br />
+        <div class="login-button-container">
+            <button type="submit" class="btn login-btn">Submit</button>
+        </div>
+    </form>
+</div>
+<template id="flash-mesage">
+    <div class="flash success" style="z-index: 9999">
+        <div class="flash__icon">
+            <i class="icon fa fa-check-circle"></i>
+        </div>
+        <p class="flash__body">success</p>
+    </div>
+    <div class="flash fail" style="z-index: 9999">
+        <div class="flash__icon">
+            <i class="icon fa fa-exclamation-triangle"></i>
+        </div>
+        <p class="flash__body">Failure</p>
+    </div>
+</template>
+<script>
+    async function postData(url = "", data = {}) {
+        try {
+            // Default options are marked with *
+            const response = await fetch(url, {
+                method: "POST", // *GET, POST, PUT, DELETE, etc.
+                mode: "cors", // no-cors, *cors, same-origin
+                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: "same-origin", // include, *same-origin, omit
+                headers: {
+                    "Content-Type": "application/json",
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: "follow", // manual, *follow, error
+                referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                body: JSON.stringify(data), // body data type must match "Content-Type" header
+            });
+            if (response.ok) {
+                let resData = await response.json(); // parses JSON response into native JavaScript objects
+                return resData;
+            } else {
+                return { fail: true, message: "Error: Operation failed." };
+            }
+        } catch (err) {
+            return { fail: true, message: "Error: Operation failed." };
+        }
+    }
+    async function getData(url = "") {
+        try {
+            const response = await fetch(url, { cache: "no-cache" });
+            if (response.ok) {
+                let resData = await response.json();
+                return resData;
+            } else {
+                return { fail: true, message: "Error: Operation failed." };
+            }
+        } catch (err) {
+            return { fail: true, message: "Error: Operation failed." };
+        }
+    }
+
+    function flash(message, typeClass) {
+        const card = document
+            .querySelector("#flash-mesage")
+            .content.querySelector(typeClass)
+            .cloneNode(true);
+        card.querySelector("p").textContent = message;
+        document.body.appendChild(card);
+        document
+            .querySelector(".flash")
+            .classList.add("animate--drop-in-fade-out");
+        setTimeout(function () {
+            document
+                .querySelector(".flash")
+                .classList.remove("animate--drop-in-fade-out");
+            document.querySelector(".flash").remove();
+        }, 3500);
+    }
+
+    document
+        .getElementById("shiftForm")
+        .addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const date = document.getElementById("date").value;
+            const shift = document.getElementById("shift").value;
+            const errorMsg = document.getElementById("errorMsg");
+
+            if (!date || !shift) {
+                errorMsg.style.display = "block";
+            } else {
+                errorMsg.style.display = "none";
+                const data = {
+                    date: date,
+                    shift: shift,
+                };
+
+                // Send the JSON data to the server (replace 'your-server-url' with actual URL)
+                fetch("your-server-url", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            alert("Shift report submitted successfully!");
+                        } else {
+                            alert(
+                                "There was an issue submitting the shift report."
+                            );
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                    });
+            }
+        });
+</script>

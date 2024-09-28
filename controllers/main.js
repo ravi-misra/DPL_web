@@ -30,7 +30,7 @@ module.exports.login = async (req, res) => {
 module.exports.logout = (req, res) => {
     req.logout();
     // req.flash('success', "Goodbye!");
-    res.redirect("/home");
+    res.redirect("/login");
 };
 
 async function homeController(req, res, depList = [], deptName = undefined) {

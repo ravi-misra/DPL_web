@@ -100,6 +100,7 @@
 let roles = {
     departmentCA: {},
     departmentTr: {},
+    departmentFTP: {},
     ShiftIC: {
         Home: "/home",
         View: {

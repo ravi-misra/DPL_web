@@ -1,0 +1,26 @@
+/* body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+} */
+
+.ftp-report-select {
+    margin-top: 50px;
+    font-size: 36px;
+    text-decoration: underline;
+}
+
+.container-ftp-report-select {
+    margin-top: 50px;
+}
+
+#ftp-report-date,
+#ftp-selected-shift {
+    padding: 10px;
+    margin: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}

@@ -32,24 +32,24 @@ const {
     repeatCycle,
 } = require("./web-scraping/getPotlineEmployees");
 const shutdownResponse = require("./utils/shutdownResponse");
-const http = require("http");
-const { Server } = require("socket.io");
+// const http = require("http");
+// const { Server } = require("socket.io");
 
-const host = PLCI_HOST;
-// const host = LOCAL_HOST;
+// const host = PLCI_HOST;
+const host = LOCAL_HOST;
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+// const server = http.createServer(app);
+// const io = new Server(server);
 
 /////////////////////////////////////////////////////////////////////
 //Add listeners for department wise data producer namespaces/////////
 /////////////////////////////////////////////////////////////////////
 //Carbon area rs-1
-socListeners.CARS1.cars1listener(io);
+// socListeners.CARS1.cars1listener(io);
 
 //Carbon area rs-2
-socListeners.CARS2.cars2listener(io);
+// socListeners.CARS2.cars2listener(io);
 /////////////////////////////////////////////////////////////////////
 
 //MongoDB connection
@@ -77,6 +77,7 @@ app.set("trust proxy", true);
 //session configuration
 const store = MongoStore.create({
     clientPromise: mongoose.connection.asPromise().then((c) => c.getClient()),
+    // mongoUrl: DB_URL,
     touchAfter: 24 * 3600, // time period in seconds
 });
 
@@ -140,46 +141,46 @@ app.use(async (req, res, next) => {
 });
 
 //Scheduled employees DB update
-let startDBUpdate = false;
-let dbUpdateHour = 2;
-let checkIntervalMinutes = 30;
-setInterval(triggerDBMaintenance, 1000 * 60 * checkIntervalMinutes);
+// let startDBUpdate = false;
+// let dbUpdateHour = 2;
+// let checkIntervalMinutes = 30;
+// setInterval(triggerDBMaintenance, 1000 * 60 * checkIntervalMinutes);
 
-function triggerDBMaintenance() {
-    let myDate = new Date();
-    if (myDate.getHours() == dbUpdateHour) {
-        if (myDate.getMinutes() <= checkIntervalMinutes - 1) {
-            dbMaintenance();
-        }
-    }
-}
+// function triggerDBMaintenance() {
+//     let myDate = new Date();
+//     if (myDate.getHours() == dbUpdateHour) {
+//         if (myDate.getMinutes() <= checkIntervalMinutes - 1) {
+//             dbMaintenance();
+//         }
+//     }
+// }
 
-async function dbMaintenance() {
-    try {
-        console.log(`Scraping started at ${new Date()}`);
-        const { data, allPN } = await scrape();
-        console.log("scraping done");
-        startDBUpdate = true;
-        await dbUpdate(data, allPN);
-        console.log("Update done");
-        await repeatCycle();
-        await deleteolddata();
-        console.log("Cleaning done");
-        console.log(`Completed at ${new Date()}`);
-    } catch (err) {
-        console.log(err);
-    } finally {
-        startDBUpdate = false;
-    }
-}
+// async function dbMaintenance() {
+//     try {
+//         console.log(`Scraping started at ${new Date()}`);
+//         const { data, allPN } = await scrape();
+//         console.log("scraping done");
+//         startDBUpdate = true;
+//         await dbUpdate(data, allPN);
+//         console.log("Update done");
+//         await repeatCycle();
+//         await deleteolddata();
+//         console.log("Cleaning done");
+//         console.log(`Completed at ${new Date()}`);
+//     } catch (err) {
+//         console.log(err);
+//     } finally {
+//         startDBUpdate = false;
+//     }
+// }
 
-app.all("*", (req, res, next) => {
-    if (!startDBUpdate) {
-        next();
-    } else {
-        return res.send(shutdownResponse);
-    }
-});
+// app.all("*", (req, res, next) => {
+//     if (!startDBUpdate) {
+//         next();
+//     } else {
+//         return res.send(shutdownResponse);
+//     }
+// });
 
 app.use("/", mainRoutes);
 app.use("/profile", profileRoutes);
@@ -208,7 +209,7 @@ app.use((err, req, res, next) => {
     }
 });
 
-server.listen(PORT, host, () => {
+app.listen(PORT, host, () => {
     console.log(`###################################`);
     console.log(`Web server started at ${new Date()}`);
     console.log(`Listening at ${host}:${PORT}`);

@@ -1,24 +1,26 @@
 <% layout('layouts/boilerplate.ejs') %>
-<h1 class="ftp-report-select">Edit/Print Shift Report</h1>
-<div class="container-ftp-report-select">
-    <form id="ftpReportSelectForm">
-        <input
-            type="date"
-            id="ftp-report-date"
-            placeholder="Select date"
-            required
-        />
-        <select id="ftp-selected-shift" required>
-            <option value="">Select Shift</option>
-            <option value="A">A</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-        </select>
-        <br />
-        <div class="login-button-container">
-            <button type="submit" class="btn login-btn">Submit</button>
-        </div>
-    </form>
+<div class="ftp-report-selector-outer">
+    <h1 class="ftp-report-select">Edit/Print Shift Report</h1>
+    <div class="container-ftp-report-select">
+        <form id="ftpReportSelectForm">
+            <input
+                type="date"
+                id="ftp-report-date"
+                placeholder="Select date"
+                required
+            />
+            <select id="ftp-selected-shift" required>
+                <option value="">Select Shift</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+            </select>
+            <br />
+            <div class="login-button-container">
+                <button type="submit" class="btn login-btn">Submit</button>
+            </div>
+        </form>
+    </div>
 </div>
 <template id="flash-mesage">
     <div class="flash success" style="z-index: 9999">

@@ -3,9 +3,10 @@ const Department = require("../models/department");
 
 module.exports = async (user) => {
     let finalDashboard = {};
-    if (user.role === "DPLAdmin") {
-        let doc, dept;
+    let myrole = user.role;
+    if (myrole === "DPLAdmin") {
         finalDashboard = {};
+        let doc, dept;
         let userDashboard = {},
             deptDashboard = {};
         dept = await Department.find({});
@@ -21,6 +22,14 @@ module.exports = async (user) => {
             }
         }
         finalDashboard = { ...deptDashboard, ...userDashboard };
+    } else if (myrole.startsWith("department")) {
+        let doc;
+        let userDashboard = {};
+        doc = await Employee.findById(user._id);
+        if (doc) {
+            userDashboard = doc.dashboards;
+        }
+        finalDashboard = { ...userDashboard };
     } else {
         let doc, dept;
         finalDashboard = {};

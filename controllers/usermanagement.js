@@ -126,7 +126,7 @@ module.exports.updateExceptioUsersData = async (req, res) => {
             }
         } else {
             exceptionUser = await Employee.findOne({
-                username: req.body.username,
+                username: req.body.userData.userId,
             });
             if (exceptionUser) {
                 if (req.body.deleteUser) {
@@ -134,7 +134,7 @@ module.exports.updateExceptioUsersData = async (req, res) => {
                         user: exceptionUser._id,
                     });
                     await Employee.findOneAndDelete({
-                        username: req.body.username,
+                        username: req.body.userData.userId,
                     });
                 } else {
                     exceptionUser.name = req.body.userData.name;
@@ -153,6 +153,7 @@ module.exports.updateExceptioUsersData = async (req, res) => {
                         exceptionAccount.scadaMode =
                             req.body.userData.scadaMode;
                         await exceptionAccount.save();
+                        console.log("updated");
                     } else {
                         exceptionAccount = new ExceptionUser({
                             user: exceptionUser._id,

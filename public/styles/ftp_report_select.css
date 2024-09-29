@@ -1,10 +1,9 @@
-/* body {
+.ftp-report-selector-outer {
     font-family: Arial, sans-serif;
     text-align: center;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
-} */
+}
 
 .ftp-report-select {
     margin-top: 50px;

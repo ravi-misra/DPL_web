@@ -96,18 +96,16 @@
     }
 
     document
-        .getElementById("shiftForm")
+        .getElementById("ftpReportSelectForm")
         .addEventListener("submit", function (event) {
             event.preventDefault();
 
-            const date = document.getElementById("date").value;
-            const shift = document.getElementById("shift").value;
-            const errorMsg = document.getElementById("errorMsg");
+            const date = document.getElementById("ftp-report-date").value;
+            const shift = document.getElementById("ftp-selected-shift").value;
 
             if (!date || !shift) {
-                errorMsg.style.display = "block";
+                flash("Please select both Date and Shift!", ".fail");
             } else {
-                errorMsg.style.display = "none";
                 const data = {
                     date: date,
                     shift: shift,

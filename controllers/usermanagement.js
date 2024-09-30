@@ -153,7 +153,6 @@ module.exports.updateExceptioUsersData = async (req, res) => {
                         exceptionAccount.scadaMode =
                             req.body.userData.scadaMode;
                         await exceptionAccount.save();
-                        console.log("updated");
                     } else {
                         exceptionAccount = new ExceptionUser({
                             user: exceptionUser._id,

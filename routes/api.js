@@ -8,5 +8,8 @@ const catchAsync = require("../utils/catchAsync");
 // router
 //     .route("/potline/process-data")
 //     .post(catchAsync(apiController.uploadPotData));
+router
+    .route("/ftp/select-report")
+    .post(catchAsync(apiController.uploadPotData));
 
 module.exports = router;

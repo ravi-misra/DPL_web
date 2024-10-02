@@ -7,6 +7,7 @@ const {
     isAuthorized,
     isDPLAdmin,
     isHOD,
+    checkRequest,
 } = require("../middleware");
 
 // router.route("/ca/gap2").post(catchAsync(apiController.saveGap2AnodeData));

@@ -125,6 +125,9 @@ app.use(async (req, res, next) => {
                     }
                 }
             }
+            if (req.user.username == "ftpo" || req.user.role == "DPLAdmin") {
+                allowedURLs.push("/api/ftp/select-report");
+            }
         }
     } else {
         res.locals.role = undefined;
@@ -182,11 +185,11 @@ app.use(async (req, res, next) => {
 //     }
 // });
 
+app.use("/api", apiRoutes);
 app.use("/", mainRoutes);
 app.use("/profile", profileRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/admin", adminRoutes);
-app.use("/api", apiRoutes);
 
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404));
@@ -203,7 +206,8 @@ app.use((err, req, res, next) => {
     // check if flash exists
     if (req.flash) {
         req.flash("error", err.message);
-        res.redirect("/home");
+        // res.redirect("/home");
+        res.end();
     } else {
         res.end();
     }

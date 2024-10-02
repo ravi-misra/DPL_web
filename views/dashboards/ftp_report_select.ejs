@@ -124,20 +124,40 @@
                     redirect: "follow", // manual, *follow, error
                     referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
                     body: JSON.stringify(data), // body data type must match "Content-Type" header
+                }).then(response => {
+                    // Check if the response is a PDF (blob)
+                    if (response.headers.get('content-type') === 'application/pdf') {
+                        return response.blob();
+                    } else {
+                        return response.json();
+                    }
                 })
-                    .then((response) => {
-                        console.log(response);
-                        if (response.ok) {
-                            alert("Shift report submitted successfully!");
+                .then(data => {
+                    if (data instanceof Blob) {
+                        // If it's a PDF, download it
+                        const downloadLink = document.createElement('a');
+                        const url = window.URL.createObjectURL(data);
+                        downloadLink.href = url;
+                        downloadLink.download = 'shift-report.pdf';  // Adjust the filename as necessary
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        window.URL.revokeObjectURL(url);
+                        downloadLink.remove();
+                        flash("Report downloaded!!!", ".success")
+                    } else {
+                        // If it's JSON, show a confirmation dialog
+                        if (confirm(data.message)) {
+                            // User clicked "Yes", handle the manual data addition logic here
+                            alert('You clicked Yes.');
                         } else {
-                            alert(
-                                "There was an issue submitting the shift report."
-                            );
+                            // User clicked "No"
+                            alert('You clicked No.');
                         }
-                    })
-                    .catch((error) => {
-                        console.error("Error:", error);
-                    });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
             }
         });
 </script>

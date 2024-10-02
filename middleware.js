@@ -28,3 +28,8 @@ module.exports.isHOD = (req, res, next) => {
     }
     next();
 };
+
+module.exports.checkRequest = (req, res, next) => {
+    console.log(res.locals.allowedURLs);
+    next();
+};

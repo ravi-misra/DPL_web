@@ -27,7 +27,6 @@ module.exports.uploadPdfReport = async (req, res) => {
             if (report.status === "draft") {
                 // Send the PDF file if status is 'final'
                 const pdfFilePath = path.join(ftpFolder, "withdrawal.pdf");
-                console.log("pdffile");
                 res.download(pdfFilePath);
             } else {
                 // Send JSON response if status is not 'final'

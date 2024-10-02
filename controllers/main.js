@@ -22,9 +22,6 @@ module.exports.login = async (req, res) => {
         }
         if (exceptionUsers[req.user.username].defaultRoute) {
             redirectUrl = exceptionUsers[req.user.username].defaultRoute;
-            if (req.user.username == "ftpo") {
-                res.locals.allowedURLs.push("/api/ftp/select-report");
-            }
         }
     }
     res.redirect(redirectUrl);

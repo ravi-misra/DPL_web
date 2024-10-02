@@ -22,6 +22,9 @@ module.exports.login = async (req, res) => {
         }
         if (exceptionUsers[req.user.username].defaultRoute) {
             redirectUrl = exceptionUsers[req.user.username].defaultRoute;
+            if (req.user.username == "ftpo") {
+                res.locals.allowedURLs.push("/api/ftp/select-report");
+            }
         }
     }
     res.redirect(redirectUrl);
@@ -112,6 +115,9 @@ async function homeController(req, res, depList = [], deptName = undefined) {
     });
 }
 
+module.exports.goFTP = (req, res) => {
+    res.redirect("/dashboard/ftp");
+};
 module.exports.goHome = (req, res, next) => {
     homeController(req, res).catch(next);
 };

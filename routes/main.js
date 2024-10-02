@@ -5,7 +5,7 @@ const main = require("../controllers/main");
 const catchAsync = require("../utils/catchAsync");
 const { isLoggedIn, isAuthorized } = require("../middleware");
 
-router.get("/", main.renderLogin);
+router.get("/", isLoggedIn, main.goFTP);
 
 router
     .route("/login")

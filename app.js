@@ -193,7 +193,7 @@ app.all("*", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-    // console.log(err);
+    console.log(err);
     console.log("Error from following client ip");
     let ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
     console.log(ip);

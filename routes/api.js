@@ -1,7 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const apiController = require("../controllers/api_controller");
+const apiController = require("../controllers/ftp_api");
 const catchAsync = require("../utils/catchAsync");
+const {
+    isLoggedIn,
+    isAuthorized,
+    isDPLAdmin,
+    isHOD,
+} = require("../middleware");
 
 // router.route("/ca/gap2").post(catchAsync(apiController.saveGap2AnodeData));
 // router.route("/ca/gap1").post(catchAsync(apiController.saveGap1AnodeData));
@@ -10,6 +16,6 @@ const catchAsync = require("../utils/catchAsync");
 //     .post(catchAsync(apiController.uploadPotData));
 router
     .route("/ftp/select-report")
-    .post(catchAsync(apiController.uploadPotData));
+    .post(isLoggedIn, isAuthorized, catchAsync(apiController.uploadPdfReport));
 
 module.exports = router;

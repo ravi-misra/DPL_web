@@ -1,0 +1,83 @@
+/* body {
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+} */
+.ftp-report-container {
+    font-family: Arial, sans-serif;
+    width: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px 0 20px 0;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.ftp-report-container h1 {
+    text-align: center;
+    color: #333;
+}
+.ftp-report-container .form-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.ftp-report-container .form-section div {
+    text-decoration: underline;
+}
+
+.ftp-report-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+.ftp-report-container table,
+.ftp-report-container th,
+.ftp-report-container td {
+    border: 1px solid #ddd;
+}
+.ftp-report-container th,
+.ftp-report-container td {
+    padding: 8px;
+    text-align: center;
+}
+.ftp-report-container td > textarea {
+    height: 20ch;
+    resize: none;
+}
+.ftp-report-container th {
+    background-color: #f2f2f2;
+}
+/* tr > td:first-child {
+    font-weight: bold;
+} */
+.ftp-report-container .section-title {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    margin-top: 30px;
+    text-align: center;
+    font-size: 1.2em;
+}
+.ftp-report-container .footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0.9em;
+    color: #555;
+}
+.ftp-report-container input[type="text"],
+.ftp-report-container input[type="number"],
+.ftp-report-container textarea,
+.ftp-report-container td > select {
+    width: 100%;
+    border: none;
+    padding: 8px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+.ftp-report-container input[type="text"]:focus,
+.ftp-report-container input[type="number"]:focus,
+.ftp-report-container textarea:focus,
+.ftp-report-container select:focus {
+    outline: none;
+    border: 1px solid #007bff;
+}

@@ -1,5 +1,506 @@
 const sql = require("mssql");
 const path = require("path");
+const fs = require("fs");
+const puppeteer = require("puppeteer");
+const { ht } = require("date-fns/locale");
+
+const myData = {
+    "total-stock-val": "total_stock",
+    "total-stock-days-val": "total_stock_days",
+    "deviation-txt": "deviation_txt",
+    ftp1: {
+        1: "max_bag_dpt",
+        2: "min_bag_dpt",
+        3: "running_filter_count",
+        4: "inlet_temp",
+        5: "avg_maxima_inlet",
+        6: "outlet_press",
+        7: "diff_press",
+        8: "avg_maxima_pulse",
+        9: "pulse_interval",
+        10: "pulse_duration",
+        11: "running_scs",
+        12: "sc_min_freq",
+        13: "sc_max_freq",
+        14: "fresh_al_flow",
+        15: "sec_silo",
+        16: "hopper_bl",
+        17: "sec_airlift_p",
+        18: "sec_airslide_p",
+        19: "vib_screen",
+        20: "compressor_running",
+        21: "compressor_running_hours",
+        22: "running_mefs",
+        23: "avg_mef_cur",
+        24: "hf_avg",
+        25: "hf_max",
+        26: "hf_gt_2",
+        27: "hf_gt_5",
+        28: "hf_exceed",
+        29: "avg_dust",
+        30: "max_dust",
+        B101: "drive_status_b101",
+        B102: "drive_status_b102",
+        B103: "drive_status_b103",
+        B104: "drive_status_b104",
+        B105: "drive_status_b105",
+        B106: "drive_status_b106",
+        F107: "drive_status_f107",
+        F108: "drive_status_f108",
+        F109: "drive_status_f109",
+        F110: "drive_status_f110",
+    },
+    ftp2: {
+        1: "max_bag_dpt",
+        2: "min_bag_dpt",
+        3: "running_filter_count",
+        4: "inlet_temp",
+        5: "avg_maxima_inlet",
+        6: "outlet_press",
+        7: "diff_press",
+        8: "avg_maxima_pulse",
+        9: "pulse_interval",
+        10: "pulse_duration",
+        11: "running_scs",
+        12: "sc_min_freq",
+        13: "sc_max_freq",
+        14: "fresh_al_flow",
+        15: "sec_silo",
+        16: "hopper_bl",
+        17: "sec_airlift_p",
+        18: "sec_airslide_p",
+        19: "vib_screen",
+        20: "compressor_running",
+        21: "compressor_running_hours",
+        22: "running_mefs",
+        23: "avg_mef_cur",
+        24: "hf_avg",
+        25: "hf_max",
+        26: "hf_gt_2",
+        27: "hf_gt_5",
+        28: "hf_exceed",
+        29: "avg_dust",
+        30: "max_dust",
+        B201: "drive_status_b201",
+        B202: "drive_status_b202",
+        B203: "drive_status_b203",
+        B204: "drive_status_b204",
+        B205: "drive_status_b205",
+        B206: "drive_status_b206",
+        F207: "drive_status_f207",
+        F208: "drive_status_f208",
+        F210: "drive_status_f210",
+        F209: "drive_status_f209",
+    },
+    ftp3: {
+        1: "max_bag_dpt",
+        2: "min_bag_dpt",
+        3: "running_filter_count",
+        4: "inlet_temp",
+        5: "avg_maxima_inlet",
+        6: "outlet_press",
+        7: "diff_press",
+        8: "avg_maxima_pulse",
+        9: "pulse_interval",
+        10: "pulse_duration",
+        11: "running_scs",
+        12: "sc_min_freq",
+        13: "sc_max_freq",
+        14: "fresh_al_flow",
+        15: "sec_silo",
+        16: "hopper_bl",
+        17: "sec_airlift_p",
+        18: "sec_airslide_p",
+        19: "vib_screen",
+        20: "compressor_running",
+        21: "compressor_running_hours",
+        22: "running_mefs",
+        23: "avg_mef_cur",
+        24: "hf_avg",
+        25: "hf_max",
+        26: "hf_gt_2",
+        27: "hf_gt_5",
+        28: "hf_exceed",
+        29: "avg_dust",
+        30: "max_dust",
+        B301: "drive_status_b301",
+        B302: "drive_status_b302",
+        B303: "drive_status_b303",
+        B304: "drive_status_b304",
+        B305: "drive_status_b305",
+        B306: "drive_status_b306",
+        F307: "drive_status_f307",
+        F308: "drive_status_f308",
+        F309: "drive_status_f309",
+        F310: "drive_status_f310",
+    },
+    ftp4: {
+        1: "max_bag_dpt",
+        2: "min_bag_dpt",
+        3: "running_filter_count",
+        4: "inlet_temp",
+        5: "avg_maxima_inlet",
+        6: "outlet_press",
+        7: "diff_press",
+        8: "avg_maxima_pulse",
+        9: "pulse_interval",
+        10: "pulse_duration",
+        11: "running_scs",
+        12: "sc_min_freq",
+        13: "sc_max_freq",
+        14: "fresh_al_flow",
+        15: "sec_silo",
+        16: "hopper_bl",
+        17: "sec_airlift_p",
+        18: "sec_airslide_p",
+        19: "vib_screen",
+        20: "compressor_running",
+        21: "compressor_running_hours",
+        22: "running_mefs",
+        23: "avg_mef_cur",
+        24: "hf_avg",
+        25: "hf_max",
+        26: "hf_gt_2",
+        27: "hf_gt_5",
+        28: "hf_exceed",
+        29: "avg_dust",
+        30: "max_dust",
+        B401: "drive_status_b401",
+        B402: "drive_status_b402",
+        B403: "drive_status_b403",
+        B404: "drive_status_b404",
+        B405: "drive_status_b405",
+        B406: "drive_status_b406",
+        F407: "drive_status_f407",
+        F408: "drive_status_f408",
+        F409: "drive_status_f409",
+        F410: "drive_status_f410",
+    },
+    ftp5: {
+        1: "max_bag_dpt",
+        2: "min_bag_dpt",
+        3: "running_filter_count",
+        4: "inlet_temp",
+        5: "avg_maxima_inlet",
+        6: "outlet_press",
+        7: "diff_press",
+        8: "avg_maxima_pulse",
+        9: "pulse_interval",
+        10: "pulse_duration",
+        11: "running_scs",
+        12: "sc_min_freq",
+        13: "sc_max_freq",
+        15: "sec_silo",
+        16: "hopper_bl",
+        17: "sec_airlift_p",
+        18: "sec_airslide_p",
+        19: "vib_screen",
+        20: "compressor_running",
+        21: "compressor_running_hours",
+        22: "running_mefs",
+        23: "avg_mef_cur",
+        24: "hf_avg",
+        25: "hf_max",
+        26: "hf_gt_2",
+        27: "hf_gt_5",
+        28: "hf_exceed",
+        29: "avg_dust",
+        30: "max_dust",
+        B501: "drive_status_b501",
+        B502: "drive_status_b502",
+        B503: "drive_status_b503",
+        B504: "drive_status_b504",
+        B505: "drive_status_b505",
+        B506: "drive_status_b506",
+        F507: "drive_status_f507",
+        F508: "drive_status_f508",
+        F509: "drive_status_f509",
+        F510: "drive_status_f510",
+    },
+    ftp6: {
+        1: "max_bag_dpt",
+        2: "min_bag_dpt",
+        3: "running_filter_count",
+        4: "inlet_temp",
+        5: "avg_maxima_inlet",
+        6: "outlet_press",
+        7: "diff_press",
+        8: "avg_maxima_pulse",
+        9: "pulse_interval",
+        10: "pulse_duration",
+        11: "running_scs",
+        12: "sc_min_freq",
+        13: "sc_max_freq",
+        15: "sec_silo",
+        16: "hopper_bl",
+        17: "sec_airlift_p",
+        18: "sec_airslide_p",
+        19: "vib_screen",
+        20: "compressor_running",
+        21: "compressor_running_hours",
+        22: "running_mefs",
+        23: "avg_mef_cur",
+        24: "hf_avg",
+        25: "hf_max",
+        26: "hf_gt_2",
+        27: "hf_gt_5",
+        28: "hf_exceed",
+        29: "avg_dust",
+        30: "max_dust",
+        B601: "drive_status_b601",
+        B602: "drive_status_b602",
+        B603: "drive_status_b603",
+        B604: "drive_status_b604",
+        B605: "drive_status_b605",
+        B606: "drive_status_b606",
+        F607: "drive_status_f607",
+        F608: "drive_status_f608",
+        F609: "drive_status_f609",
+        F610: "drive_status_f610",
+    },
+    gtc7: {
+        1: "max_bag_dpt",
+        2: "min_bag_dpt",
+        3: "running_filter_count",
+        4: "inlet_temp",
+        5: "avg_maxima_inlet",
+        6: "outlet_press",
+        7: "diff_press",
+        8: "avg_maxima_pulse",
+        9: "pulse_interval",
+        10: "pulse_duration",
+        11: "running_scs",
+        12: "sc_min_freq",
+        13: "sc_max_freq",
+        14: "fresh_al_flow",
+        15: "sec_silo",
+        16: "hopper_bl",
+        17: "sec_airlift_p",
+        18: "sec_airslide_p",
+        19: "vib_screen",
+        20: "compressor_running",
+        21: "compressor_running_hours",
+        22: "running_mefs",
+        23: "avg_mef_cur",
+        24: "hf_avg",
+        25: "hf_max",
+        26: "hf_gt_2",
+        27: "hf_gt_5",
+        28: "hf_exceed",
+        29: "avg_dust",
+        30: "max_dust",
+        B701: "drive_status_b701",
+        B702: "drive_status_b702",
+        B703: "drive_status_b703",
+        B704: "drive_status_b704",
+        F707: "drive_status_f707",
+        F708: "drive_status_f708",
+        F709: "drive_status_f709",
+        F710: "drive_status_f710",
+    },
+    gtc8: {
+        1: "max_bag_dpt",
+        2: "min_bag_dpt",
+        3: "running_filter_count",
+        4: "inlet_temp",
+        5: "avg_maxima_inlet",
+        6: "outlet_press",
+        7: "diff_press",
+        8: "avg_maxima_pulse",
+        9: "pulse_interval",
+        10: "pulse_duration",
+        11: "running_scs",
+        12: "sc_min_freq",
+        13: "sc_max_freq",
+        14: "fresh_al_flow",
+        15: "sec_silo",
+        16: "hopper_bl",
+        17: "sec_airlift_p",
+        18: "sec_airslide_p",
+        19: "vib_screen",
+        20: "compressor_running",
+        21: "compressor_running_hours",
+        22: "running_mefs",
+        23: "avg_mef_cur",
+        24: "hf_avg",
+        25: "hf_max",
+        26: "hf_gt_2",
+        27: "hf_gt_5",
+        28: "hf_exceed",
+        29: "avg_dust",
+        30: "max_dust",
+        B801: "drive_status_b801",
+        B802: "drive_status_b802",
+        B803: "drive_status_b803",
+        B804: "drive_status_b804",
+        F807: "drive_status_f807",
+        F808: "drive_status_f808",
+        F809: "drive_status_f809",
+        F810: "drive_status_f810",
+    },
+    plc2: {
+        1: "silo_level_JN101",
+        2: "silo_level_JN102",
+        3: "silo_level_JN103",
+        4: "silo_level_JN104",
+        5: "silo_level_JN201",
+        6: "silo_level_JN202",
+        7: "silo_level_JN203",
+        8: "silo_level_JN204",
+        9: "avg_level_silo1",
+        10: "avg_level_silo1_qty",
+        11: "avg_level_silo2",
+        12: "avg_level_silo2_qty",
+        av2: "drive_status_av2",
+        av4: "drive_status_av4",
+        av6: "drive_status_av6",
+        as2: "drive_status_as2",
+        as4: "drive_status_as4",
+        as6: "drive_status_as6",
+        an5: "drive_status_an5",
+        an6: "drive_status_an6",
+        an7: "drive_status_an7",
+        an8: "drive_status_an8",
+        "av23-R": "dedusting_av23",
+        "av22-R": "dedusting_av22",
+    },
+    plc3: {
+        1: "silo_level_JN301",
+        2: "silo_level_JN302",
+        3: "silo_level_JN303",
+        4: "silo_level_JN304",
+        5: "silo_level_JN401",
+        6: "silo_level_JN402",
+        7: "silo_level_JN403",
+        8: "silo_level_JN404",
+        9: "avg_level_silo3",
+        10: "avg_level_silo3_qty",
+        11: "avg_level_silo4",
+        12: "avg_level_silo4_qty",
+        av1: "drive_status_av1",
+        av3: "drive_status_av3",
+        av5: "drive_status_av5",
+        as1: "drive_status_as1",
+        as3: "drive_status_as3",
+        as5: "drive_status_as5",
+        an1: "drive_status_an1",
+        an2: "drive_status_an2",
+        an3: "drive_status_an3",
+        an4: "drive_status_an4",
+        "av21-R": "dedusting_av21",
+        "av20-R": "dedusting_av20",
+    },
+    plc4: {
+        1: "silo_level_LT501",
+        2: "silo_level_LT502",
+        3: "silo_level_LT503",
+        4: "silo_level_LT504",
+        5: "avg_level_silo5",
+        6: "avg_level_silo5_qty",
+        14: "fresh_al_flow",
+        "BLR5-1": "drive_status_blr5.1",
+        "BLR5-2": "drive_status_blr5.2",
+        "BLT5-1": "drive_status_blt5.1",
+        "BLT5-2": "drive_status_blt5.2",
+        "BLB5-1": "drive_status_blb5.1",
+        "BLB5-2": "drive_status_blb5.2",
+        "BLA5-1": "drive_status_bla5.1",
+        "BLA5-2": "drive_status_bla5.2",
+        "BLF5-1": "drive_status_blf5.1",
+        "BLF5-2": "drive_status_blf5.2",
+        "du11-R": "dedusting_du11",
+        "du41-R": "dedusting_du41",
+    },
+    plc5: {
+        1: "silo_level_LT701",
+        2: "silo_level_LT702",
+        3: "silo_level_LT703",
+        4: "silo_level_LT704",
+        5: "avg_level_silo7",
+        6: "avg_level_silo7_qty",
+        14: "fresh_al_flow",
+        "BLR7-1": "drive_status_blr7.1",
+        "BLR7-2": "drive_status_blr7.2",
+        "BLT7-1": "drive_status_blt7.1",
+        "BLT7-2": "drive_status_blt7.2",
+        "BLB7-1": "drive_status_blb7.1",
+        "BLB7-2": "drive_status_blb7.2",
+        "BLA7-1": "drive_status_bla7.1",
+        "BLA7-2": "drive_status_bla7.2",
+        "BLF7-1": "drive_status_blf7.1",
+        "BLF7-2": "drive_status_blf7.2",
+        "du29-R": "dedusting_du29",
+        "du42-R": "dedusting_du42",
+    },
+    plc6: {
+        2: "silo_level_LI6003",
+        1: "silo_level_LI6002",
+        3: "silo_level_LI6004",
+        4: "silo_level_LI6005",
+        5: "avg_level_silo6",
+        6: "avg_level_silo6_qty",
+        FN6109: "drive_status_fn6109",
+        FN6110: "drive_status_fn6110",
+        FN6113: "drive_status_fn6113",
+        FN6114: "drive_status_fn6114",
+        BL6103: "drive_status_bl6103",
+        BL6104: "drive_status_bl6104",
+        BL6107: "drive_status_bl6107",
+        BL6108: "drive_status_bl6108",
+        BL6115: "drive_status_bl6115",
+        BL6116: "drive_status_bl6116",
+        du261A: "dedusting_du261a",
+        du261B: "dedusting_du261b",
+        du291A: "dedusting_du291a",
+        du291B: "dedusting_du291b",
+    },
+    plc7: {
+        2: "silo_level_LI8003",
+        1: "silo_level_LI8002",
+        3: "silo_level_LI8004",
+        4: "silo_level_LI8005",
+        5: "avg_level_silo8",
+        6: "avg_level_silo8_qty",
+        FN8125: "drive_status_fn8125",
+        FN8126: "drive_status_fn8126",
+        FN8129: "drive_status_fn8129",
+        FN8130: "drive_status_fn8130",
+        BL8119: "drive_status_bl8119",
+        BL8120: "drive_status_bl8120",
+        BL8123: "drive_status_bl8123",
+        BL8124: "drive_status_bl8124",
+        BL8131: "drive_status_bl8131",
+        BL8132: "drive_status_bl8132",
+        du279A: "dedusting_du279a",
+        du279B: "dedusting_du279b",
+        du292A: "dedusting_du292a",
+        du292B: "dedusting_du292b",
+    },
+    hdps7: {
+        av701: "pit_av701",
+        av702: "pit_av702",
+        av703: "pit_av703",
+        av704: "pit_av704",
+        pit710: "pit710",
+        pit711: "pit711",
+        pit720: "pit720",
+        pit721: "pit721",
+        av751: "drive_status_av751",
+        av752: "drive_status_av752",
+    },
+    hdps8: {
+        av801: "pit_av801",
+        av802: "pit_av802",
+        av803: "pit_av803",
+        av804: "pit_av804",
+        pit810: "pit810",
+        pit811: "pit811",
+        pit820: "pit820",
+        pit821: "pit821",
+        av851: "drive_status_av851",
+        av852: "drive_status_av852",
+    },
+};
 
 const ftpFolder = path.resolve(__dirname, "../uploads/ftp/");
 
@@ -20,14 +521,59 @@ module.exports.uploadPdfReport = async (req, res) => {
         // Connect to the database
         await sql.connect(dbConfig);
         const result =
-            await sql.query`SELECT status FROM ftp_report WHERE shift_date = ${date} AND shift = ${shift}`;
+            await sql.query`SELECT * FROM ftp_report WHERE shift_date = ${date} AND shift = ${shift}`;
 
         if (result.recordset.length > 0) {
             const report = result.recordset[0];
             if (report.status === "draft") {
                 // Send the PDF file if status is 'final'
-                const pdfFilePath = path.join(ftpFolder, "withdrawal.pdf");
-                res.download(pdfFilePath);
+                // const pdfFilePath = path.join(ftpFolder, "withdrawal.pdf");
+                // res.download(pdfFilePath);
+                // fs.readFile(pdfFilePath, (err, data) => {
+                //     if (err) {
+                //         console.error(err);
+                //         return;
+                //     }
+                //     // Set headers and send the PDF
+                //     res.set({
+                //         "Content-Type": "application/pdf",
+                //         "Content-Disposition":
+                //             'attachment; filename="report.pdf"',
+                //     });
+                //     res.send(data);
+                // });
+                let jsonData = JSON.parse(report.data);
+                let updatedHTML = "";
+                // res.render(
+                //     "dashboards/ftp_entry_form.ejs",
+                //     { mykey: "hello" },
+                //     (err, html) => {
+                //         if (err) {
+                //             console.log(err);
+                //         }
+                //         populateHTMLFromDB(html, jsonData, myData)
+                //             .then((finalHTML) => {
+                //                 res.set({ "Content-Type": "text/html" });
+                //                 res.send(html);
+                //             })
+                //             .catch((error) =>
+                //                 console.error("Error during execution:", error)
+                //             );
+                //     }
+                // );
+                res.render("dashboards/ftp_entry_form.ejs", (err, html) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    updatedHTML = html;
+                });
+                updatedHTML = await populateHTMLFromDB(
+                    updatedHTML,
+                    jsonData,
+                    myData
+                );
+                res.set({ "Content-Type": "text/html" });
+                res.send(updatedHTML);
             } else {
                 // Send JSON response if status is not 'final'
                 res.json({
@@ -47,3 +593,82 @@ module.exports.uploadPdfReport = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
+async function populateHTMLFromDB(html, jsonData, myData) {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    // Load your HTML content directly
+    await page.setContent(html, { waitUntil: "networkidle0" });
+    const finalHTML = await page.evaluate(
+        ({ jsonData, myData }) => {
+            // Iterate through the keys of the "myData" template
+            for (let k of Object.keys(myData)) {
+                let topEntry = myData[k];
+                // let element = document.getElementById("deviation-txt");
+                // if(typeof topEntry === "object") {
+                //     for(let i of topEntry)
+                //     element.innerHTML += ", " + String(topEntry);
+                // }
+                // Check if top entry value is a value or object
+                if (typeof topEntry === "string") {
+                    if (Object.hasOwn(jsonData, topEntry)) {
+                        let element = document.getElementById(k);
+                        if (element) {
+                            if (element.tagName.toLowerCase() === "input") {
+                                element.setAttribute(
+                                    "value",
+                                    jsonData[topEntry]
+                                );
+                            } else if (
+                                element.tagName.toLowerCase() === "textarea"
+                            ) {
+                                element.innerHTML = jsonData[topEntry];
+                            }
+                        }
+                    }
+                } else if (typeof topEntry === "object" && topEntry !== null) {
+                    const area = k.toUpperCase();
+                    for (let p of Object.keys(topEntry)) {
+                        if (Object.hasOwn(jsonData[area], topEntry[p])) {
+                            let myID = !isNaN(p)
+                                ? `${k}-${p}-val`
+                                : `${k}-${p}`;
+                            let element = document.getElementById(myID);
+                            if (
+                                element &&
+                                element.tagName.toLowerCase() === "input"
+                            ) {
+                                if (element.type === "number") {
+                                    element.setAttribute(
+                                        "value",
+                                        jsonData[area][topEntry[p]]
+                                    );
+                                } else if (element.type === "radio") {
+                                    if (jsonData[area][topEntry[p]]) {
+                                        element.checked = true;
+                                    } else {
+                                        let tempId = myID.split("-");
+                                        if (tempId.pop() === "R") {
+                                            tempId.push("NR");
+                                        }
+                                        myID = tempId.join("-");
+                                        let radioElement =
+                                            document.getElementById(myID);
+                                        radioElement.checked = true;
+                                    }
+                                } else {
+                                    element.checked =
+                                        jsonData[area][topEntry[p]];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return document.documentElement.outerHTML;
+        },
+        { jsonData, myData }
+    );
+    await browser.close();
+    return finalHTML;
+}

@@ -604,17 +604,15 @@ async function populateHTMLFromDB(html, jsonData, myData) {
             // Iterate through the keys of the "myData" template
             for (let k of Object.keys(myData)) {
                 let topEntry = myData[k];
-                // let element = document.getElementById("deviation-txt");
-                // if(typeof topEntry === "object") {
-                //     for(let i of topEntry)
-                //     element.innerHTML += ", " + String(topEntry);
-                // }
                 // Check if top entry value is a value or object
                 if (typeof topEntry === "string") {
                     if (Object.hasOwn(jsonData, topEntry)) {
                         let element = document.getElementById(k);
                         if (element) {
-                            if (element.tagName.toLowerCase() === "input") {
+                            if (
+                                element.tagName.toLowerCase() === "input" &&
+                                element.type === "number"
+                            ) {
                                 element.setAttribute(
                                     "value",
                                     jsonData[topEntry]
@@ -645,7 +643,7 @@ async function populateHTMLFromDB(html, jsonData, myData) {
                                     );
                                 } else if (element.type === "radio") {
                                     if (jsonData[area][topEntry[p]]) {
-                                        element.checked = true;
+                                        element.setAttribute("checked", true);
                                     } else {
                                         let tempId = myID.split("-");
                                         if (tempId.pop() === "R") {
@@ -654,11 +652,15 @@ async function populateHTMLFromDB(html, jsonData, myData) {
                                         myID = tempId.join("-");
                                         let radioElement =
                                             document.getElementById(myID);
-                                        radioElement.checked = true;
+                                        radioElement.setAttribute(
+                                            "checked",
+                                            true
+                                        );
                                     }
-                                } else {
-                                    element.checked =
-                                        jsonData[area][topEntry[p]];
+                                } else if (element.type === "checkbox") {
+                                    if (jsonData[area][topEntry[p]]) {
+                                        element.setAttribute("checked", true);
+                                    }
                                 }
                             }
                         }

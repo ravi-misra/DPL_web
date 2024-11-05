@@ -127,6 +127,7 @@ app.use(async (req, res, next) => {
             }
             if (req.user.username == "ftpo" || req.user.role == "DPLAdmin") {
                 allowedURLs.push("/api/ftp/select-report");
+                allowedURLs.push("/api/ftp/manual-entry");
             }
         }
     } else {

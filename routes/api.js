@@ -18,5 +18,8 @@ const {
 router
     .route("/ftp/select-report")
     .post(isLoggedIn, isAuthorized, catchAsync(apiController.uploadPdfReport));
+router
+    .route("/ftp/manual-entry")
+    .post(isLoggedIn, isAuthorized, catchAsync(apiController.serveBlankForm));
 
 module.exports = router;

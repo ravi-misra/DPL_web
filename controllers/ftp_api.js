@@ -2,7 +2,7 @@ const sql = require("mssql");
 const path = require("path");
 const fs = require("fs");
 const puppeteer = require("puppeteer");
-const { ht } = require("date-fns/locale");
+const { format } = require("date-fns");
 
 const myData = {
     "total-stock-val": "total_stock",
@@ -515,8 +515,24 @@ const dbConfig = {
     },
 };
 
+module.exports.saveReportDraft = async (req, res) => {};
+
+module.exports.serveBlankForm = async (req, res) => {
+    const { date, shift } = req.body;
+    console.log(date);
+    let dateFormat = format(new Date(date), "do MMM yyyy");
+    dateFormat = dateFormat.split(" ");
+    const dateString =
+        dateFormat[0] + " " + dateFormat[1] + `'` + dateFormat[2];
+    res.render("dashboards/ftp_entry_form.ejs", { date, shift, dateString });
+};
+
 module.exports.uploadPdfReport = async (req, res) => {
     const { date, shift } = req.body;
+    let dateFormat = format(new Date(date), "do MMM yyyy");
+    dateFormat = dateFormat.split(" ");
+    const dateString =
+        dateFormat[0] + " " + dateFormat[1] + `'` + dateFormat[2];
     try {
         // Connect to the database
         await sql.connect(dbConfig);
@@ -525,6 +541,7 @@ module.exports.uploadPdfReport = async (req, res) => {
 
         if (result.recordset.length > 0) {
             const report = result.recordset[0];
+            let jsonData = JSON.parse(report.data);
             if (report.status === "draft") {
                 // Send the PDF file if status is 'final'
                 // const pdfFilePath = path.join(ftpFolder, "withdrawal.pdf");
@@ -542,7 +559,6 @@ module.exports.uploadPdfReport = async (req, res) => {
                 //     });
                 //     res.send(data);
                 // });
-                let jsonData = JSON.parse(report.data);
                 let updatedHTML = "";
                 // res.render(
                 //     "dashboards/ftp_entry_form.ejs",
@@ -561,12 +577,16 @@ module.exports.uploadPdfReport = async (req, res) => {
                 //             );
                 //     }
                 // );
-                res.render("dashboards/ftp_entry_form.ejs", (err, html) => {
-                    if (err) {
-                        console.log(err);
+                res.render(
+                    "dashboards/ftp_entry_form.ejs",
+                    { date, shift, dateString },
+                    (err, html) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        updatedHTML = html;
                     }
-                    updatedHTML = html;
-                });
+                );
                 updatedHTML = await populateHTMLFromDB(
                     updatedHTML,
                     jsonData,
@@ -575,17 +595,22 @@ module.exports.uploadPdfReport = async (req, res) => {
                 res.set({ "Content-Type": "text/html" });
                 res.send(updatedHTML);
             } else {
-                // Send JSON response if status is not 'final'
-                res.json({
-                    message:
-                        "No matching data found, do you want to add all the data manually?",
-                });
+                // const htmlContent = generateHTML(data); // Replace with your templating logic
+                // // Generate PDF
+                // const pdfBuffer = await generatePDF(htmlContent);
+                // // Set headers and send the PDF
+                // res.set({
+                //     "Content-Type": "application/pdf",
+                //     "Content-Disposition": 'attachment; filename="report.pdf"',
+                // });
+                // res.send(pdfBuffer);
             }
         } else {
             // No matching row found
             res.json({
+                action: "manual-entry",
                 message:
-                    "No matching data found, do you want to add all the data manually?",
+                    "No matching data found, do you want to enter all the data manually?",
             });
         }
     } catch (err) {

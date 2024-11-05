@@ -8,7 +8,7 @@
     padding: 0.5rem 0.7rem;
 }
 .login-close > i:hover {
-    color: #9b2b1e;;
+    color: #9b2b1e;
 }
 
 .login-container {
@@ -128,7 +128,9 @@
     margin: 2px 3px;
 }
 .login-button-container {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
 }
 .login-btn {
     border-radius: 5px;

@@ -1,11 +1,30 @@
 <% layout('layouts/boilerplate.ejs') %>
 <form class="ftp-report-container">
+    <i style="display: none"
+        ><input
+            type="date"
+            name="report-date"
+            id="report-date-placeholder"
+            value="<%= date %>"
+    /></i>
+    <i style="display: none"
+        ><input
+            type="text"
+            name="report-shift"
+            id="report-shift-placeholder"
+            value="<%= shift %>"
+    /></i>
     <h1>FTP and Alumina Handling Shift End Report</h1>
 
     <div class="form-section">
         <div>
-            <span id="shift-date"><strong>Date:</strong> 15/09/2024</span
-            >&nbsp;<span id="shift"><strong> Shift:</strong> A</span>
+            <span
+                ><strong>Date: </strong
+                ><span id="shift-date"><%= dateString %></span></span
+            >&nbsp;<span
+                ><strong> Shift: </strong
+                ><span id="shift"><%= shift %></span></span
+            >
         </div>
     </div>
 
@@ -515,55 +534,279 @@
         <tr>
             <td>Vibrating Screen running status</td>
             <td>
-                <input type="number" name="ftp1-19-val" id="ftp1-19-val" />
+                <label for="ftp1-19-val">R</label>
+                <input
+                    type="radio"
+                    id="ftp1-19-val"
+                    name="ftp1-19-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="ftp1-19-NR">NR</label>
+                <input
+                    type="radio"
+                    id="ftp1-19-NR"
+                    name="ftp1-19-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="ftp2-19-val" id="ftp2-19-val" />
+                <label for="ftp2-19-val">R</label>
+                <input
+                    type="radio"
+                    id="ftp2-19-val"
+                    name="ftp2-19-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="ftp2-19-NR">NR</label>
+                <input
+                    type="radio"
+                    id="ftp2-19-NR"
+                    name="ftp2-19-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="ftp3-19-val" id="ftp3-19-val" />
+                <label for="ftp3-19-val">R</label>
+                <input
+                    type="radio"
+                    id="ftp3-19-val"
+                    name="ftp3-19-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="ftp3-19-NR">NR</label>
+                <input
+                    type="radio"
+                    id="ftp3-19-NR"
+                    name="ftp3-19-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="ftp4-19-val" id="ftp4-19-val" />
+                <label for="ftp4-19-val">R</label>
+                <input
+                    type="radio"
+                    id="ftp4-19-val"
+                    name="ftp4-19-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="ftp4-19-NR">NR</label>
+                <input
+                    type="radio"
+                    id="ftp4-19-NR"
+                    name="ftp4-19-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="ftp5-19-val" id="ftp5-19-val" />
+                <label for="ftp5-19-val">R</label>
+                <input
+                    type="radio"
+                    id="ftp5-19-val"
+                    name="ftp5-19-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="ftp5-19-NR">NR</label>
+                <input
+                    type="radio"
+                    id="ftp5-19-NR"
+                    name="ftp5-19-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="ftp6-19-val" id="ftp6-19-val" />
+                <label for="ftp6-19-val">R</label>
+                <input
+                    type="radio"
+                    id="ftp6-19-val"
+                    name="ftp6-19-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="ftp6-19-NR">NR</label>
+                <input
+                    type="radio"
+                    id="ftp6-19-NR"
+                    name="ftp6-19-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="gtc7-19-val" id="gtc7-19-val" />
+                <label for="gtc7-19-val">R</label>
+                <input
+                    type="radio"
+                    id="gtc7-19-val"
+                    name="gtc7-19-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="gtc7-19-NR">NR</label>
+                <input
+                    type="radio"
+                    id="gtc7-19-NR"
+                    name="gtc7-19-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="gtc8-19-val" id="gtc8-19-val" />
+                <label for="gtc8-19-val">R</label>
+                <input
+                    type="radio"
+                    id="gtc8-19-val"
+                    name="gtc8-19-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="gtc8-19-NR">NR</label>
+                <input
+                    type="radio"
+                    id="gtc8-19-NR"
+                    name="gtc8-19-val"
+                    value="false"
+                />
             </td>
         </tr>
         <tr>
             <td>Compressor running status</td>
             <td>
-                <input type="number" name="ftp1-20-val" id="ftp1-20-val" />
+                <label for="ftp1-20-val">R</label>
+                <input
+                    type="radio"
+                    id="ftp1-20-val"
+                    name="ftp1-20-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="ftp1-20-NR">NR</label>
+                <input
+                    type="radio"
+                    id="ftp1-20-NR"
+                    name="ftp1-20-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="ftp2-20-val" id="ftp2-20-val" />
+                <label for="ftp2-20-val">R</label>
+                <input
+                    type="radio"
+                    id="ftp2-20-val"
+                    name="ftp2-20-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="ftp2-20-NR">NR</label>
+                <input
+                    type="radio"
+                    id="ftp2-20-NR"
+                    name="ftp2-20-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="ftp3-20-val" id="ftp3-20-val" />
+                <label for="ftp3-20-val">R</label>
+                <input
+                    type="radio"
+                    id="ftp3-20-val"
+                    name="ftp3-20-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="ftp3-20-NR">NR</label>
+                <input
+                    type="radio"
+                    id="ftp3-20-NR"
+                    name="ftp3-20-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="ftp4-20-val" id="ftp4-20-val" />
+                <label for="ftp4-20-val">R</label>
+                <input
+                    type="radio"
+                    id="ftp4-20-val"
+                    name="ftp4-20-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="ftp4-20-NR">NR</label>
+                <input
+                    type="radio"
+                    id="ftp4-20-NR"
+                    name="ftp4-20-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="ftp5-20-val" id="ftp5-20-val" />
+                <label for="ftp5-20-val">R</label>
+                <input
+                    type="radio"
+                    id="ftp5-20-val"
+                    name="ftp5-20-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="ftp5-20-NR">NR</label>
+                <input
+                    type="radio"
+                    id="ftp5-20-NR"
+                    name="ftp5-20-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="ftp6-20-val" id="ftp6-20-val" />
+                <label for="ftp6-20-val">R</label>
+                <input
+                    type="radio"
+                    id="ftp6-20-val"
+                    name="ftp6-20-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="ftp6-20-NR">NR</label>
+                <input
+                    type="radio"
+                    id="ftp6-20-NR"
+                    name="ftp6-20-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="gtc7-20-val" id="gtc7-20-val" />
+                <label for="gtc7-20-val">R</label>
+                <input
+                    type="radio"
+                    id="gtc7-20-val"
+                    name="gtc7-20-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="gtc7-20-NR">NR</label>
+                <input
+                    type="radio"
+                    id="gtc7-20-NR"
+                    name="gtc7-20-val"
+                    value="false"
+                />
             </td>
             <td>
-                <input type="number" name="gtc8-20-val" id="gtc8-20-val" />
+                <label for="gtc8-20-val">R</label>
+                <input
+                    type="radio"
+                    id="gtc8-20-val"
+                    name="gtc8-20-val"
+                    value="true"
+                />
+                <span>&nbsp;&nbsp;&nbsp;</span>
+                <label for="gtc8-20-NR">NR</label>
+                <input
+                    type="radio"
+                    id="gtc8-20-NR"
+                    name="gtc8-20-val"
+                    value="false"
+                />
             </td>
         </tr>
         <tr>
@@ -1986,7 +2229,17 @@
             </td>
         </tr>
     </table>
-
+    <div class="login-button-container">
+        <button type="submit" class="btn login-btn" id="ftp-frm-save">
+            Save Draft
+        </button>
+        <button type="submit" class="btn login-btn" id="ftp-frm-submit">
+            Submit
+        </button>
+        <button type="submit" class="btn login-btn" id="ftp-frm-cls">
+            Close
+        </button>
+    </div>
     <div class="footer" style="border-top: 1px double black">
         <p>Shift End Report | FTP and Alumina Handling System</p>
     </div>

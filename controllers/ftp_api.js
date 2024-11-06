@@ -2,7 +2,7 @@ const sql = require("mssql");
 const path = require("path");
 const fs = require("fs");
 const puppeteer = require("puppeteer");
-const { format } = require("date-fns");
+const { format, isFuture, addDays } = require("date-fns");
 
 const myData = {
     "total-stock-val": "total_stock",
@@ -519,7 +519,6 @@ module.exports.saveReportDraft = async (req, res) => {};
 
 module.exports.serveBlankForm = async (req, res) => {
     const { date, shift } = req.body;
-    console.log(date);
     let dateFormat = format(new Date(date), "do MMM yyyy");
     dateFormat = dateFormat.split(" ");
     const dateString =
@@ -607,11 +606,73 @@ module.exports.uploadPdfReport = async (req, res) => {
             }
         } else {
             // No matching row found
-            res.json({
-                action: "manual-entry",
-                message:
-                    "No matching data found, do you want to enter all the data manually?",
-            });
+            let now = new Date();
+            let selectedDate = new Date(date);
+            if (isFuture(new Date(date))) {
+                res.json({
+                    action: "invalid-date",
+                    message: "The selected date is invalid.",
+                });
+            } else if (
+                now.getFullYear() == selectedDate.getFullYear() &&
+                now.getMonth() == selectedDate.getMonth() &&
+                now.getDate() == selectedDate.getDate()
+            ) {
+                if (shift === "C") {
+                    res.json({
+                        action: "invalid-shift",
+                        message: "The selected shift is invalid.",
+                    });
+                } else if (
+                    (now.getHours() < 22 || now.getMinutes() < 35) &&
+                    shift === "B"
+                ) {
+                    res.json({
+                        action: "invalid-shift",
+                        message: "The selected shift is invalid.",
+                    });
+                } else if (
+                    (now.getHours() < 14 || now.getMinutes() < 35) &&
+                    shift === "A"
+                ) {
+                    res.json({
+                        action: "invalid-shift",
+                        message: "The selected shift is invalid.",
+                    });
+                } else {
+                    res.json({
+                        action: "manual-entry",
+                        message:
+                            "No matching data found, do you want to enter all the data manually?",
+                    });
+                }
+            } else if (
+                now.getFullYear() == selectedDate.getFullYear() &&
+                now.getMonth() == selectedDate.getMonth() &&
+                now.getDate() == addDays(selectedDate, 1).getDate()
+            ) {
+                if (
+                    (now.getHours() < 6 || now.getMinutes() < 35) &&
+                    shift === "C"
+                ) {
+                    res.json({
+                        action: "invalid-shift",
+                        message: "The selected shift is invalid.",
+                    });
+                } else {
+                    res.json({
+                        action: "manual-entry",
+                        message:
+                            "No matching data found, do you want to enter all the data manually?",
+                    });
+                }
+            } else {
+                res.json({
+                    action: "manual-entry",
+                    message:
+                        "No matching data found, do you want to enter all the data manually?",
+                });
+            }
         }
     } catch (err) {
         console.error("Database query failed:", err);

@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const puppeteer = require("puppeteer");
 const { format, isFuture, addDays } = require("date-fns");
+const { tr, id } = require("date-fns/locale");
 
 const myData = {
     "total-stock-val": "total_stock",
@@ -515,7 +516,62 @@ const dbConfig = {
     },
 };
 
-module.exports.saveReportDraft = async (req, res) => {};
+module.exports.saveReport = async (req, res) => {
+    try {
+        await sql.connect(dbConfig);
+        const submittedData = req.body;
+        let jsonData = {};
+        let date = "",
+            shift = "";
+        if (
+            Object.hasOwn(submittedData, "report-date") &&
+            Object.hasOwn(submittedData, "report-shift") &&
+            Object.hasOwn(submittedData, "form-action")
+        ) {
+            date = submittedData["report-date"];
+            shift = submittedData["report-shift"];
+            for (let k of Object.keys(submittedData)) {
+                if (submittedData[k].length > 0) {
+                    let idArray = k.split("-");
+                    // top level aggregate values
+                    if (Object.hasOwn(myData, k)) {
+                        if (idArray.includes("val")) {
+                            if (!isNaN(Number(submittedData[k]))) {
+                                jsonData[myData[k]] = Number(submittedData[k]);
+                            }
+                        } else jsonData[myData[k]] = submittedData[k];
+                    } else if (Object.hasOwn(myData, idArray[0])) {
+                        let areaData = {};
+                        if (
+                            idArray.includes("val") &&
+                            (idArray[1] == "19" || idArray[1] == "20")
+                        ) {
+                            if (submittedData[k] == "true") {
+                                areaData[myData[idArray[0]][idArray[1]]] = true;
+                            } else
+                                areaData[
+                                    myData[idArray[0]][idArray[1]]
+                                ] = false;
+                        } else if (
+                            idArray.includes("val") &&
+                            !isNaN(Number(submittedData[k]))
+                        ) {
+                            areaData[myData[idArray[0]][idArray[1]]] = Number(
+                                submittedData[k]
+                            );
+                        }
+                        jsonData[idArray[0].toUpperCase()] = areaData;
+                    }
+                }
+            }
+            let result =
+                await sql.query`SELECT * FROM ftp_report WHERE shift_date = ${date} AND shift = ${shift}`;
+        }
+    } catch (err) {
+        console.error("Database query failed:", err);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
 
 module.exports.serveBlankForm = async (req, res) => {
     const { date, shift } = req.body;
@@ -624,7 +680,7 @@ module.exports.uploadPdfReport = async (req, res) => {
                         message: "The selected shift is invalid.",
                     });
                 } else if (
-                    (now.getHours() < 22 || now.getMinutes() < 35) &&
+                    (now.getHours() < 21 || now.getMinutes() < 35) &&
                     shift === "B"
                 ) {
                     res.json({
@@ -632,7 +688,7 @@ module.exports.uploadPdfReport = async (req, res) => {
                         message: "The selected shift is invalid.",
                     });
                 } else if (
-                    (now.getHours() < 14 || now.getMinutes() < 35) &&
+                    (now.getHours() < 13 || now.getMinutes() < 35) &&
                     shift === "A"
                 ) {
                     res.json({
@@ -652,7 +708,7 @@ module.exports.uploadPdfReport = async (req, res) => {
                 now.getDate() == addDays(selectedDate, 1).getDate()
             ) {
                 if (
-                    (now.getHours() < 6 || now.getMinutes() < 35) &&
+                    (now.getHours() < 5 || now.getMinutes() < 35) &&
                     shift === "C"
                 ) {
                     res.json({

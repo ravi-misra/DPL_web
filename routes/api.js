@@ -21,5 +21,8 @@ router
 router
     .route("/ftp/manual-entry")
     .post(isLoggedIn, isAuthorized, catchAsync(apiController.serveBlankForm));
+router
+    .route("/ftp/submit-report")
+    .post(isLoggedIn, isAuthorized, catchAsync(apiController.serveBlankForm));
 
 module.exports = router;

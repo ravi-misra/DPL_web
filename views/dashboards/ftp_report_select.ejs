@@ -99,7 +99,7 @@
         .getElementById("ftpReportSelectForm")
         .addEventListener("submit", async function (event) {
             event.preventDefault();
-
+            const myButton = document.getElementsByClassName("login-btn")[0];
             const date = document.getElementById("ftp-report-date").value;
             const shift = document.getElementById("ftp-selected-shift").value;
 
@@ -111,6 +111,8 @@
                     shift: shift,
                 };
                 // Send the JSON data to the server (replace 'your-server-url' with actual URL)
+                myButton.innerHTML = "Wait...";
+                myButton.disabled = true;
                 fetch("/api/ftp/select-report", {
                     method: "POST", // *GET, POST, PUT, DELETE, etc.
                     mode: "cors", // no-cors, *cors, same-origin
@@ -177,10 +179,15 @@
                                         })
                                         .catch((error) => {
                                             console.error("Error:", error);
+                                            alert(error);
+                                            myButton.innerHTML = "Submit";
+                                            myButton.disabled = false;
                                         });
                                 }
                             } else {
                                 alert(data.message);
+                                myButton.innerHTML = "Submit";
+                                myButton.disabled = false;
                             }
                         } else {
                             document.write(data);
@@ -188,6 +195,9 @@
                     })
                     .catch((error) => {
                         console.error("Error:", error);
+                        alert(error);
+                        myButton.innerHTML = "Submit";
+                        myButton.disabled = false;
                     });
             }
         });

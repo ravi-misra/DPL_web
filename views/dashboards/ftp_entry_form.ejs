@@ -2230,13 +2230,13 @@
         </tr>
     </table>
     <div class="login-button-container">
-        <button type="submit" class="btn login-btn" id="ftp-frm-save">
+        <button type="button" class="btn login-btn" id="ftp-frm-save" autofocus>
             Save Draft
         </button>
-        <button type="submit" class="btn login-btn" id="ftp-frm-submit">
+        <button type="button" class="btn login-btn" id="ftp-frm-submit">
             Submit
         </button>
-        <button type="submit" class="btn login-btn" id="ftp-frm-cls">
+        <button type="button" class="btn login-btn" id="ftp-frm-cls">
             Close
         </button>
     </div>
@@ -2244,3 +2244,117 @@
         <p>Shift End Report | FTP and Alumina Handling System</p>
     </div>
 </form>
+<script>
+    function refreshPage() {
+        location.reload(true);
+    }
+
+    document
+        .getElementById("ftp-frm-cls")
+        .addEventListener("click", async function (event) {
+            event.preventDefault();
+            refreshPage();
+        });
+
+    document
+        .getElementById("ftp-frm-submit")
+        .addEventListener("click", async function (event) {
+            event.preventDefault();
+            const allButtons = document.getElementsByTagName("button");
+            if (
+                confirm(
+                    "All the data will be stored and no edits will be allowed later. Do you want to proceed ?"
+                )
+            ) {
+                for (let b of allButtonss) {
+                    b.disabled = true;
+                }
+                try {
+                    let myData = {};
+                    myData["form-action"] = "final";
+                    const form = document.getElementsByTagName("form")[0];
+                    const formData = new FormData(form);
+                    for (let keyValue of formData.entries()) {
+                        myData[keyValue[0]] = keyValue[1];
+                    }
+                    fetch("/api/ftp/submit-report", {
+                        method: "POST", // *GET, POST, PUT, DELETE, etc.
+                        mode: "cors", // no-cors, *cors, same-origin
+                        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: "same-origin", // include, *same-origin, omit
+                        headers: {
+                            "Content-Type": "application/json",
+                            // 'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        redirect: "follow", // manual, *follow, error
+                        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                        body: JSON.stringify(myData), // body data type must match "Content-Type" header
+                    })
+                        .then((response) => {
+                            refreshPage();
+                        })
+                        .catch((error) => {
+                            console.error("Error:", error);
+                            alert(error);
+                            for (let b of allButtonss) {
+                                b.disabled = false;
+                            }
+                        });
+                } catch (err) {
+                    for (let b of allButtonss) {
+                        b.disabled = false;
+                    }
+                    alert(err);
+                }
+            }
+        });
+
+    document
+        .getElementById("ftp-frm-save")
+        .addEventListener("click", async function (event) {
+            event.preventDefault();
+            const allButtons = document.getElementsByTagName("button");
+            for (let b of allButtonss) {
+                b.disabled = true;
+            }
+            try {
+                let myData = {};
+                myData["form-action"] = "draft";
+                const form = document.getElementsByTagName("form")[0];
+                const formData = new FormData(form);
+                for (let keyValue of formData.entries()) {
+                    if (keyValue[1].length > 0) {
+                        myData[keyValue[0]] = keyValue[1];
+                    }
+                }
+                fetch("/api/ftp/submit-report", {
+                    method: "POST", // *GET, POST, PUT, DELETE, etc.
+                    mode: "cors", // no-cors, *cors, same-origin
+                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                    credentials: "same-origin", // include, *same-origin, omit
+                    headers: {
+                        "Content-Type": "application/json",
+                        // 'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    redirect: "follow", // manual, *follow, error
+                    referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                    body: JSON.stringify(myData), // body data type must match "Content-Type" header
+                })
+                    .then((response) => {
+                        alert("Data saved successfully!!!");
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert(error);
+                        for (let b of allButtonss) {
+                            b.disabled = false;
+                        }
+                    });
+            } catch (err) {
+                for (let b of allButtonss) {
+                    b.disabled = false;
+                }
+                alert(err);
+            }
+        });
+</script>

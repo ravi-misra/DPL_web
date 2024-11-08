@@ -478,26 +478,26 @@ const myData = {
         du292B: "dedusting_du292b",
     },
     hdps7: {
-        av701: "pit_av701",
-        av702: "pit_av702",
-        av703: "pit_av703",
-        av704: "pit_av704",
-        pit710: "pit710",
-        pit711: "pit711",
-        pit720: "pit720",
-        pit721: "pit721",
+        "av701-val": "pit_av701",
+        "av702-val": "pit_av702",
+        "av703-val": "pit_av703",
+        "av704-val": "pit_av704",
+        "pit710-val": "pit710",
+        "pit711-val": "pit711",
+        "pit720-val": "pit720",
+        "pit721-val": "pit721",
         av751: "drive_status_av751",
         av752: "drive_status_av752",
     },
     hdps8: {
-        av801: "pit_av801",
-        av802: "pit_av802",
-        av803: "pit_av803",
-        av804: "pit_av804",
-        pit810: "pit810",
-        pit811: "pit811",
-        pit820: "pit820",
-        pit821: "pit821",
+        "av801-val": "pit_av801",
+        "av802-val": "pit_av802",
+        "av803-val": "pit_av803",
+        "av804-val": "pit_av804",
+        "pit810-val": "pit810",
+        "pit811-val": "pit811",
+        "pit820-val": "pit820",
+        "pit821-val": "pit821",
         av851: "drive_status_av851",
         av852: "drive_status_av852",
     },
@@ -516,6 +516,75 @@ const dbConfig = {
     },
 };
 
+function dateshiftValidity(date, shift) {
+    let now = new Date();
+    let selectedDate = new Date(date);
+    let returnValue = {};
+    if (isFuture(selectedDate)) {
+        returnValue = {
+            action: "invalid-date",
+            message: "The selected date is invalid.",
+        };
+    } else if (
+        now.getFullYear() == selectedDate.getFullYear() &&
+        now.getMonth() == selectedDate.getMonth() &&
+        now.getDate() == selectedDate.getDate()
+    ) {
+        if (shift === "C") {
+            returnValue = {
+                action: "invalid-shift",
+                message: "The selected shift is invalid.",
+            };
+        } else if (
+            (now.getHours() < 21 || now.getMinutes() < 35) &&
+            shift === "B"
+        ) {
+            returnValue = {
+                action: "invalid-shift",
+                message: "The selected shift is invalid.",
+            };
+        } else if (
+            (now.getHours() < 13 || now.getMinutes() < 35) &&
+            shift === "A"
+        ) {
+            returnValue = {
+                action: "invalid-shift",
+                message: "The selected shift is invalid.",
+            };
+        } else {
+            returnValue = {
+                action: "manual-entry",
+                message:
+                    "No matching data found, do you want to enter all the data manually?",
+            };
+        }
+    } else if (
+        now.getFullYear() == selectedDate.getFullYear() &&
+        now.getMonth() == selectedDate.getMonth() &&
+        now.getDate() == addDays(selectedDate, 1).getDate()
+    ) {
+        if ((now.getHours() < 5 || now.getMinutes() < 35) && shift === "C") {
+            returnValue = {
+                action: "invalid-shift",
+                message: "The selected shift is invalid.",
+            };
+        } else {
+            returnValue = {
+                action: "manual-entry",
+                message:
+                    "No matching data found, do you want to enter all the data manually?",
+            };
+        }
+    } else {
+        returnValue = {
+            action: "manual-entry",
+            message:
+                "No matching data found, do you want to enter all the data manually?",
+        };
+    }
+    return returnValue;
+}
+
 module.exports.saveReport = async (req, res) => {
     try {
         await sql.connect(dbConfig);
@@ -530,42 +599,61 @@ module.exports.saveReport = async (req, res) => {
         ) {
             date = submittedData["report-date"];
             shift = submittedData["report-shift"];
-            for (let k of Object.keys(submittedData)) {
-                if (submittedData[k].length > 0) {
+            let validShift = dateshiftValidity(date, shift);
+            if (!validShift["action"].includes("invalid")) {
+                for (let k of Object.keys(submittedData)) {
                     let idArray = k.split("-");
-                    // top level aggregate values
-                    if (Object.hasOwn(myData, k)) {
-                        if (idArray.includes("val")) {
-                            if (!isNaN(Number(submittedData[k]))) {
-                                jsonData[myData[k]] = Number(submittedData[k]);
-                            }
-                        } else jsonData[myData[k]] = submittedData[k];
-                    } else if (Object.hasOwn(myData, idArray[0])) {
-                        let areaData = {};
-                        if (
-                            idArray.includes("val") &&
-                            (idArray[1] == "19" || idArray[1] == "20")
-                        ) {
-                            if (submittedData[k] == "true") {
-                                areaData[myData[idArray[0]][idArray[1]]] = true;
-                            } else
-                                areaData[
-                                    myData[idArray[0]][idArray[1]]
-                                ] = false;
+                    let areaItem = idArray.slice(1).join("-");
+                    // As Number("") == 0 in js, we have to filter blank values from number fields
+                    if (submittedData[k].length > 0) {
+                        // top level aggregate values
+                        if (Object.hasOwn(myData, k)) {
+                            if (idArray.includes("val")) {
+                                if (!isNaN(submittedData[k])) {
+                                    jsonData[myData[k]] = Number(
+                                        submittedData[k]
+                                    );
+                                }
+                            } else jsonData[myData[k]] = submittedData[k];
                         } else if (
-                            idArray.includes("val") &&
-                            !isNaN(Number(submittedData[k]))
+                            Object.hasOwn(myData, idArray[0]) &&
+                            (Object.hasOwn(myData[idArray[0]], idArray[1]) ||
+                                Object.hasOwn(myData[idArray[0]], areaItem))
                         ) {
-                            areaData[myData[idArray[0]][idArray[1]]] = Number(
-                                submittedData[k]
-                            );
+                            let areaData = {};
+                            if (
+                                idArray.includes("val") &&
+                                (idArray[1] == "19" || idArray[1] == "20")
+                            ) {
+                                if (submittedData[k] == "true") {
+                                    areaData[
+                                        myData[idArray[0]][idArray[1]]
+                                    ] = true;
+                                } else
+                                    areaData[
+                                        myData[idArray[0]][idArray[1]]
+                                    ] = false;
+                            } else if (
+                                idArray.includes("val") &&
+                                !isNaN() &&
+                                !isNaN(submittedData[k])
+                            ) {
+                                areaData[myData[idArray[0]][idArray[1]]] =
+                                    Number(submittedData[k]);
+                            } else if (
+                                areaItem.includes("val") &&
+                                !isNaN(submittedData[k])
+                            ) {
+                                areaData[myData[idArray[0]][areaItem]] = Number(
+                                    submittedData[k]
+                                );
+                            }
+                            jsonData[idArray[0].toUpperCase()] = areaData;
                         }
-                        jsonData[idArray[0].toUpperCase()] = areaData;
+                    } else {
                     }
                 }
             }
-            let result =
-                await sql.query`SELECT * FROM ftp_report WHERE shift_date = ${date} AND shift = ${shift}`;
         }
     } catch (err) {
         console.error("Database query failed:", err);
@@ -662,73 +750,7 @@ module.exports.uploadPdfReport = async (req, res) => {
             }
         } else {
             // No matching row found
-            let now = new Date();
-            let selectedDate = new Date(date);
-            if (isFuture(new Date(date))) {
-                res.json({
-                    action: "invalid-date",
-                    message: "The selected date is invalid.",
-                });
-            } else if (
-                now.getFullYear() == selectedDate.getFullYear() &&
-                now.getMonth() == selectedDate.getMonth() &&
-                now.getDate() == selectedDate.getDate()
-            ) {
-                if (shift === "C") {
-                    res.json({
-                        action: "invalid-shift",
-                        message: "The selected shift is invalid.",
-                    });
-                } else if (
-                    (now.getHours() < 21 || now.getMinutes() < 35) &&
-                    shift === "B"
-                ) {
-                    res.json({
-                        action: "invalid-shift",
-                        message: "The selected shift is invalid.",
-                    });
-                } else if (
-                    (now.getHours() < 13 || now.getMinutes() < 35) &&
-                    shift === "A"
-                ) {
-                    res.json({
-                        action: "invalid-shift",
-                        message: "The selected shift is invalid.",
-                    });
-                } else {
-                    res.json({
-                        action: "manual-entry",
-                        message:
-                            "No matching data found, do you want to enter all the data manually?",
-                    });
-                }
-            } else if (
-                now.getFullYear() == selectedDate.getFullYear() &&
-                now.getMonth() == selectedDate.getMonth() &&
-                now.getDate() == addDays(selectedDate, 1).getDate()
-            ) {
-                if (
-                    (now.getHours() < 5 || now.getMinutes() < 35) &&
-                    shift === "C"
-                ) {
-                    res.json({
-                        action: "invalid-shift",
-                        message: "The selected shift is invalid.",
-                    });
-                } else {
-                    res.json({
-                        action: "manual-entry",
-                        message:
-                            "No matching data found, do you want to enter all the data manually?",
-                    });
-                }
-            } else {
-                res.json({
-                    action: "manual-entry",
-                    message:
-                        "No matching data found, do you want to enter all the data manually?",
-                });
-            }
+            res.json(dateshiftValidity(date, shift));
         }
     } catch (err) {
         console.error("Database query failed:", err);

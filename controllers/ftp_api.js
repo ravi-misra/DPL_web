@@ -3,7 +3,6 @@ const path = require("path");
 const fs = require("fs");
 const puppeteer = require("puppeteer");
 const { format, isFuture, addDays } = require("date-fns");
-const { tr, id } = require("date-fns/locale");
 
 const myData = {
     "total-stock-val": "total_stock",
@@ -604,7 +603,7 @@ module.exports.saveReport = async (req, res) => {
                 for (let k of Object.keys(submittedData)) {
                     let idArray = k.split("-");
                     let areaItem = idArray.slice(1).join("-");
-                    // As Number("") == 0 in js, we have to filter blank values from number fields
+                    // As Number("") == 0 in js, we have to filter out blank values from number fields
                     if (submittedData[k].length > 0) {
                         // top level aggregate values
                         if (Object.hasOwn(myData, k)) {
@@ -635,7 +634,7 @@ module.exports.saveReport = async (req, res) => {
                                     ] = false;
                             } else if (
                                 idArray.includes("val") &&
-                                !isNaN() &&
+                                !isNaN(idArray[1]) &&
                                 !isNaN(submittedData[k])
                             ) {
                                 areaData[myData[idArray[0]][idArray[1]]] =
@@ -647,14 +646,100 @@ module.exports.saveReport = async (req, res) => {
                                 areaData[myData[idArray[0]][areaItem]] = Number(
                                     submittedData[k]
                                 );
+                            } else if (
+                                Object.hasOwn(myData[idArray[0]], areaItem) &&
+                                (myData[idArray[0]][areaItem].includes(
+                                    "drive_status"
+                                ) ||
+                                    myData[idArray[0]][areaItem].includes(
+                                        "dedusting"
+                                    ))
+                            ) {
+                                if (
+                                    submittedData[k] === "true" ||
+                                    submittedData[k] === "on"
+                                ) {
+                                    areaData[
+                                        myData[idArray[0]][areaItem]
+                                    ] = true;
+                                } else {
+                                    areaData[
+                                        myData[idArray[0]][areaItem]
+                                    ] = false;
+                                }
                             }
-                            jsonData[idArray[0].toUpperCase()] = areaData;
+                            if (
+                                !Object.hasOwn(
+                                    jsonData,
+                                    idArray[0].toUpperCase()
+                                )
+                            ) {
+                                jsonData[idArray[0].toUpperCase()] = {};
+                            }
+                            jsonData[idArray[0].toUpperCase()] = {
+                                ...jsonData[idArray[0].toUpperCase()],
+                                ...areaData,
+                            };
                         }
+                    }
+                }
+                // Set unselected checkbox value to false
+                for (let k of Object.keys(myData)) {
+                    let areaData2 = {};
+                    if (typeof myData[k] === "object") {
+                        for (let m of Object.keys(myData[k])) {
+                            let fullId = k + "-" + m;
+                            if (
+                                !Object.hasOwn(submittedData, fullId) &&
+                                (myData[k][m].includes("drive_status") ||
+                                    myData[k][m].includes("dedusting"))
+                            ) {
+                                areaData2[myData[k][m]] = false;
+                                if (!Object.hasOwn(jsonData, k.toUpperCase())) {
+                                    jsonData[k.toUpperCase()] = {};
+                                }
+                                jsonData[k.toUpperCase()] = {
+                                    ...jsonData[k.toUpperCase()],
+                                    ...areaData2,
+                                };
+                            }
+                        }
+                    }
+                }
+                /////////////////////////////////////////////////
+            }
+        }
+        if (Object.keys(jsonData).length > 0 && date != "" && shift != "") {
+            const jsonDataString = JSON.stringify(jsonData);
+            await sql.connect(dbConfig);
+            const result =
+                await sql.query`SELECT * FROM ftp_report WHERE shift_date = ${date} AND shift = ${shift}`;
+            if (result.recordset.length > 0) {
+                const report = result.recordset[0];
+                if (report.status === "draft") {
+                    if (submittedData["form-action"] === "final") {
+                        await sql.query`UPDATE ftp_report
+                                SET data = ${jsonDataString}, status = 'final'
+                                WHERE shift = ${shift} AND shift_date = ${date}`;
                     } else {
+                        await sql.query`UPDATE ftp_report
+                                SET data = ${jsonDataString}, status = 'draft'
+                                WHERE shift = ${shift} AND shift_date = ${date}`;
+                    }
+                }
+            } else {
+                if (report.status === "draft") {
+                    if (submittedData["form-action"] === "final") {
+                        await sql.query`INSERT INTO ftp-report (shift_date, shift, data, status)
+                        VALUES (${date}, ${shift}, ${jsonDataString}, 'final')`;
+                    } else {
+                        await sql.query`INSERT INTO ftp-report (shift_date, shift, data, status)
+                        VALUES (${date}, ${shift}, ${jsonDataString}, 'draft')`;
                     }
                 }
             }
         }
+        res.end();
     } catch (err) {
         console.error("Database query failed:", err);
         res.status(500).json({ message: "Internal Server Error" });
@@ -685,6 +770,7 @@ module.exports.uploadPdfReport = async (req, res) => {
         if (result.recordset.length > 0) {
             const report = result.recordset[0];
             let jsonData = JSON.parse(report.data);
+            let updatedHTML = "";
             if (report.status === "draft") {
                 // Send the PDF file if status is 'final'
                 // const pdfFilePath = path.join(ftpFolder, "withdrawal.pdf");
@@ -702,7 +788,6 @@ module.exports.uploadPdfReport = async (req, res) => {
                 //     });
                 //     res.send(data);
                 // });
-                let updatedHTML = "";
                 // res.render(
                 //     "dashboards/ftp_entry_form.ejs",
                 //     { mykey: "hello" },
@@ -733,20 +818,39 @@ module.exports.uploadPdfReport = async (req, res) => {
                 updatedHTML = await populateHTMLFromDB(
                     updatedHTML,
                     jsonData,
-                    myData
+                    myData,
+                    dateString,
+                    shift,
+                    false
                 );
                 res.set({ "Content-Type": "text/html" });
                 res.send(updatedHTML);
             } else {
-                // const htmlContent = generateHTML(data); // Replace with your templating logic
-                // // Generate PDF
-                // const pdfBuffer = await generatePDF(htmlContent);
-                // // Set headers and send the PDF
-                // res.set({
-                //     "Content-Type": "application/pdf",
-                //     "Content-Disposition": 'attachment; filename="report.pdf"',
-                // });
-                // res.send(pdfBuffer);
+                updatedHTML = fs.readFileSync(
+                    path.join(
+                        __dirname,
+                        "..",
+                        "views",
+                        "dashboards",
+                        "ftp_report_pdf.html"
+                    ),
+                    "utf8"
+                );
+                const pdfBuffer = await populateHTMLFromDB(
+                    updatedHTML,
+                    jsonData,
+                    myData,
+                    dateString,
+                    shift,
+                    true
+                );
+
+                res.set({
+                    "Content-Type": "application/pdf",
+                    "Content-Disposition": 'attachment; filename="report.pdf"',
+                    "Content-Length": pdfBuffer.length,
+                });
+                res.end(pdfBuffer);
             }
         } else {
             // No matching row found
@@ -758,14 +862,25 @@ module.exports.uploadPdfReport = async (req, res) => {
     }
 };
 
-async function populateHTMLFromDB(html, jsonData, myData) {
+async function populateHTMLFromDB(
+    html,
+    jsonData,
+    myData,
+    reportDate,
+    reportShift,
+    pdf
+) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     // Load your HTML content directly
     await page.setContent(html, { waitUntil: "networkidle0" });
     const finalHTML = await page.evaluate(
-        ({ jsonData, myData }) => {
+        ({ jsonData, myData, reportDate, reportShift, pdf }) => {
             // Iterate through the keys of the "myData" template
+            if (pdf) {
+                document.getElementById("shift-date").innerHTML = reportDate;
+                document.getElementById("shift").innerHTML = reportShift;
+            }
             for (let k of Object.keys(myData)) {
                 let topEntry = myData[k];
                 // Check if top entry value is a value or object
@@ -833,8 +948,17 @@ async function populateHTMLFromDB(html, jsonData, myData) {
             }
             return document.documentElement.outerHTML;
         },
-        { jsonData, myData }
+        { jsonData, myData, reportDate, reportShift, pdf }
     );
-    await browser.close();
-    return finalHTML;
+    if (pdf) {
+        const pdfBuffer = await page.pdf({
+            format: "A4",
+            printBackground: true,
+        });
+        await browser.close();
+        return pdfBuffer;
+    } else {
+        await browser.close();
+        return finalHTML;
+    }
 }

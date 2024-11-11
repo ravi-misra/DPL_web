@@ -23,6 +23,6 @@ router
     .post(isLoggedIn, isAuthorized, catchAsync(apiController.serveBlankForm));
 router
     .route("/ftp/submit-report")
-    .post(isLoggedIn, isAuthorized, catchAsync(apiController.serveBlankForm));
+    .post(isLoggedIn, isAuthorized, catchAsync(apiController.saveReport));
 
 module.exports = router;

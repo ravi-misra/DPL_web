@@ -2266,7 +2266,7 @@
                     "All the data will be stored and no edits will be allowed later. Do you want to proceed ?"
                 )
             ) {
-                for (let b of allButtonss) {
+                for (let b of allButtons) {
                     b.disabled = true;
                 }
                 try {
@@ -2291,17 +2291,18 @@
                         body: JSON.stringify(myData), // body data type must match "Content-Type" header
                     })
                         .then((response) => {
+                            alert("Data saved successfully!!!");
                             refreshPage();
                         })
                         .catch((error) => {
                             console.error("Error:", error);
                             alert(error);
-                            for (let b of allButtonss) {
+                            for (let b of allButtons) {
                                 b.disabled = false;
                             }
                         });
                 } catch (err) {
-                    for (let b of allButtonss) {
+                    for (let b of allButtons) {
                         b.disabled = false;
                     }
                     alert(err);
@@ -2314,7 +2315,7 @@
         .addEventListener("click", async function (event) {
             event.preventDefault();
             const allButtons = document.getElementsByTagName("button");
-            for (let b of allButtonss) {
+            for (let b of allButtons) {
                 b.disabled = true;
             }
             try {
@@ -2342,16 +2343,19 @@
                 })
                     .then((response) => {
                         alert("Data saved successfully!!!");
+                        for (let b of allButtons) {
+                            b.disabled = false;
+                        }
                     })
                     .catch((error) => {
                         console.error("Error:", error);
                         alert(error);
-                        for (let b of allButtonss) {
+                        for (let b of allButtons) {
                             b.disabled = false;
                         }
                     });
             } catch (err) {
-                for (let b of allButtonss) {
+                for (let b of allButtons) {
                     b.disabled = false;
                 }
                 alert(err);

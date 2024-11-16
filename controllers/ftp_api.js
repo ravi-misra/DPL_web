@@ -931,10 +931,12 @@ async function populateHTMLFromDB(
                                         myID = tempId.join("-");
                                         let radioElement =
                                             document.getElementById(myID);
-                                        radioElement.setAttribute(
-                                            "checked",
-                                            true
-                                        );
+                                        if (radioElement) {
+                                            radioElement.setAttribute(
+                                                "checked",
+                                                true
+                                            );
+                                        }
                                     }
                                 } else if (element.type === "checkbox") {
                                     if (jsonData[area][topEntry[p]]) {

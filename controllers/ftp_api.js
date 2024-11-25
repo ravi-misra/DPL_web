@@ -870,7 +870,12 @@ async function populateHTMLFromDB(
     reportShift,
     pdf
 ) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        headless: true, // Run in headless mode
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        // --no-sandbox : Disables the Chromium sandbox entirely
+        // --disable-setuid-sandbox : Disables a specific type of sandboxing called setuid sandbox, which relies on special permissions on Linux to isolate processes.
+    });
     const page = await browser.newPage();
     // Load your HTML content directly
     await page.setContent(html, { waitUntil: "networkidle0" });

@@ -36,6 +36,11 @@
                 flex-direction: column; */
             }
 
+            td .checkbox-container {
+                display: inline-flex;
+                align-items: center; /* Center the checkbox and label vertically */
+            }
+
             @media print {
                 @page {
                     size: A4;
@@ -51,8 +56,8 @@
                 width: 95%;
                 margin: 0 auto;
                 background-color: #fff;
-                padding: 20px 0 20px 0;
-                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                /* padding: 20px 0 20px 0; */
+                /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); */
             }
             .ftp-report-container h1 {
                 text-align: center;
@@ -62,7 +67,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                margin-bottom: 20px;
+                margin-bottom: 10px;
             }
             .ftp-report-container .form-section div {
                 text-decoration: underline;
@@ -71,7 +76,7 @@
             .ftp-report-container table {
                 width: 100%;
                 border-collapse: collapse;
-                margin-bottom: 20px;
+                /* margin-bottom: 20px; */
             }
             .ftp-report-container table,
             .ftp-report-container th,
@@ -96,8 +101,8 @@
             .ftp-report-container .section-title {
                 background-color: #007bff;
                 color: #fff;
-                padding: 10px;
-                margin-top: 30px;
+                padding: 2px;
+                /* margin-top: 30px; */
                 text-align: center;
                 font-size: 1.2em;
             }
@@ -1224,23 +1229,25 @@
                 <tr>
                     <td>Vibrating Screen running status</td>
                     <td>
-                        <label for="ftp1-19-val">R</label>
-                        <input
-                            type="radio"
-                            id="ftp1-19-val"
-                            name="ftp1-19-val"
-                            value="true"
-                        />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
-                        <label for="ftp1-19-NR">NR</label>
-                        <input
-                            type="radio"
-                            id="ftp1-19-NR"
-                            name="ftp1-19-val"
-                            value="false"
-                        />
+                        <div class="checkbox-container">
+                            <label for="ftp1-19-val">R</label>
+                            <input
+                                type="radio"
+                                id="ftp1-19-val"
+                                name="ftp1-19-val"
+                                value="true"
+                            />
+                            <label for="ftp1-19-NR">NR</label>
+                            <input
+                                type="radio"
+                                id="ftp1-19-NR"
+                                name="ftp1-19-val"
+                                value="false"
+                            />
+                        </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="ftp2-19-val">R</label>
                         <input
                             type="radio"
@@ -1248,7 +1255,6 @@
                             name="ftp2-19-val"
                             value="true"
                         />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
                         <label for="ftp2-19-NR">NR</label>
                         <input
                             type="radio"
@@ -1256,8 +1262,10 @@
                             name="ftp2-19-val"
                             value="false"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="ftp3-19-val">R</label>
                         <input
                             type="radio"
@@ -1265,7 +1273,6 @@
                             name="ftp3-19-val"
                             value="true"
                         />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
                         <label for="ftp3-19-NR">NR</label>
                         <input
                             type="radio"
@@ -1273,8 +1280,10 @@
                             name="ftp3-19-val"
                             value="false"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="ftp4-19-val">R</label>
                         <input
                             type="radio"
@@ -1282,7 +1291,6 @@
                             name="ftp4-19-val"
                             value="true"
                         />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
                         <label for="ftp4-19-NR">NR</label>
                         <input
                             type="radio"
@@ -1290,8 +1298,10 @@
                             name="ftp4-19-val"
                             value="false"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="ftp5-19-val">R</label>
                         <input
                             type="radio"
@@ -1299,7 +1309,6 @@
                             name="ftp5-19-val"
                             value="true"
                         />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
                         <label for="ftp5-19-NR">NR</label>
                         <input
                             type="radio"
@@ -1307,8 +1316,10 @@
                             name="ftp5-19-val"
                             value="false"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="ftp6-19-val">R</label>
                         <input
                             type="radio"
@@ -1316,7 +1327,6 @@
                             name="ftp6-19-val"
                             value="true"
                         />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
                         <label for="ftp6-19-NR">NR</label>
                         <input
                             type="radio"
@@ -1324,8 +1334,10 @@
                             name="ftp6-19-val"
                             value="false"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="gtc7-19-val">R</label>
                         <input
                             type="radio"
@@ -1333,7 +1345,6 @@
                             name="gtc7-19-val"
                             value="true"
                         />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
                         <label for="gtc7-19-NR">NR</label>
                         <input
                             type="radio"
@@ -1341,8 +1352,10 @@
                             name="gtc7-19-val"
                             value="false"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="gtc8-19-val">R</label>
                         <input
                             type="radio"
@@ -1350,7 +1363,6 @@
                             name="gtc8-19-val"
                             value="true"
                         />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
                         <label for="gtc8-19-NR">NR</label>
                         <input
                             type="radio"
@@ -1358,145 +1370,162 @@
                             name="gtc8-19-val"
                             value="false"
                         />
+                    </div>
                     </td>
                 </tr>
                 <tr>
                     <td>Compressor running status</td>
                     <td>
-                        <label for="ftp1-20-val">R</label>
-                        <input
-                            type="radio"
-                            id="ftp1-20-val"
-                            name="ftp1-20-val"
-                            value="true"
-                        />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
-                        <label for="ftp1-20-NR">NR</label>
-                        <input
-                            type="radio"
-                            id="ftp1-20-NR"
-                            name="ftp1-20-val"
-                            value="false"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp1-20-val">R</label>
+                            <input
+                                type="radio"
+                                id="ftp1-20-val"
+                                name="ftp1-20-val"
+                                value="true"
+                            />
+                            <label for="ftp1-20-NR">NR</label>
+                            <input
+                                type="radio"
+                                id="ftp1-20-NR"
+                                name="ftp1-20-val"
+                                value="false"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp2-20-val">R</label>
-                        <input
-                            type="radio"
-                            id="ftp2-20-val"
-                            name="ftp2-20-val"
-                            value="true"
-                        />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
-                        <label for="ftp2-20-NR">NR</label>
-                        <input
-                            type="radio"
-                            id="ftp2-20-NR"
-                            name="ftp2-20-val"
-                            value="false"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp2-20-val">R</label>
+                            <input
+                                type="radio"
+                                id="ftp2-20-val"
+                                name="ftp2-20-val"
+                                value="true"
+                            />
+                            <label for="ftp2-20-NR">NR</label>
+                            <input
+                                type="radio"
+                                id="ftp2-20-NR"
+                                name="ftp2-20-val"
+                                value="false"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp3-20-val">R</label>
-                        <input
-                            type="radio"
-                            id="ftp3-20-val"
-                            name="ftp3-20-val"
-                            value="true"
-                        />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
-                        <label for="ftp3-20-NR">NR</label>
-                        <input
-                            type="radio"
-                            id="ftp3-20-NR"
-                            name="ftp3-20-val"
-                            value="false"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp3-20-val">R</label>
+                            <input
+                                type="radio"
+                                id="ftp3-20-val"
+                                name="ftp3-20-val"
+                                value="true"
+                            />
+                            <label for="ftp3-20-NR">NR</label>
+                            <input
+                                type="radio"
+                                id="ftp3-20-NR"
+                                name="ftp3-20-val"
+                                value="false"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp4-20-val">R</label>
-                        <input
-                            type="radio"
-                            id="ftp4-20-val"
-                            name="ftp4-20-val"
-                            value="true"
-                        />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
-                        <label for="ftp4-20-NR">NR</label>
-                        <input
-                            type="radio"
-                            id="ftp4-20-NR"
-                            name="ftp4-20-val"
-                            value="false"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp4-20-val">R</label>
+                            <input
+                                type="radio"
+                                id="ftp4-20-val"
+                                name="ftp4-20-val"
+                                value="true"
+                            />
+                            <label for="ftp4-20-NR">NR</label>
+                            <input
+                                type="radio"
+                                id="ftp4-20-NR"
+                                name="ftp4-20-val"
+                                value="false"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp5-20-val">R</label>
-                        <input
-                            type="radio"
-                            id="ftp5-20-val"
-                            name="ftp5-20-val"
-                            value="true"
-                        />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
-                        <label for="ftp5-20-NR">NR</label>
-                        <input
-                            type="radio"
-                            id="ftp5-20-NR"
-                            name="ftp5-20-val"
-                            value="false"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp5-20-val">R</label>
+                            <input
+                                type="radio"
+                                id="ftp5-20-val"
+                                name="ftp5-20-val"
+                                value="true"
+                            />
+                            <label for="ftp5-20-NR">NR</label>
+                            <input
+                                type="radio"
+                                id="ftp5-20-NR"
+                                name="ftp5-20-val"
+                                value="false"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp6-20-val">R</label>
-                        <input
-                            type="radio"
-                            id="ftp6-20-val"
-                            name="ftp6-20-val"
-                            value="true"
-                        />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
-                        <label for="ftp6-20-NR">NR</label>
-                        <input
-                            type="radio"
-                            id="ftp6-20-NR"
-                            name="ftp6-20-val"
-                            value="false"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp6-20-val">R</label>
+                            <input
+                                type="radio"
+                                id="ftp6-20-val"
+                                name="ftp6-20-val"
+                                value="true"
+                            />
+                            <label for="ftp6-20-NR">NR</label>
+                            <input
+                                type="radio"
+                                id="ftp6-20-NR"
+                                name="ftp6-20-val"
+                                value="false"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc7-20-val">R</label>
-                        <input
-                            type="radio"
-                            id="gtc7-20-val"
-                            name="gtc7-20-val"
-                            value="true"
-                        />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
-                        <label for="gtc7-20-NR">NR</label>
-                        <input
-                            type="radio"
-                            id="gtc7-20-NR"
-                            name="gtc7-20-val"
-                            value="false"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc7-20-val">R</label>
+                            <input
+                                type="radio"
+                                id="gtc7-20-val"
+                                name="gtc7-20-val"
+                                value="true"
+                            />
+                            <label for="gtc7-20-NR">NR</label>
+                            <input
+                                type="radio"
+                                id="gtc7-20-NR"
+                                name="gtc7-20-val"
+                                value="false"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc8-20-val">R</label>
-                        <input
-                            type="radio"
-                            id="gtc8-20-val"
-                            name="gtc8-20-val"
-                            value="true"
-                        />
-                        <span>&nbsp;&nbsp;&nbsp;</span>
-                        <label for="gtc8-20-NR">NR</label>
-                        <input
-                            type="radio"
-                            id="gtc8-20-NR"
-                            name="gtc8-20-val"
-                            value="false"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc8-20-val">R</label>
+                            <input
+                                type="radio"
+                                id="gtc8-20-val"
+                                name="gtc8-20-val"
+                                value="true"
+                            />
+                            <label for="gtc8-20-NR">NR</label>
+                            <input
+                                type="radio"
+                                id="gtc8-20-NR"
+                                name="gtc8-20-val"
+                                value="false"
+                            />
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -2130,7 +2159,7 @@
                     <th>Silo 8</th>
                 </tr>
                 <tr>
-                    <td>Silo level Pilot #1 (meter)</td>
+                    <td>Silo level Pilot #1</td>
                     <td>
                         <input
                             type="number"
@@ -2189,7 +2218,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Silo level Pilot #2 (meter)</td>
+                    <td>Silo level Pilot #2</td>
                     <td>
                         <input
                             type="number"
@@ -2248,7 +2277,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Silo level Pilot #3 (meter)</td>
+                    <td>Silo level Pilot #3</td>
                     <td>
                         <input
                             type="number"
@@ -2307,7 +2336,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Silo level Pilot #4 (meter)</td>
+                    <td>Silo level Pilot #4</td>
                     <td>
                         <input
                             type="number"
@@ -2520,637 +2549,871 @@
                 <tr>
                     <th>FTP1</th>
                     <td>
-                        <label for="ftp1-B101">B101</label
-                        ><input
-                            type="checkbox"
-                            id="ftp1-B101"
-                            name="ftp1-B101"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp1-B101">B101</label
+                            ><input
+                                type="checkbox"
+                                id="ftp1-B101"
+                                name="ftp1-B101"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp1-B102">B102</label
-                        ><input
-                            type="checkbox"
-                            id="ftp1-B102"
-                            name="ftp1-B102"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp1-B102">B102</label
+                            ><input
+                                type="checkbox"
+                                id="ftp1-B102"
+                                name="ftp1-B102"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp1-B103">B103</label
-                        ><input
-                            type="checkbox"
-                            id="ftp1-B103"
-                            name="ftp1-B103"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp1-B103">B103</label
+                            ><input
+                                type="checkbox"
+                                id="ftp1-B103"
+                                name="ftp1-B103"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp1-B104">B104</label
-                        ><input
-                            type="checkbox"
-                            id="ftp1-B104"
-                            name="ftp1-B104"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp1-B104">B104</label
+                            ><input
+                                type="checkbox"
+                                id="ftp1-B104"
+                                name="ftp1-B104"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp1-B105">B105</label
-                        ><input
-                            type="checkbox"
-                            id="ftp1-B105"
-                            name="ftp1-B105"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp1-B105">B105</label
+                            ><input
+                                type="checkbox"
+                                id="ftp1-B105"
+                                name="ftp1-B105"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp1-B106">B106</label
-                        ><input
-                            type="checkbox"
-                            id="ftp1-B106"
-                            name="ftp1-B106"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp1-B106">B106</label
+                            ><input
+                                type="checkbox"
+                                id="ftp1-B106"
+                                name="ftp1-B106"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp1-F107">F107</label
-                        ><input
-                            type="checkbox"
-                            id="ftp1-F107"
-                            name="ftp1-F107"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp1-F107">F107</label
+                            ><input
+                                type="checkbox"
+                                id="ftp1-F107"
+                                name="ftp1-F107"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp1-F108">F108</label
-                        ><input
-                            type="checkbox"
-                            id="ftp1-F108"
-                            name="ftp1-F108"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp1-F108">F108</label
+                            ><input
+                                type="checkbox"
+                                id="ftp1-F108"
+                                name="ftp1-F108"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp1-F109">F109</label
-                        ><input
-                            type="checkbox"
-                            id="ftp1-F109"
-                            name="ftp1-F109"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp1-F109">F109</label
+                            ><input
+                                type="checkbox"
+                                id="ftp1-F109"
+                                name="ftp1-F109"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp1-F110">F110</label
-                        ><input
-                            type="checkbox"
-                            id="ftp1-F110"
-                            name="ftp1-F110"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp1-F110">F110</label
+                            ><input
+                                type="checkbox"
+                                id="ftp1-F110"
+                                name="ftp1-F110"
+                            />
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <th>FTP2</th>
                     <td>
-                        <label for="ftp2-B201">B201</label
-                        ><input
-                            type="checkbox"
-                            id="ftp2-B201"
-                            name="ftp2-B201"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp2-B201">B201</label
+                            ><input
+                                type="checkbox"
+                                id="ftp2-B201"
+                                name="ftp2-B201"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp2-B202">B202</label
-                        ><input
-                            type="checkbox"
-                            id="ftp2-B202"
-                            name="ftp2-B202"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp2-B202">B202</label
+                            ><input
+                                type="checkbox"
+                                id="ftp2-B202"
+                                name="ftp2-B202"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp2-B203">B203</label
-                        ><input
-                            type="checkbox"
-                            id="ftp2-B203"
-                            name="ftp2-B203"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp2-B203">B203</label
+                            ><input
+                                type="checkbox"
+                                id="ftp2-B203"
+                                name="ftp2-B203"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp2-B204">B204</label
-                        ><input
-                            type="checkbox"
-                            id="ftp2-B204"
-                            name="ftp2-B204"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp2-B204">B204</label
+                            ><input
+                                type="checkbox"
+                                id="ftp2-B204"
+                                name="ftp2-B204"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp2-B205">B205</label
-                        ><input
-                            type="checkbox"
-                            id="ftp2-B205"
-                            name="ftp2-B205"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp2-B205">B205</label
+                            ><input
+                                type="checkbox"
+                                id="ftp2-B205"
+                                name="ftp2-B205"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp2-B206">B206</label
-                        ><input
-                            type="checkbox"
-                            id="ftp2-B206"
-                            name="ftp2-B206"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp2-B206">B206</label
+                            ><input
+                                type="checkbox"
+                                id="ftp2-B206"
+                                name="ftp2-B206"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp2-F207">F207</label
-                        ><input
-                            type="checkbox"
-                            id="ftp2-F207"
-                            name="ftp2-F207"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp2-F207">F207</label
+                            ><input
+                                type="checkbox"
+                                id="ftp2-F207"
+                                name="ftp2-F207"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp2-F208">F208</label
-                        ><input
-                            type="checkbox"
-                            id="ftp2-F208"
-                            name="ftp2-F208"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp2-F208">F208</label
+                            ><input
+                                type="checkbox"
+                                id="ftp2-F208"
+                                name="ftp2-F208"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp2-F209">F209</label
-                        ><input
-                            type="checkbox"
-                            id="ftp2-F209"
-                            name="ftp2-F209"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp2-F209">F209</label
+                            ><input
+                                type="checkbox"
+                                id="ftp2-F209"
+                                name="ftp2-F209"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp2-F210">F210</label
-                        ><input
-                            type="checkbox"
-                            id="ftp2-F210"
-                            name="ftp2-F210"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp2-F210">F210</label
+                            ><input
+                                type="checkbox"
+                                id="ftp2-F210"
+                                name="ftp2-F210"
+                            />
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <th>FTP3</th>
                     <td>
-                        <label for="ftp3-B301">B301</label
-                        ><input
-                            type="checkbox"
-                            id="ftp3-B301"
-                            name="ftp3-B301"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp3-B301">B301</label
+                            ><input
+                                type="checkbox"
+                                id="ftp3-B301"
+                                name="ftp3-B301"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp3-B302">B302</label
-                        ><input
-                            type="checkbox"
-                            id="ftp3-B302"
-                            name="ftp3-B302"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp3-B302">B302</label
+                            ><input
+                                type="checkbox"
+                                id="ftp3-B302"
+                                name="ftp3-B302"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp3-B303">B303</label
-                        ><input
-                            type="checkbox"
-                            id="ftp3-B303"
-                            name="ftp3-B303"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp3-B303">B303</label
+                            ><input
+                                type="checkbox"
+                                id="ftp3-B303"
+                                name="ftp3-B303"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp3-B304">B304</label
-                        ><input
-                            type="checkbox"
-                            id="ftp3-B304"
-                            name="ftp3-B304"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp3-B304">B304</label
+                            ><input
+                                type="checkbox"
+                                id="ftp3-B304"
+                                name="ftp3-B304"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp3-B305">B305</label
-                        ><input
-                            type="checkbox"
-                            id="ftp3-B305"
-                            name="ftp3-B305"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp3-B305">B305</label
+                            ><input
+                                type="checkbox"
+                                id="ftp3-B305"
+                                name="ftp3-B305"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp3-B306">B306</label
-                        ><input
-                            type="checkbox"
-                            id="ftp3-B306"
-                            name="ftp3-B306"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp3-B306">B306</label
+                            ><input
+                                type="checkbox"
+                                id="ftp3-B306"
+                                name="ftp3-B306"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp3-F307">F307</label
-                        ><input
-                            type="checkbox"
-                            id="ftp3-F307"
-                            name="ftp3-F307"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp3-F307">F307</label
+                            ><input
+                                type="checkbox"
+                                id="ftp3-F307"
+                                name="ftp3-F307"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp3-F308">F308</label
-                        ><input
-                            type="checkbox"
-                            id="ftp3-F308"
-                            name="ftp3-F308"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp3-F308">F308</label
+                            ><input
+                                type="checkbox"
+                                id="ftp3-F308"
+                                name="ftp3-F308"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp3-F309">F309</label
-                        ><input
-                            type="checkbox"
-                            id="ftp3-F309"
-                            name="ftp3-F309"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp3-F309">F309</label
+                            ><input
+                                type="checkbox"
+                                id="ftp3-F309"
+                                name="ftp3-F309"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp3-F310">F310</label
-                        ><input
-                            type="checkbox"
-                            id="ftp3-F310"
-                            name="ftp3-F310"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp3-F310">F310</label
+                            ><input
+                                type="checkbox"
+                                id="ftp3-F310"
+                                name="ftp3-F310"
+                            />
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <th>FTP4</th>
                     <td>
-                        <label for="ftp4-B401">B401</label
-                        ><input
-                            type="checkbox"
-                            id="ftp4-B401"
-                            name="ftp4-B401"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp4-B401">B401</label
+                            ><input
+                                type="checkbox"
+                                id="ftp4-B401"
+                                name="ftp4-B401"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp4-B402">B402</label
-                        ><input
-                            type="checkbox"
-                            id="ftp4-B402"
-                            name="ftp4-B402"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp4-B402">B402</label
+                            ><input
+                                type="checkbox"
+                                id="ftp4-B402"
+                                name="ftp4-B402"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp4-B403">B403</label
-                        ><input
-                            type="checkbox"
-                            id="ftp4-B403"
-                            name="ftp4-B403"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp4-B403">B403</label
+                            ><input
+                                type="checkbox"
+                                id="ftp4-B403"
+                                name="ftp4-B403"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp4-B404">B404</label
-                        ><input
-                            type="checkbox"
-                            id="ftp4-B404"
-                            name="ftp4-B404"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp4-B404">B404</label
+                            ><input
+                                type="checkbox"
+                                id="ftp4-B404"
+                                name="ftp4-B404"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp4-B405">B405</label
-                        ><input
-                            type="checkbox"
-                            id="ftp4-B405"
-                            name="ftp4-B405"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp4-B405">B405</label
+                            ><input
+                                type="checkbox"
+                                id="ftp4-B405"
+                                name="ftp4-B405"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp4-B406">B406</label
-                        ><input
-                            type="checkbox"
-                            id="ftp4-B406"
-                            name="ftp4-B406"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp4-B406">B406</label
+                            ><input
+                                type="checkbox"
+                                id="ftp4-B406"
+                                name="ftp4-B406"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp4-F407">F407</label
-                        ><input
-                            type="checkbox"
-                            id="ftp4-F407"
-                            name="ftp4-F407"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp4-F407">F407</label
+                            ><input
+                                type="checkbox"
+                                id="ftp4-F407"
+                                name="ftp4-F407"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp4-F408">F408</label
-                        ><input
-                            type="checkbox"
-                            id="ftp4-F408"
-                            name="ftp4-F408"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp4-F408">F408</label
+                            ><input
+                                type="checkbox"
+                                id="ftp4-F408"
+                                name="ftp4-F408"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp4-F409">F409</label
-                        ><input
-                            type="checkbox"
-                            id="ftp4-F409"
-                            name="ftp4-F409"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp4-F409">F409</label
+                            ><input
+                                type="checkbox"
+                                id="ftp4-F409"
+                                name="ftp4-F409"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp4-F410">F410</label
-                        ><input
-                            type="checkbox"
-                            id="ftp4-F410"
-                            name="ftp4-F410"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp4-F410">F410</label
+                            ><input
+                                type="checkbox"
+                                id="ftp4-F410"
+                                name="ftp4-F410"
+                            />
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <th>FTP5</th>
                     <td>
-                        <label for="ftp5-B501">B501</label
-                        ><input
-                            type="checkbox"
-                            id="ftp5-B501"
-                            name="ftp5-B501"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp5-B501">B501</label
+                            ><input
+                                type="checkbox"
+                                id="ftp5-B501"
+                                name="ftp5-B501"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp5-B502">B502</label
-                        ><input
-                            type="checkbox"
-                            id="ftp5-B502"
-                            name="ftp5-B502"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp5-B502">B502</label
+                            ><input
+                                type="checkbox"
+                                id="ftp5-B502"
+                                name="ftp5-B502"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp5-B503">B503</label
-                        ><input
-                            type="checkbox"
-                            id="ftp5-B503"
-                            name="ftp5-B503"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp5-B503">B503</label
+                            ><input
+                                type="checkbox"
+                                id="ftp5-B503"
+                                name="ftp5-B503"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp5-B504">B504</label
-                        ><input
-                            type="checkbox"
-                            id="ftp5-B504"
-                            name="ftp5-B504"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp5-B504">B504</label
+                            ><input
+                                type="checkbox"
+                                id="ftp5-B504"
+                                name="ftp5-B504"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp5-B505">B505</label
-                        ><input
-                            type="checkbox"
-                            id="ftp5-B505"
-                            name="ftp5-B505"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp5-B505">B505</label
+                            ><input
+                                type="checkbox"
+                                id="ftp5-B505"
+                                name="ftp5-B505"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp5-B506">B506</label
-                        ><input
-                            type="checkbox"
-                            id="ftp5-B506"
-                            name="ftp5-B506"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp5-B506">B506</label
+                            ><input
+                                type="checkbox"
+                                id="ftp5-B506"
+                                name="ftp5-B506"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp5-F507">F507</label
-                        ><input
-                            type="checkbox"
-                            id="ftp5-F507"
-                            name="ftp5-F507"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp5-F507">F507</label
+                            ><input
+                                type="checkbox"
+                                id="ftp5-F507"
+                                name="ftp5-F507"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp5-F508">F508</label
-                        ><input
-                            type="checkbox"
-                            id="ftp5-F508"
-                            name="ftp5-F508"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp5-F508">F508</label
+                            ><input
+                                type="checkbox"
+                                id="ftp5-F508"
+                                name="ftp5-F508"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp5-F509">F509</label
-                        ><input
-                            type="checkbox"
-                            id="ftp5-F509"
-                            name="ftp5-F509"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp5-F509">F509</label
+                            ><input
+                                type="checkbox"
+                                id="ftp5-F509"
+                                name="ftp5-F509"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp5-F510">F510</label
-                        ><input
-                            type="checkbox"
-                            id="ftp5-F510"
-                            name="ftp5-F510"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp5-F510">F510</label
+                            ><input
+                                type="checkbox"
+                                id="ftp5-F510"
+                                name="ftp5-F510"
+                            />
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <th>FTP6</th>
                     <td>
-                        <label for="ftp6-B601">B601</label
-                        ><input
-                            type="checkbox"
-                            id="ftp6-B601"
-                            name="ftp6-B601"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp6-B601">B601</label
+                            ><input
+                                type="checkbox"
+                                id="ftp6-B601"
+                                name="ftp6-B601"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp6-B602">B602</label
-                        ><input
-                            type="checkbox"
-                            id="ftp6-B602"
-                            name="ftp6-B602"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp6-B602">B602</label
+                            ><input
+                                type="checkbox"
+                                id="ftp6-B602"
+                                name="ftp6-B602"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp6-B603">B603</label
-                        ><input
-                            type="checkbox"
-                            id="ftp6-B603"
-                            name="ftp6-B603"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp6-B603">B603</label
+                            ><input
+                                type="checkbox"
+                                id="ftp6-B603"
+                                name="ftp6-B603"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp6-B604">B604</label
-                        ><input
-                            type="checkbox"
-                            id="ftp6-B604"
-                            name="ftp6-B604"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp6-B604">B604</label
+                            ><input
+                                type="checkbox"
+                                id="ftp6-B604"
+                                name="ftp6-B604"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp6-B605">B605</label
-                        ><input
-                            type="checkbox"
-                            id="ftp6-B605"
-                            name="ftp6-B605"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp6-B605">B605</label
+                            ><input
+                                type="checkbox"
+                                id="ftp6-B605"
+                                name="ftp6-B605"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp6-B606">B606</label
-                        ><input
-                            type="checkbox"
-                            id="ftp6-B606"
-                            name="ftp6-B606"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp6-B606">B606</label
+                            ><input
+                                type="checkbox"
+                                id="ftp6-B606"
+                                name="ftp6-B606"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp6-F607">F607</label
-                        ><input
-                            type="checkbox"
-                            id="ftp6-F607"
-                            name="ftp6-F607"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp6-F607">F607</label
+                            ><input
+                                type="checkbox"
+                                id="ftp6-F607"
+                                name="ftp6-F607"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp6-F608">F608</label
-                        ><input
-                            type="checkbox"
-                            id="ftp6-F608"
-                            name="ftp6-F608"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp6-F608">F608</label
+                            ><input
+                                type="checkbox"
+                                id="ftp6-F608"
+                                name="ftp6-F608"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp6-F609">F609</label
-                        ><input
-                            type="checkbox"
-                            id="ftp6-F609"
-                            name="ftp6-F609"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp6-F609">F609</label
+                            ><input
+                                type="checkbox"
+                                id="ftp6-F609"
+                                name="ftp6-F609"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="ftp6-F610">F610</label
-                        ><input
-                            type="checkbox"
-                            id="ftp6-F610"
-                            name="ftp6-F610"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="ftp6-F610">F610</label
+                            ><input
+                                type="checkbox"
+                                id="ftp6-F610"
+                                name="ftp6-F610"
+                            />
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <th>GTC7</th>
                     <td>
-                        <label for="gtc7-B701">B701</label
-                        ><input
-                            type="checkbox"
-                            id="gtc7-B701"
-                            name="gtc7-B701"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc7-B701">B701</label
+                            ><input
+                                type="checkbox"
+                                id="gtc7-B701"
+                                name="gtc7-B701"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc7-B702">B702</label
-                        ><input
-                            type="checkbox"
-                            id="gtc7-B702"
-                            name="gtc7-B702"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc7-B702">B702</label
+                            ><input
+                                type="checkbox"
+                                id="gtc7-B702"
+                                name="gtc7-B702"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc7-B703">B703</label
-                        ><input
-                            type="checkbox"
-                            id="gtc7-B703"
-                            name="gtc7-B703"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc7-B703">B703</label
+                            ><input
+                                type="checkbox"
+                                id="gtc7-B703"
+                                name="gtc7-B703"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc7-B704">B704</label
-                        ><input
-                            type="checkbox"
-                            id="gtc7-B704"
-                            name="gtc7-B704"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc7-B704">B704</label
+                            ><input
+                                type="checkbox"
+                                id="gtc7-B704"
+                                name="gtc7-B704"
+                            />
+                        </div>
                     </td>
+                    <div class="checkbox-container">
+
+                    </div>
                     <td style="background-color: gray"></td>
                     <td style="background-color: gray"></td>
                     <td>
-                        <label for="gtc7-F707">F707</label
-                        ><input
-                            type="checkbox"
-                            id="gtc7-F707"
-                            name="gtc7-F707"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc7-F707">F707</label
+                            ><input
+                                type="checkbox"
+                                id="gtc7-F707"
+                                name="gtc7-F707"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc7-F708">F708</label
-                        ><input
-                            type="checkbox"
-                            id="gtc7-F708"
-                            name="gtc7-F708"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc7-F708">F708</label
+                            ><input
+                                type="checkbox"
+                                id="gtc7-F708"
+                                name="gtc7-F708"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc7-F709">F709</label
-                        ><input
-                            type="checkbox"
-                            id="gtc7-F709"
-                            name="gtc7-F709"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc7-F709">F709</label
+                            ><input
+                                type="checkbox"
+                                id="gtc7-F709"
+                                name="gtc7-F709"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc7-F710">F710</label
-                        ><input
-                            type="checkbox"
-                            id="gtc7-F710"
-                            name="gtc7-F710"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc7-F710">F710</label
+                            ><input
+                                type="checkbox"
+                                id="gtc7-F710"
+                                name="gtc7-F710"
+                            />
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <th>GTC8</th>
                     <td>
-                        <label for="gtc8-B801">B801</label
-                        ><input
-                            type="checkbox"
-                            id="gtc8-B801"
-                            name="gtc8-B801"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc8-B801">B801</label
+                            ><input
+                                type="checkbox"
+                                id="gtc8-B801"
+                                name="gtc8-B801"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc8-B802">B802</label
-                        ><input
-                            type="checkbox"
-                            id="gtc8-B802"
-                            name="gtc8-B802"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc8-B802">B802</label
+                            ><input
+                                type="checkbox"
+                                id="gtc8-B802"
+                                name="gtc8-B802"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc8-B803">B803</label
-                        ><input
-                            type="checkbox"
-                            id="gtc8-B803"
-                            name="gtc8-B803"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc8-B803">B803</label
+                            ><input
+                                type="checkbox"
+                                id="gtc8-B803"
+                                name="gtc8-B803"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc8-B804">B804</label
-                        ><input
-                            type="checkbox"
-                            id="gtc8-B804"
-                            name="gtc8-B804"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc8-B804">B804</label
+                            ><input
+                                type="checkbox"
+                                id="gtc8-B804"
+                                name="gtc8-B804"
+                            />
+                        </div>
                     </td>
+                    <div class="checkbox-container">
+
+                    </div>
                     <td style="background-color: gray"></td>
                     <td style="background-color: gray"></td>
                     <td>
-                        <label for="gtc8-F807">F807</label
-                        ><input
-                            type="checkbox"
-                            id="gtc8-F807"
-                            name="gtc8-F807"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc8-F807">F807</label
+                            ><input
+                                type="checkbox"
+                                id="gtc8-F807"
+                                name="gtc8-F807"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc8-F808">F808</label
-                        ><input
-                            type="checkbox"
-                            id="gtc8-F808"
-                            name="gtc8-F808"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc8-F808">F808</label
+                            ><input
+                                type="checkbox"
+                                id="gtc8-F808"
+                                name="gtc8-F808"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc8-F809">F809</label
-                        ><input
-                            type="checkbox"
-                            id="gtc8-F809"
-                            name="gtc8-F809"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc8-F809">F809</label
+                            ><input
+                                type="checkbox"
+                                id="gtc8-F809"
+                                name="gtc8-F809"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="gtc8-F810">F810</label
-                        ><input
-                            type="checkbox"
-                            id="gtc8-F810"
-                            name="gtc8-F810"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="gtc8-F810">F810</label
+                            ><input
+                                type="checkbox"
+                                id="gtc8-F810"
+                                name="gtc8-F810"
+                            />
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -3159,419 +3422,599 @@
                 <tr>
                     <th>PLC2</th>
                     <td>
-                        <label for="plc2-av2">AV2 </label
-                        ><input type="checkbox" id="plc2-av2" name="plc2-av2" />
+                        <div class="checkbox-container">
+
+                            <label for="plc2-av2">AV2 </label
+                            ><input type="checkbox" id="plc2-av2" name="plc2-av2" />
+                        </td>
+                        </div>
+                    <td>
+                        <div class="checkbox-container">
+
+                            <label for="plc2-av4">AV4 </label
+                            ><input type="checkbox" id="plc2-av4" name="plc2-av4" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc2-av4">AV4 </label
-                        ><input type="checkbox" id="plc2-av4" name="plc2-av4" />
+                        <div class="checkbox-container">
+
+                            <label for="plc2-av6">AV6 </label
+                            ><input type="checkbox" id="plc2-av6" name="plc2-av6" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc2-av6">AV6 </label
-                        ><input type="checkbox" id="plc2-av6" name="plc2-av6" />
+                        <div class="checkbox-container">
+
+                            <label for="plc2-as2">AS2 </label
+                            ><input type="checkbox" id="plc2-as2" name="plc2-as2" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc2-as2">AS2 </label
-                        ><input type="checkbox" id="plc2-as2" name="plc2-as2" />
+                        <div class="checkbox-container">
+
+                            <label for="plc2-as4">AS4 </label
+                            ><input type="checkbox" id="plc2-as4" name="plc2-as4" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc2-as4">AS4 </label
-                        ><input type="checkbox" id="plc2-as4" name="plc2-as4" />
+                        <div class="checkbox-container">
+
+                            <label for="plc2-as6">AS6 </label
+                            ><input type="checkbox" id="plc2-as6" name="plc2-as6" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc2-as6">AS6 </label
-                        ><input type="checkbox" id="plc2-as6" name="plc2-as6" />
+                        <div class="checkbox-container">
+
+                            <label for="plc2-an5">AN5 </label
+                            ><input type="checkbox" id="plc2-an5" name="plc2-an5" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc2-an5">AN5 </label
-                        ><input type="checkbox" id="plc2-an5" name="plc2-an5" />
+                        <div class="checkbox-container">
+
+                            <label for="plc2-an6">AN6 </label
+                            ><input type="checkbox" id="plc2-an6" name="plc2-an6" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc2-an6">AN6 </label
-                        ><input type="checkbox" id="plc2-an6" name="plc2-an6" />
+                        <div class="checkbox-container">
+
+                            <label for="plc2-an7">AN7 </label
+                            ><input type="checkbox" id="plc2-an7" name="plc2-an7" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc2-an7">AN7 </label
-                        ><input type="checkbox" id="plc2-an7" name="plc2-an7" />
-                    </td>
-                    <td>
-                        <label for="plc2-an8">AN8 </label
-                        ><input type="checkbox" id="plc2-an8" name="plc2-an8" />
+                        <div class="checkbox-container">
+
+                            <label for="plc2-an8">AN8 </label
+                            ><input type="checkbox" id="plc2-an8" name="plc2-an8" />
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <th>PLC3</th>
                     <td>
-                        <label for="plc3-av1">AV1 </label
-                        ><input type="checkbox" id="plc3-av1" name="plc3-av1" />
+                        <div class="checkbox-container">
+
+                            <label for="plc3-av1">AV1 </label
+                            ><input type="checkbox" id="plc3-av1" name="plc3-av1" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc3-av3">AV3 </label
-                        ><input type="checkbox" id="plc3-av3" name="plc3-av3" />
+                        <div class="checkbox-container">
+
+                            <label for="plc3-av3">AV3 </label
+                            ><input type="checkbox" id="plc3-av3" name="plc3-av3" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc3-av5">AV5 </label
-                        ><input type="checkbox" id="plc3-av5" name="plc3-av5" />
+                        <div class="checkbox-container">
+
+                            <label for="plc3-av5">AV5 </label
+                            ><input type="checkbox" id="plc3-av5" name="plc3-av5" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc3-as1">AS1 </label
-                        ><input type="checkbox" id="plc3-as1" name="plc3-as1" />
+                        <div class="checkbox-container">
+
+                            <label for="plc3-as1">AS1 </label
+                            ><input type="checkbox" id="plc3-as1" name="plc3-as1" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc3-as3">AS3 </label
-                        ><input type="checkbox" id="plc3-as3" name="plc3-as3" />
+                        <div class="checkbox-container">
+
+                            <label for="plc3-as3">AS3 </label
+                            ><input type="checkbox" id="plc3-as3" name="plc3-as3" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc3-as5">AS5 </label
-                        ><input type="checkbox" id="plc3-as5" name="plc3-as5" />
+                        <div class="checkbox-container">
+
+                            <label for="plc3-as5">AS5 </label
+                            ><input type="checkbox" id="plc3-as5" name="plc3-as5" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc3-an1">AN1 </label
-                        ><input type="checkbox" id="plc3-an1" name="plc3-an1" />
+                        <div class="checkbox-container">
+
+                            <label for="plc3-an1">AN1 </label
+                            ><input type="checkbox" id="plc3-an1" name="plc3-an1" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc3-an2">AN2 </label
-                        ><input type="checkbox" id="plc3-an2" name="plc3-an2" />
+                        <div class="checkbox-container">
+
+                            <label for="plc3-an2">AN2 </label
+                            ><input type="checkbox" id="plc3-an2" name="plc3-an2" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc3-an3">AN3 </label
-                        ><input type="checkbox" id="plc3-an3" name="plc3-an3" />
+                        <div class="checkbox-container">
+
+                            <label for="plc3-an3">AN3 </label
+                            ><input type="checkbox" id="plc3-an3" name="plc3-an3" />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc3-an4">AN4 </label
-                        ><input type="checkbox" id="plc3-an4" name="plc3-an4" />
+                        <div class="checkbox-container">
+
+                            <label for="plc3-an4">AN4 </label
+                            ><input type="checkbox" id="plc3-an4" name="plc3-an4" />
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <th>SILO5</th>
                     <td>
-                        <label for="plc4-BLR5-1">BLR5.1 </label
-                        ><input
-                            type="checkbox"
-                            id="plc4-BLR5-1"
-                            name="plc4-BLR5-1"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc4-BLR5-1">BLR5.1 </label
+                            ><input
+                                type="checkbox"
+                                id="plc4-BLR5-1"
+                                name="plc4-BLR5-1"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc4-BLR5-2">BLR5.2 </label
-                        ><input
-                            type="checkbox"
-                            id="plc4-BLR5-2"
-                            name="plc4-BLR5-2"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc4-BLR5-2">BLR5.2 </label
+                            ><input
+                                type="checkbox"
+                                id="plc4-BLR5-2"
+                                name="plc4-BLR5-2"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc4-BLT5-1">BLT5.1 </label
-                        ><input
-                            type="checkbox"
-                            id="plc4-BLT5-1"
-                            name="plc4-BLT5-1"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc4-BLT5-1">BLT5.1 </label
+                            ><input
+                                type="checkbox"
+                                id="plc4-BLT5-1"
+                                name="plc4-BLT5-1"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc4-BLT5-2">BLT5.2 </label
-                        ><input
-                            type="checkbox"
-                            id="plc4-BLT5-2"
-                            name="plc4-BLT5-2"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc4-BLT5-2">BLT5.2 </label
+                            ><input
+                                type="checkbox"
+                                id="plc4-BLT5-2"
+                                name="plc4-BLT5-2"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc4-BLB5-1">BLB5.1 </label
-                        ><input
-                            type="checkbox"
-                            id="plc4-BLB5-1"
-                            name="plc4-BLB5-1"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc4-BLB5-1">BLB5.1 </label
+                            ><input
+                                type="checkbox"
+                                id="plc4-BLB5-1"
+                                name="plc4-BLB5-1"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc4-BLB5-2">BLB5.2 </label
-                        ><input
-                            type="checkbox"
-                            id="plc4-BLB5-2"
-                            name="plc4-BLB5-2"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc4-BLB5-2">BLB5.2 </label
+                            ><input
+                                type="checkbox"
+                                id="plc4-BLB5-2"
+                                name="plc4-BLB5-2"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc4-BLA5-1">BLA5.1 </label
-                        ><input
-                            type="checkbox"
-                            id="plc4-BLA5-1"
-                            name="plc4-BLA5-1"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc4-BLA5-1">BLA5.1 </label
+                            ><input
+                                type="checkbox"
+                                id="plc4-BLA5-1"
+                                name="plc4-BLA5-1"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc4-BLA5-2">BLA5.2 </label
-                        ><input
-                            type="checkbox"
-                            id="plc4-BLA5-2"
-                            name="plc4-BLA5-2"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc4-BLA5-2">BLA5.2 </label
+                            ><input
+                                type="checkbox"
+                                id="plc4-BLA5-2"
+                                name="plc4-BLA5-2"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc4-BLF5-1">BLF5.1 </label
-                        ><input
-                            type="checkbox"
-                            id="plc4-BLF5-1"
-                            name="plc4-BLF5-1"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc4-BLF5-1">BLF5.1 </label
+                            ><input
+                                type="checkbox"
+                                id="plc4-BLF5-1"
+                                name="plc4-BLF5-1"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc4-BLF5-2">BLF5.2 </label
-                        ><input
-                            type="checkbox"
-                            id="plc4-BLF5-2"
-                            name="plc4-BLF5-2"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc4-BLF5-2">BLF5.2 </label
+                            ><input
+                                type="checkbox"
+                                id="plc4-BLF5-2"
+                                name="plc4-BLF5-2"
+                            />
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <th>SILO7</th>
                     <td>
-                        <label for="plc5-BLR7-1">BLR7.1 </label
-                        ><input
-                            type="checkbox"
-                            id="plc5-BLR7-1"
-                            name="plc5-BLR7-1"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc5-BLR7-1">BLR7.1 </label
+                            ><input
+                                type="checkbox"
+                                id="plc5-BLR7-1"
+                                name="plc5-BLR7-1"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc5-BLR7-2">BLR7.2 </label
-                        ><input
-                            type="checkbox"
-                            id="plc5-BLR7-2"
-                            name="plc5-BLR7-2"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc5-BLR7-2">BLR7.2 </label
+                            ><input
+                                type="checkbox"
+                                id="plc5-BLR7-2"
+                                name="plc5-BLR7-2"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc5-BLT7-1">BLT7.1 </label
-                        ><input
-                            type="checkbox"
-                            id="plc5-BLT7-1"
-                            name="plc5-BLT7-1"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc5-BLT7-1">BLT7.1 </label
+                            ><input
+                                type="checkbox"
+                                id="plc5-BLT7-1"
+                                name="plc5-BLT7-1"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc5-BLT7-2">BLT7.2 </label
-                        ><input
-                            type="checkbox"
-                            id="plc5-BLT7-2"
-                            name="plc5-BLT7-2"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc5-BLT7-2">BLT7.2 </label
+                            ><input
+                                type="checkbox"
+                                id="plc5-BLT7-2"
+                                name="plc5-BLT7-2"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc5-BLB7-1">BLB7.1 </label
-                        ><input
-                            type="checkbox"
-                            id="plc5-BLB7-1"
-                            name="plc5-BLB7-1"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc5-BLB7-1">BLB7.1 </label
+                            ><input
+                                type="checkbox"
+                                id="plc5-BLB7-1"
+                                name="plc5-BLB7-1"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc5-BLB7-2">BLB7.2 </label
-                        ><input
-                            type="checkbox"
-                            id="plc5-BLB7-2"
-                            name="plc5-BLB7-2"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc5-BLB7-2">BLB7.2 </label
+                            ><input
+                                type="checkbox"
+                                id="plc5-BLB7-2"
+                                name="plc5-BLB7-2"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc5-BLA7-1">BLA7.1 </label
-                        ><input
-                            type="checkbox"
-                            id="plc5-BLA7-1"
-                            name="plc5-BLA7-1"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc5-BLA7-1">BLA7.1 </label
+                            ><input
+                                type="checkbox"
+                                id="plc5-BLA7-1"
+                                name="plc5-BLA7-1"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc5-BLA7-2">BLA7.2 </label
-                        ><input
-                            type="checkbox"
-                            id="plc5-BLA7-2"
-                            name="plc5-BLA7-2"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc5-BLA7-2">BLA7.2 </label
+                            ><input
+                                type="checkbox"
+                                id="plc5-BLA7-2"
+                                name="plc5-BLA7-2"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc5-BLF7-1">BLF7.1 </label
-                        ><input
-                            type="checkbox"
-                            id="plc5-BLF7-1"
-                            name="plc5-BLF7-1"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc5-BLF7-1">BLF7.1 </label
+                            ><input
+                                type="checkbox"
+                                id="plc5-BLF7-1"
+                                name="plc5-BLF7-1"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc5-BLF7-2">BLF7.2 </label
-                        ><input
-                            type="checkbox"
-                            id="plc5-BLF7-2"
-                            name="plc5-BLF7-2"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc5-BLF7-2">BLF7.2 </label
+                            ><input
+                                type="checkbox"
+                                id="plc5-BLF7-2"
+                                name="plc5-BLF7-2"
+                            />
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <th>SILO6</th>
                     <td>
-                        <label for="plc6-FN6109">FN6109 </label
-                        ><input
-                            type="checkbox"
-                            id="plc6-FN6109"
-                            name="plc6-FN6109"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc6-FN6109">FN6109 </label
+                            ><input
+                                type="checkbox"
+                                id="plc6-FN6109"
+                                name="plc6-FN6109"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc6-FN6110">FN6110 </label
-                        ><input
-                            type="checkbox"
-                            id="plc6-FN6110"
-                            name="plc6-FN6110"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc6-FN6110">FN6110 </label
+                            ><input
+                                type="checkbox"
+                                id="plc6-FN6110"
+                                name="plc6-FN6110"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc6-FN6113">FN6113 </label
-                        ><input
-                            type="checkbox"
-                            id="plc6-FN6113"
-                            name="plc6-FN6113"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc6-FN6113">FN6113 </label
+                            ><input
+                                type="checkbox"
+                                id="plc6-FN6113"
+                                name="plc6-FN6113"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc6-FN6114">FN6114 </label
-                        ><input
-                            type="checkbox"
-                            id="plc6-FN6114"
-                            name="plc6-FN6114"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc6-FN6114">FN6114 </label
+                            ><input
+                                type="checkbox"
+                                id="plc6-FN6114"
+                                name="plc6-FN6114"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc6-BL6103">BL6103 </label
-                        ><input
-                            type="checkbox"
-                            id="plc6-BL6103"
-                            name="plc6-BL6103"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc6-BL6103">BL6103 </label
+                            ><input
+                                type="checkbox"
+                                id="plc6-BL6103"
+                                name="plc6-BL6103"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc6-BL6104">BL6104 </label
-                        ><input
-                            type="checkbox"
-                            id="plc6-BL6104"
-                            name="plc6-BL6104"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc6-BL6104">BL6104 </label
+                            ><input
+                                type="checkbox"
+                                id="plc6-BL6104"
+                                name="plc6-BL6104"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc6-BL6107">BL6107 </label
-                        ><input
-                            type="checkbox"
-                            id="plc6-BL6107"
-                            name="plc6-BL6107"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc6-BL6107">BL6107 </label
+                            ><input
+                                type="checkbox"
+                                id="plc6-BL6107"
+                                name="plc6-BL6107"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc6-BL6108">BL6108 </label
-                        ><input
-                            type="checkbox"
-                            id="plc6-BL6108"
-                            name="plc6-BL6108"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc6-BL6108">BL6108 </label
+                            ><input
+                                type="checkbox"
+                                id="plc6-BL6108"
+                                name="plc6-BL6108"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc6-BL6115">BL6115 </label
-                        ><input
-                            type="checkbox"
-                            id="plc6-BL6115"
-                            name="plc6-BL6115"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc6-BL6115">BL6115 </label
+                            ><input
+                                type="checkbox"
+                                id="plc6-BL6115"
+                                name="plc6-BL6115"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc6-BL6116">BL6116 </label
-                        ><input
-                            type="checkbox"
-                            id="plc6-BL6116"
-                            name="plc6-BL6116"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc6-BL6116">BL6116 </label
+                            ><input
+                                type="checkbox"
+                                id="plc6-BL6116"
+                                name="plc6-BL6116"
+                            />
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <th>SILO8</th>
                     <td>
-                        <label for="plc7-FN8125">FN8125 </label
-                        ><input
-                            type="checkbox"
-                            id="plc7-FN8125"
-                            name="plc7-FN8125"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc7-FN8125">FN8125 </label
+                            ><input
+                                type="checkbox"
+                                id="plc7-FN8125"
+                                name="plc7-FN8125"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc7-FN8126">FN8126 </label
-                        ><input
-                            type="checkbox"
-                            id="plc7-FN8126"
-                            name="plc7-FN8126"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc7-FN8126">FN8126 </label
+                            ><input
+                                type="checkbox"
+                                id="plc7-FN8126"
+                                name="plc7-FN8126"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc7-FN8129">FN8129 </label
-                        ><input
-                            type="checkbox"
-                            id="plc7-FN8129"
-                            name="plc7-FN8129"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc7-FN8129">FN8129 </label
+                            ><input
+                                type="checkbox"
+                                id="plc7-FN8129"
+                                name="plc7-FN8129"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc7-FN8130">FN8130 </label
-                        ><input
-                            type="checkbox"
-                            id="plc7-FN8130"
-                            name="plc7-FN8130"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc7-FN8130">FN8130 </label
+                            ><input
+                                type="checkbox"
+                                id="plc7-FN8130"
+                                name="plc7-FN8130"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc7-BL8119">BL8119 </label
-                        ><input
-                            type="checkbox"
-                            id="plc7-BL8119"
-                            name="plc7-BL8119"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc7-BL8119">BL8119 </label
+                            ><input
+                                type="checkbox"
+                                id="plc7-BL8119"
+                                name="plc7-BL8119"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc7-BL8120">BL8120 </label
-                        ><input
-                            type="checkbox"
-                            id="plc7-BL8120"
-                            name="plc7-BL8120"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc7-BL8120">BL8120 </label
+                            ><input
+                                type="checkbox"
+                                id="plc7-BL8120"
+                                name="plc7-BL8120"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc7-BL8123">BL8123 </label
-                        ><input
-                            type="checkbox"
-                            id="plc7-BL8123"
-                            name="plc7-BL8123"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc7-BL8123">BL8123 </label
+                            ><input
+                                type="checkbox"
+                                id="plc7-BL8123"
+                                name="plc7-BL8123"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc7-BL8124">BL8124 </label
-                        ><input
-                            type="checkbox"
-                            id="plc7-BL8124"
-                            name="plc7-BL8124"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc7-BL8124">BL8124 </label
+                            ><input
+                                type="checkbox"
+                                id="plc7-BL8124"
+                                name="plc7-BL8124"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc7-BL8131">BL8131 </label
-                        ><input
-                            type="checkbox"
-                            id="plc7-BL8131"
-                            name="plc7-BL8131"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc7-BL8131">BL8131 </label
+                            ><input
+                                type="checkbox"
+                                id="plc7-BL8131"
+                                name="plc7-BL8131"
+                            />
+                        </div>
                     </td>
                     <td>
-                        <label for="plc7-BL8132">BL8132 </label
-                        ><input
-                            type="checkbox"
-                            id="plc7-BL8132"
-                            name="plc7-BL8132"
-                        />
+                        <div class="checkbox-container">
+
+                            <label for="plc7-BL8132">BL8132 </label
+                            ><input
+                                type="checkbox"
+                                id="plc7-BL8132"
+                                name="plc7-BL8132"
+                            />
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -3765,7 +4208,8 @@
                 <tr>
                     <th>SILO 1</th>
                     <td>AV 23</td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc2-av23-R">R</label
                         ><input
                             type="radio"
@@ -3773,8 +4217,10 @@
                             name="plc2-av23-R"
                             value="true"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc2-av23-NR">NR</label
                         ><input
                             type="radio"
@@ -3782,11 +4228,13 @@
                             name="plc2-av23-R"
                             value="false"
                         />
+                    </div>
                     </td>
 
                     <th>SILO 5</th>
                     <td>DU 11</td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc4-du11-R">R</label
                         ><input
                             type="radio"
@@ -3794,8 +4242,10 @@
                             name="plc4-du11-R"
                             value="true"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc4-du11-NR">NR</label
                         ><input
                             type="radio"
@@ -3803,10 +4253,12 @@
                             name="plc4-du11-R"
                             value="false"
                         />
+                    </div>
                     </td>
 
                     <td>DU 41</td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc4-du41-R">R</label
                         ><input
                             type="radio"
@@ -3814,8 +4266,10 @@
                             name="plc4-du41-R"
                             value="true"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc4-du41-NR">NR</label
                         ><input
                             type="radio"
@@ -3823,12 +4277,14 @@
                             name="plc4-du41-R"
                             value="false"
                         />
+                    </div>
                     </td>
                 </tr>
                 <tr>
                     <th>SILO 2</th>
                     <td>AV 22</td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc2-av22-R">R</label
                         ><input
                             type="radio"
@@ -3836,8 +4292,10 @@
                             name="plc2-av22-R"
                             value="true"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc2-av22-NR">NR</label
                         ><input
                             type="radio"
@@ -3845,11 +4303,13 @@
                             name="plc2-av22-R"
                             value="false"
                         />
+                    </div>
                     </td>
 
                     <th>SILO 7</th>
                     <td>DU 29</td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc5-du29-R">R</label
                         ><input
                             type="radio"
@@ -3857,8 +4317,10 @@
                             name="plc5-du29-R"
                             value="true"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc5-du29-NR">NR</label
                         ><input
                             type="radio"
@@ -3866,10 +4328,12 @@
                             name="plc5-du29-R"
                             value="false"
                         />
+                    </div>
                     </td>
 
                     <td>DU 42</td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc5-du42-R">R</label
                         ><input
                             type="radio"
@@ -3877,8 +4341,10 @@
                             name="plc5-du42-R"
                             value="true"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc5-du42-NR">NR</label
                         ><input
                             type="radio"
@@ -3886,12 +4352,14 @@
                             name="plc5-du42-R"
                             value="false"
                         />
+                    </div>
                     </td>
                 </tr>
                 <tr>
                     <th>SILO 3</th>
                     <td>AV 21</td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc3-av21-R">R</label
                         ><input
                             type="radio"
@@ -3899,8 +4367,10 @@
                             name="plc3-av21-R"
                             value="true"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc3-av21-NR">NR</label
                         ><input
                             type="radio"
@@ -3908,49 +4378,59 @@
                             name="plc3-av21-R"
                             value="false"
                         />
+                    </div>
                     </td>
 
                     <th>SILO 6</th>
                     <td>DU 261</td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc6-du261A">A </label
                         ><input
                             type="checkbox"
                             id="plc6-du261A"
                             name="plc6-du261A"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc6-du261B">B </label
                         ><input
                             type="checkbox"
                             id="plc6-du261B"
                             name="plc6-du261B"
                         />
+                    </div>
                     </td>
 
                     <td>DU 291</td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc6-du291A">A </label
                         ><input
                             type="checkbox"
                             id="plc6-du291A"
                             name="plc6-du291A"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc6-du291B">B </label
                         ><input
                             type="checkbox"
                             id="plc6-du291B"
                             name="plc6-du291B"
                         />
+                    </div>
                     </td>
                 </tr>
                 <tr>
                     <th>SILO 4</th>
                     <td>AV 20</td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc3-av20-R">R</label
                         ><input
                             type="radio"
@@ -3958,8 +4438,10 @@
                             name="plc3-av20-R"
                             value="true"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc3-av20-NR">NR</label
                         ><input
                             type="radio"
@@ -3967,48 +4449,58 @@
                             name="plc3-av20-R"
                             value="false"
                         />
+                    </div>
                     </td>
 
                     <th>SILO 8</th>
                     <td>DU 279</td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc7-du279A">A </label
                         ><input
                             type="checkbox"
                             id="plc7-du279A"
                             name="plc7-du279A"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc7-du279B">B </label
                         ><input
                             type="checkbox"
                             id="plc7-du279B"
                             name="plc7-du279B"
                         />
+                    </div>
                     </td>
 
                     <td>DU 292</td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc7-du292A">A </label
                         ><input
                             type="checkbox"
                             id="plc7-du292A"
                             name="plc7-du292A"
                         />
+                    </div>
                     </td>
-                    <td>
+                    <td><div class="checkbox-container">
+
                         <label for="plc7-du292B">B </label
                         ><input
                             type="checkbox"
                             id="plc7-du292B"
                             name="plc7-du292B"
                         />
+                    </div>
                     </td>
                 </tr>
             </table>
             <div class="footer" style="border-top: 1px double black">
                 <p>Shift End Report | FTP and Alumina Handling System</p>
+                <p style="text-align: right;text-decoration: underline;">Signature of Shift In-Charge</p>
             </div>
         </form>
     </body>

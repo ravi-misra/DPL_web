@@ -921,10 +921,43 @@ async function populateHTMLFromDB(
                                 element.tagName.toLowerCase() === "input"
                             ) {
                                 if (element.type === "number") {
-                                    element.setAttribute(
-                                        "value",
-                                        jsonData[area][topEntry[p]]
-                                    );
+                                    let testValue = jsonData[area][topEntry[p]];
+                                    element.setAttribute("value", testValue);
+                                    ///////////////////////////////////////////////
+                                    //Change background depending on cut-off values
+                                    ///////////////////////////////////////////////
+                                    if (/ftp\d-(1|2)-val/.test(myID)) {
+                                        //Bag filter DP
+                                        if (
+                                            testValue < 100 ||
+                                            testValue > 250
+                                        ) {
+                                            element.classList.add(
+                                                "monitored-value"
+                                            );
+                                        }
+                                    } else if (/ftp\d-7-val/.test(myID)) {
+                                        //Plant DP
+                                        if (testValue > 300) {
+                                            element.classList.add(
+                                                "monitored-value"
+                                            );
+                                        }
+                                    } else if (/ftp\d-(24|25)-val/.test(myID)) {
+                                        //HF
+                                        if (testValue > 5) {
+                                            element.classList.add(
+                                                "monitored-value"
+                                            );
+                                        }
+                                    } else if (/ftp\d-(29|30)-val/.test(myID)) {
+                                        //Dust
+                                        if (testValue > 50) {
+                                            element.classList.add(
+                                                "monitored-value"
+                                            );
+                                        }
+                                    }
                                 } else if (element.type === "radio") {
                                     if (jsonData[area][topEntry[p]]) {
                                         element.setAttribute("checked", true);

@@ -772,39 +772,6 @@ module.exports.uploadPdfReport = async (req, res) => {
             let jsonData = JSON.parse(report.data);
             let updatedHTML = "";
             if (report.status === "draft") {
-                // Send the PDF file if status is 'final'
-                // const pdfFilePath = path.join(ftpFolder, "withdrawal.pdf");
-                // res.download(pdfFilePath);
-                // fs.readFile(pdfFilePath, (err, data) => {
-                //     if (err) {
-                //         console.error(err);
-                //         return;
-                //     }
-                //     // Set headers and send the PDF
-                //     res.set({
-                //         "Content-Type": "application/pdf",
-                //         "Content-Disposition":
-                //             'attachment; filename="report.pdf"',
-                //     });
-                //     res.send(data);
-                // });
-                // res.render(
-                //     "dashboards/ftp_entry_form.ejs",
-                //     { mykey: "hello" },
-                //     (err, html) => {
-                //         if (err) {
-                //             console.log(err);
-                //         }
-                //         populateHTMLFromDB(html, jsonData, myData)
-                //             .then((finalHTML) => {
-                //                 res.set({ "Content-Type": "text/html" });
-                //                 res.send(html);
-                //             })
-                //             .catch((error) =>
-                //                 console.error("Error during execution:", error)
-                //             );
-                //     }
-                // );
                 res.render(
                     "dashboards/ftp_entry_form.ejs",
                     { date, shift, dateString },
@@ -872,133 +839,160 @@ async function populateHTMLFromDB(
 ) {
     const browser = await puppeteer.launch({
         headless: true, // Run in headless mode
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        // --no-sandbox : Disables the Chromium sandbox entirely
-        // --disable-setuid-sandbox : Disables a specific type of sandboxing called setuid sandbox, which relies on special permissions on Linux to isolate processes.
+        args: [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage",
+            "--disable-cache",
+            "--disable-gpu",
+            "--disable-extensions",
+            "--disable-accelerated-2d-canvas",
+        ],
     });
-    const page = await browser.newPage();
-    // Load your HTML content directly
-    await page.setContent(html, { waitUntil: "networkidle0" });
-    const finalHTML = await page.evaluate(
-        ({ jsonData, myData, reportDate, reportShift, pdf }) => {
-            // Iterate through the keys of the "myData" template
-            if (pdf) {
-                document.getElementById("shift-date").innerHTML = reportDate;
-                document.getElementById("shift").innerHTML = reportShift;
-            }
-            for (let k of Object.keys(myData)) {
-                let topEntry = myData[k];
-                // Check if top entry value is a value or object
-                if (typeof topEntry === "string") {
-                    if (Object.hasOwn(jsonData, topEntry)) {
-                        let element = document.getElementById(k);
-                        if (element) {
-                            if (
-                                element.tagName.toLowerCase() === "input" &&
-                                element.type === "number"
-                            ) {
-                                element.setAttribute(
-                                    "value",
-                                    jsonData[topEntry]
-                                );
-                            } else if (
-                                element.tagName.toLowerCase() === "textarea"
-                            ) {
-                                element.innerHTML = jsonData[topEntry];
+    try {
+        const page = await browser.newPage();
+        // Load your HTML content directly
+        await page.setContent(html, { waitUntil: "networkidle0" });
+        const finalHTML = await page.evaluate(
+            ({ jsonData, myData, reportDate, reportShift, pdf }) => {
+                // Iterate through the keys of the "myData" template
+                if (pdf) {
+                    document.getElementById("shift-date").innerHTML =
+                        reportDate;
+                    document.getElementById("shift").innerHTML = reportShift;
+                }
+                for (let k of Object.keys(myData)) {
+                    let topEntry = myData[k];
+                    // Check if top entry value is a value or object
+                    if (typeof topEntry === "string") {
+                        if (Object.hasOwn(jsonData, topEntry)) {
+                            let element = document.getElementById(k);
+                            if (element) {
+                                if (
+                                    element.tagName.toLowerCase() === "input" &&
+                                    element.type === "number"
+                                ) {
+                                    element.setAttribute(
+                                        "value",
+                                        jsonData[topEntry]
+                                    );
+                                } else if (
+                                    element.tagName.toLowerCase() === "textarea"
+                                ) {
+                                    element.innerHTML = jsonData[topEntry];
+                                }
                             }
                         }
-                    }
-                } else if (typeof topEntry === "object" && topEntry !== null) {
-                    const area = k.toUpperCase();
-                    for (let p of Object.keys(topEntry)) {
-                        if (Object.hasOwn(jsonData[area], topEntry[p])) {
-                            let myID = !isNaN(p)
-                                ? `${k}-${p}-val`
-                                : `${k}-${p}`;
-                            let element = document.getElementById(myID);
-                            if (
-                                element &&
-                                element.tagName.toLowerCase() === "input"
-                            ) {
-                                if (element.type === "number") {
-                                    let testValue = jsonData[area][topEntry[p]];
-                                    element.setAttribute("value", testValue);
-                                    ///////////////////////////////////////////////
-                                    //Change background depending on cut-off values
-                                    ///////////////////////////////////////////////
-                                    if (/ftp\d-(1|2)-val/.test(myID)) {
-                                        //Bag filter DP
-                                        if (
-                                            testValue < 100 ||
-                                            testValue > 250
+                    } else if (
+                        typeof topEntry === "object" &&
+                        topEntry !== null
+                    ) {
+                        const area = k.toUpperCase();
+                        for (let p of Object.keys(topEntry)) {
+                            if (Object.hasOwn(jsonData[area], topEntry[p])) {
+                                let myID = !isNaN(p)
+                                    ? `${k}-${p}-val`
+                                    : `${k}-${p}`;
+                                let element = document.getElementById(myID);
+                                if (
+                                    element &&
+                                    element.tagName.toLowerCase() === "input"
+                                ) {
+                                    if (element.type === "number") {
+                                        let testValue =
+                                            jsonData[area][topEntry[p]];
+                                        element.setAttribute(
+                                            "value",
+                                            testValue
+                                        );
+                                        ///////////////////////////////////////////////
+                                        //Change background depending on cut-off values
+                                        ///////////////////////////////////////////////
+                                        if (/ftp\d-(1|2)-val/.test(myID)) {
+                                            //Bag filter DP
+                                            if (
+                                                testValue < 100 ||
+                                                testValue > 250
+                                            ) {
+                                                element.classList.add(
+                                                    "monitored-value"
+                                                );
+                                            }
+                                        } else if (/ftp\d-7-val/.test(myID)) {
+                                            //Plant DP
+                                            if (testValue > 300) {
+                                                element.classList.add(
+                                                    "monitored-value"
+                                                );
+                                            }
+                                        } else if (
+                                            /ftp\d-(24|25)-val/.test(myID)
                                         ) {
-                                            element.classList.add(
-                                                "monitored-value"
+                                            //HF
+                                            if (testValue > 5) {
+                                                element.classList.add(
+                                                    "monitored-value"
+                                                );
+                                            }
+                                        } else if (
+                                            /ftp\d-(29|30)-val/.test(myID)
+                                        ) {
+                                            //Dust
+                                            if (testValue > 50) {
+                                                element.classList.add(
+                                                    "monitored-value"
+                                                );
+                                            }
+                                        }
+                                    } else if (element.type === "radio") {
+                                        if (jsonData[area][topEntry[p]]) {
+                                            element.setAttribute(
+                                                "checked",
+                                                true
                                             );
+                                        } else {
+                                            let tempId = myID.split("-");
+                                            if (tempId.pop() === "R") {
+                                                tempId.push("NR");
+                                            }
+                                            myID = tempId.join("-");
+                                            let radioElement =
+                                                document.getElementById(myID);
+                                            if (radioElement) {
+                                                radioElement.setAttribute(
+                                                    "checked",
+                                                    true
+                                                );
+                                            }
                                         }
-                                    } else if (/ftp\d-7-val/.test(myID)) {
-                                        //Plant DP
-                                        if (testValue > 300) {
-                                            element.classList.add(
-                                                "monitored-value"
-                                            );
-                                        }
-                                    } else if (/ftp\d-(24|25)-val/.test(myID)) {
-                                        //HF
-                                        if (testValue > 5) {
-                                            element.classList.add(
-                                                "monitored-value"
-                                            );
-                                        }
-                                    } else if (/ftp\d-(29|30)-val/.test(myID)) {
-                                        //Dust
-                                        if (testValue > 50) {
-                                            element.classList.add(
-                                                "monitored-value"
-                                            );
-                                        }
-                                    }
-                                } else if (element.type === "radio") {
-                                    if (jsonData[area][topEntry[p]]) {
-                                        element.setAttribute("checked", true);
-                                    } else {
-                                        let tempId = myID.split("-");
-                                        if (tempId.pop() === "R") {
-                                            tempId.push("NR");
-                                        }
-                                        myID = tempId.join("-");
-                                        let radioElement =
-                                            document.getElementById(myID);
-                                        if (radioElement) {
-                                            radioElement.setAttribute(
+                                    } else if (element.type === "checkbox") {
+                                        if (jsonData[area][topEntry[p]]) {
+                                            element.setAttribute(
                                                 "checked",
                                                 true
                                             );
                                         }
-                                    }
-                                } else if (element.type === "checkbox") {
-                                    if (jsonData[area][topEntry[p]]) {
-                                        element.setAttribute("checked", true);
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-            return document.documentElement.outerHTML;
-        },
-        { jsonData, myData, reportDate, reportShift, pdf }
-    );
-    if (pdf) {
-        const pdfBuffer = await page.pdf({
-            format: "A4",
-            printBackground: true,
-        });
-        await browser.close();
-        return pdfBuffer;
-    } else {
-        await browser.close();
-        return finalHTML;
+                return document.documentElement.outerHTML;
+            },
+            { jsonData, myData, reportDate, reportShift, pdf }
+        );
+        if (pdf) {
+            const pdfBuffer = await page.pdf({
+                format: "A4",
+                printBackground: true,
+            });
+            return pdfBuffer;
+        } else {
+            return finalHTML;
+        }
+    } finally {
+        // Finally is always executed even before returning control or exiting
+        await browser.close(); // Ensure browser is closed
     }
 }

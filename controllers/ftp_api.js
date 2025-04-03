@@ -515,73 +515,52 @@ const dbConfig = {
     },
 };
 
+function isInvalidShift(now, shift) {
+    const time = now.getHours() * 60 + now.getMinutes(); // Convert to minutes
+    const shiftCutoffs = { A: 13 * 60 + 35, B: 21 * 60 + 35, C: 5 * 60 + 35 };
+    return time < shiftCutoffs[shift];
+}
+
 function dateshiftValidity(date, shift) {
     let now = new Date();
     let selectedDate = new Date(date);
-    let returnValue = {};
     if (isFuture(selectedDate)) {
-        returnValue = {
+        return {
             action: "invalid-date",
             message: "The selected date is invalid.",
         };
-    } else if (
-        now.getFullYear() == selectedDate.getFullYear() &&
-        now.getMonth() == selectedDate.getMonth() &&
-        now.getDate() == selectedDate.getDate()
-    ) {
-        if (shift === "C") {
-            returnValue = {
+    }
+
+    if (now.toDateString() === selectedDate.toDateString()) {
+        if (shift === "C" || isInvalidShift(now, shift)) {
+            return {
                 action: "invalid-shift",
                 message: "The selected shift is invalid.",
-            };
-        } else if (
-            (now.getHours() < 21 || now.getMinutes() < 35) &&
-            shift === "B"
-        ) {
-            returnValue = {
-                action: "invalid-shift",
-                message: "The selected shift is invalid.",
-            };
-        } else if (
-            (now.getHours() < 13 || now.getMinutes() < 35) &&
-            shift === "A"
-        ) {
-            returnValue = {
-                action: "invalid-shift",
-                message: "The selected shift is invalid.",
-            };
-        } else {
-            returnValue = {
-                action: "manual-entry",
-                message:
-                    "No matching data found, do you want to enter all the data manually?",
             };
         }
-    } else if (
-        now.getFullYear() == selectedDate.getFullYear() &&
-        now.getMonth() == selectedDate.getMonth() &&
-        now.getDate() == addDays(selectedDate, 1).getDate()
-    ) {
-        if ((now.getHours() < 5 || now.getMinutes() < 35) && shift === "C") {
-            returnValue = {
-                action: "invalid-shift",
-                message: "The selected shift is invalid.",
-            };
-        } else {
-            returnValue = {
-                action: "manual-entry",
-                message:
-                    "No matching data found, do you want to enter all the data manually?",
-            };
-        }
-    } else {
-        returnValue = {
+        return {
             action: "manual-entry",
             message:
                 "No matching data found, do you want to enter all the data manually?",
         };
     }
-    return returnValue;
+    let nextDay = addDays(selectedDate, 1);
+    if (
+        now.toDateString() === nextDay.toDateString() &&
+        isInvalidShift(now, shift) &&
+        shift === "C"
+    ) {
+        return {
+            action: "invalid-shift",
+            message: "The selected shift is invalid.",
+        };
+    }
+
+    return {
+        action: "manual-entry",
+        message:
+            "No matching data found, do you want to enter all the data manually?",
+    };
 }
 
 module.exports.saveReport = async (req, res) => {
@@ -707,6 +686,8 @@ module.exports.saveReport = async (req, res) => {
                     }
                 }
                 /////////////////////////////////////////////////
+            } else {
+                throw new Error(validShift["message"]);
             }
         }
         if (Object.keys(jsonData).length > 0 && date != "" && shift != "") {
@@ -738,6 +719,8 @@ module.exports.saveReport = async (req, res) => {
                     }
                 }
             }
+        } else {
+            throw new Error("Missing data.");
         }
         res.end();
     } catch (err) {

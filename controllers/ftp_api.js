@@ -505,9 +505,9 @@ const myData = {
 const ftpFolder = path.resolve(__dirname, "../uploads/ftp/");
 
 const dbConfig = {
-    user: "smartsmelter",
+    user: "ftp",
     password: "Smelter@123",
-    server: "10.130.82.111", // example: localhost
+    server: "10.130.82.112", // example: localhost
     database: "smartsmelter",
     options: {
         encrypt: false, // If using Azure SQL, else set to false

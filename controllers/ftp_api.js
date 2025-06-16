@@ -891,7 +891,9 @@ async function populateHTMLFromDB(
                                         ///////////////////////////////////////////////
                                         //Change background depending on cut-off values
                                         ///////////////////////////////////////////////
-                                        if (/ftp\d-(1|2)-val/.test(myID)) {
+                                        if (
+                                            /(ftp|gtc)\d+-(1|2)-val/.test(myID)
+                                        ) {
                                             //Bag filter DP
                                             if (
                                                 testValue < 100 ||
@@ -901,7 +903,9 @@ async function populateHTMLFromDB(
                                                     "monitored-value"
                                                 );
                                             }
-                                        } else if (/ftp\d-7-val/.test(myID)) {
+                                        } else if (
+                                            /(ftp|gtc)\d+-7-val/.test(myID)
+                                        ) {
                                             //Plant DP
                                             if (testValue > 300) {
                                                 element.classList.add(
@@ -909,7 +913,9 @@ async function populateHTMLFromDB(
                                                 );
                                             }
                                         } else if (
-                                            /ftp\d-(24|25)-val/.test(myID)
+                                            /(ftp|gtc)\d+-(24|25)-val/.test(
+                                                myID
+                                            )
                                         ) {
                                             //HF
                                             if (testValue > 5) {
@@ -918,7 +924,9 @@ async function populateHTMLFromDB(
                                                 );
                                             }
                                         } else if (
-                                            /ftp\d-(29|30)-val/.test(myID)
+                                            /(ftp|gtc)\d+-(29|30)-val/.test(
+                                                myID
+                                            )
                                         ) {
                                             //Dust
                                             if (testValue > 50) {
@@ -935,7 +943,7 @@ async function populateHTMLFromDB(
                                             );
                                         } else {
                                             let tempId = myID.split("-");
-                                            if (tempId.pop() === "R") {
+                                            if (tempId.pop()) {
                                                 tempId.push("NR");
                                             }
                                             myID = tempId.join("-");

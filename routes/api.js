@@ -25,4 +25,24 @@ router
     .route("/ftp/submit-report")
     .post(isLoggedIn, isAuthorized, catchAsync(apiController.saveReport));
 
+router
+    .route("/ftp/download-data")
+    .get(isLoggedIn, isAuthorized, apiController.renderDownloadPage);
+
+router
+    .route("/ftp/download-shift-data")
+    .post(
+        isLoggedIn,
+        isAuthorized,
+        catchAsync(apiController.downloadFtpShiftData)
+    );
+
+router
+    .route("/ftp/download-live-data")
+    .post(
+        isLoggedIn,
+        isAuthorized,
+        catchAsync(apiController.downloadFtpLiveData)
+    );
+
 module.exports = router;

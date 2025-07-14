@@ -2,6 +2,7 @@ const sql = require("mssql");
 const path = require("path");
 const fs = require("fs");
 const puppeteer = require("puppeteer");
+const xlsx = require("xlsx");
 const { format, isFuture, addDays } = require("date-fns");
 
 const myData = {
@@ -987,3 +988,101 @@ async function populateHTMLFromDB(
         await browser.close(); // Ensure browser is closed
     }
 }
+
+module.exports.renderDownloadPage = (req, res) => {
+    res.render("dashboards/ftp_download.ejs");
+};
+
+module.exports.downloadFtpShiftData = async (req, res) => {
+    const { startDate, startShift, endDate, endShift } = req.body;
+    await sql.connect(dbConfig);
+    // Fetch all records in the range (adjust query as needed for your shift logic)
+    const result = await sql.query`
+        SELECT * FROM ftp_report
+        WHERE (shift_date > ${startDate} OR (shift_date = ${startDate} AND shift >= ${startShift}))
+          AND (shift_date < ${endDate} OR (shift_date = ${endDate} AND shift <= ${endShift}))
+        ORDER BY shift_date, shift
+    `;
+
+    // Organize data by area
+    const areaSheets = {};
+    for (const row of result.recordset) {
+        const data = JSON.parse(row.data);
+        for (const area in data) {
+            if (!areaSheets[area]) areaSheets[area] = [];
+            if (typeof data[area] === "object") {
+                areaSheets[area].push({
+                    Date: row.shift_date,
+                    Shift: row.shift,
+                    ...data[area],
+                });
+            } else {
+                areaSheets[area].push({
+                    Date: row.shift_date,
+                    Shift: row.shift,
+                    Value: data[area],
+                });
+            }
+        }
+    }
+
+    // Create workbook and add sheets
+    const wb = xlsx.utils.book_new();
+    for (const area in areaSheets) {
+        const ws = xlsx.utils.json_to_sheet(areaSheets[area]);
+        xlsx.utils.book_append_sheet(wb, ws, area);
+    }
+    const buf = xlsx.write(wb, { type: "buffer", bookType: "xlsx" });
+    res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="ftp_shift_data_${startDate}_${endDate}.xlsx"`
+    );
+    res.end(buf);
+};
+
+module.exports.downloadFtpLiveData = async (req, res) => {
+    let { startDateTime, endDateTime } = req.body;
+    console.log(startDateTime, endDateTime);
+    if (startDateTime)
+        startDateTime = format(new Date(startDateTime), "yyyy-MM-dd HH:mm:ss");
+    if (endDateTime)
+        endDateTime = format(new Date(endDateTime), "yyyy-MM-dd HH:mm:ss");
+    await sql.connect(dbConfig);
+    const result = await sql.query`
+        SELECT * FROM ftp_data
+        WHERE inserted_at >= ${startDateTime} AND inserted_at <= ${endDateTime}
+        ORDER BY inserted_at
+    `;
+
+    // Organize data by area+frequency
+    const sheets = {};
+    for (const row of result.recordset) {
+        const key = `${row.area}_${row.frequency}`;
+        if (!sheets[key]) sheets[key] = [];
+        sheets[key].push({
+            inserted_at: row.inserted_at,
+            ...JSON.parse(row.data),
+        });
+    }
+
+    // Create workbook and add sheets
+    const wb = xlsx.utils.book_new();
+    for (const key in sheets) {
+        const ws = xlsx.utils.json_to_sheet(sheets[key]);
+        xlsx.utils.book_append_sheet(wb, ws, key);
+    }
+    const buf = xlsx.write(wb, { type: "buffer", bookType: "xlsx" });
+    res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="ftp_live_data_${startDateTime}_${endDateTime}.xlsx"`
+    );
+    res.end(buf);
+};

@@ -1,0 +1,127 @@
+<% layout('layouts/boilerplate.ejs') %>
+<div class="ftp-report-container">
+    <h1>FTP Data Download</h1>
+
+    <form id="shiftDownloadForm">
+        <div class="section-title">Download FTP Shift Data</div>
+        <table>
+            <tr>
+                <td><label for="shiftStartDate">Start Date:</label></td>
+                <td><input type="date" name="startDate" id="shiftStartDate" required /></td>
+                <td><label for="shiftStartShift">Start Shift:</label></td>
+                <td>
+                    <select name="startShift" id="shiftStartShift" required>
+                        <option value="">Select Shift</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="shiftEndDate">End Date:</label></td>
+                <td><input type="date" name="endDate" id="shiftEndDate" required /></td>
+                <td><label for="shiftEndShift">End Shift:</label></td>
+                <td>
+                    <select name="endShift" id="shiftEndShift" required>
+                        <option value="">Select Shift</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <div class="login-button-container">
+            <button type="submit" class="btn login-btn" id="shift-download-btn">Download</button>
+        </div>
+    </form>
+
+    <form id="liveDownloadForm">
+        <div class="section-title">Download FTP Live Data</div>
+        <table>
+            <tr>
+                <td><label for="liveStartDateTime">Start Date & Time:</label></td>
+                <td><input type="datetime-local" name="startDateTime" id="liveStartDateTime" required /></td>
+                <td><label for="liveEndDateTime">End Date & Time:</label></td>
+                <td><input type="datetime-local" name="endDateTime" id="liveEndDateTime" required /></td>
+            </tr>
+        </table>
+        <div class="login-button-container">
+            <button type="submit" class="btn login-btn" id="live-download-btn">Download</button>
+        </div>
+    </form>
+
+    <div class="footer" style="border-top: 1px double black">
+        <p>FTP Data Download | DPL Portal</p>
+    </div>
+</div>
+<script>
+    // Shift data download
+    document.getElementById('shiftDownloadForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('shift-download-btn');
+        btn.disabled = true;
+        const form = e.target;
+        const data = {
+            startDate: form.startDate.value,
+            startShift: form.startShift.value,
+            endDate: form.endDate.value,
+            endShift: form.endShift.value
+        };
+        fetch('/api/ftp/download-shift-data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(resp => resp.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ftp_shift_data_${data.startDate}_${data.endDate}.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            btn.disabled = false;
+        })
+        .catch(err => {
+            alert("Download failed.");
+            btn.disabled = false;
+        });
+    });
+
+    // Live data download
+    document.getElementById('liveDownloadForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('live-download-btn');
+        btn.disabled = true;
+        const form = e.target;
+        const data = {
+            startDateTime: form.startDateTime.value,
+            endDateTime: form.endDateTime.value
+        };
+        fetch('/api/ftp/download-live-data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(resp => resp.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ftp_live_data_${data.startDateTime}_${data.endDateTime}.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            btn.disabled = false;
+        })
+        .catch(err => {
+            alert("Download failed.");
+            btn.disabled = false;
+        });
+    });
+</script>

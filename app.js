@@ -129,6 +129,8 @@ app.use(async (req, res, next) => {
                 allowedURLs.push("/api/ftp/select-report");
                 allowedURLs.push("/api/ftp/manual-entry");
                 allowedURLs.push("/api/ftp/submit-report");
+                allowedURLs.push("/api/ftp/download-shift-data");
+                allowedURLs.push("/api/ftp/download-live-data");
             }
         }
     } else {
